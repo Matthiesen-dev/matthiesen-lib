@@ -9,7 +9,7 @@ architectury {
 
 loom {
     silentMojangMappingsLicense()
-    accessWidenerPath.set(project(":common").file("src/main/resources/example-mod-common.accesswidener"))
+    accessWidenerPath.set(project(":common").file("src/main/resources/matthiesen_lib.accesswidener"))
 }
 
 dependencies {
@@ -33,6 +33,16 @@ tasks {
         filesMatching("pack.mcmeta") {
             expand(project.properties)
         }
+    }
+
+    jar {
+        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
+        archiveClassifier.set("dev-slim")
+    }
+
+    remapJar {
+        archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
+        archiveVersion.set("${rootProject.version}")
     }
 
     remapSourcesJar {

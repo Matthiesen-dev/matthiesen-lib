@@ -50,6 +50,7 @@ tasks {
         inputs.property("mod_description", project.property("mod_description").toString())
         inputs.property("mod_license", project.property("mod_license").toString())
         inputs.property("mod_author", project.property("mod_author").toString())
+        inputs.property("github_url", project.property("github_url").toString())
 
         filesMatching("fabric.mod.json") {
             expand(project.properties)
