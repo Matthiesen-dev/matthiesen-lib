@@ -1,9 +1,6 @@
-package dev.matthiesen.common.matthiesen_lib.platform;
+package dev.matthiesen.common.matthiesen_lib.config;
 
-import com.google.gson.Gson;
-import com.google.gson.JsonElement;
-import com.google.gson.JsonObject;
-import com.google.gson.JsonParser;
+import com.google.gson.*;
 import dev.matthiesen.common.matthiesen_lib.Constants;
 
 import java.io.File;
@@ -11,6 +8,11 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
 
+/**
+ * A generic configuration manager for handling JSON-based config files.
+ * It supports loading, saving, and merging default values with existing config files.
+ */
+@SuppressWarnings("unused")
 public class ConfigManager<T> {
     private final Class<T> configClass;
     private final String configName;
@@ -40,7 +42,10 @@ public class ConfigManager<T> {
             return (Gson) gsonField.get(null);
         } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
             Constants.createInfoLog("No GSON field found in " + configClass.getSimpleName() + ", using default Gson instance");
-            return new Gson();
+            return new GsonBuilder()
+                    .disableHtmlEscaping()
+                    .setPrettyPrinting()
+                    .create();
         }
     }
 
@@ -56,6 +61,9 @@ public class ConfigManager<T> {
         }
     }
 
+    /**
+     * Loads the config from the file system. If the config file does not exist, it will create a new one with default values.
+     */
     public T loadConfig() {
         String configFileLoc = System.getProperty("user.dir") + File.separator + "config" +
                 File.separator + Constants.MOD_ID + File.separator + configName + ".json";
@@ -92,8 +100,7 @@ public class ConfigManager<T> {
 
                 fileReader.close();
             } catch (Exception e) {
-                Constants.createErrorLog("Failed to load the config! Using default config as fallback");
-                e.printStackTrace();
+                Constants.createErrorLog("Failed to load the config! Using default config as fallback", e);
                 config = createDefaultConfig();
             }
         } else {
@@ -105,7 +112,11 @@ public class ConfigManager<T> {
         return config;
     }
 
-    public JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
+    /**
+     * Merges the default config with the file config. If a key is missing in the file config, it will be added from the default config.
+     * If a key is present in both configs and is a nested object, it will recursively merge them.
+     */
+    private JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
         // For every entry in the default config, check if it exists in the file config
         Constants.createInfoLog("Checking for config merge.");
         boolean merged = false;
@@ -131,6 +142,9 @@ public class ConfigManager<T> {
         return fileConfig;
     }
 
+    /**
+     * Saves the current config to the file system. If the config is null, it will not save and log an error.
+     */
     public void saveConfig() {
         try {
             String configFileLoc = System.getProperty("user.dir") + File.separator + "config" +
@@ -142,8 +156,25 @@ public class ConfigManager<T> {
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {
-            Constants.createErrorLog("Failed to save config");
-            e.printStackTrace();
+            Constants.createErrorLog("Failed to save config", e);
         }
+    }
+
+    /**
+     * Gets the current config. If the config is null, it will attempt to load it from the file system.
+     */
+    public T getConfig() {
+        if (config == null) {
+            return loadConfig();
+        }
+        return config;
+    }
+
+    /**
+     * Sets the current config. This will not automatically save the config to the file system, so you should call saveConfig()
+     * after setting the config if you want to persist it.
+     */
+    public void setConfig(T config) {
+        this.config = config;
     }
 }

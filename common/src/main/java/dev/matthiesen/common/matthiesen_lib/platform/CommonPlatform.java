@@ -4,6 +4,7 @@ import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -12,6 +13,13 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.Supplier;
 
+/**
+ * CommonPlatform is an interface that abstracts away the differences between various Minecraft mod loaders (like Fabric and Forge).
+ * It provides methods for registering blocks, items, sounds, creative tabs, criteria triggers, stats, and menu types, as well as general
+ * utilities like accessing the Minecraft server and checking if a mod is loaded. This allows mod developers to write code that is compatible with
+ * multiple mod loaders without having to worry about the specific implementation details of each loader.
+ */
+@SuppressWarnings("unused")
 public interface CommonPlatform {
     // Registry Helpers
     <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String id, Supplier<BlockEntityType<T>> blockEntityType);
@@ -21,11 +29,10 @@ public interface CommonPlatform {
     <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String id, Supplier<T> tab);
     <T extends CriterionTrigger<?>> Supplier<T> registerCriteriaTriggers(String id, Supplier<T> criterionTrigger);
     <T extends ResourceLocation> Supplier<T> registerStats(String id, Supplier<T> stats);
+    <T extends MenuType<?>> Supplier<T> registerMenuType(String id, Supplier<T> menuType);
 
-    // General Utilities
+    // Utilities
     MinecraftServer server();
-
-    // Loader Specific Utilities
     boolean isModLoaded(String modId);
     boolean isDevelopmentEnvironment();
     CreativeModeTab.Builder newCreativeTabBuilder();

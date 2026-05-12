@@ -8,7 +8,6 @@
     "${mod_author}"
   ],
   "license": "${mod_license}",
-  "icon": "icon.png",
   "custom": {
     "modmenu": {
       "links": {
@@ -19,14 +18,13 @@
   "environment": "*",
   "entrypoints": {
     "main": [
-      "dev.matthiesen.fabric.matthiesen_lib.ExampleModFabric"
+      "dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabric"
     ],
     "client": [
-      "dev.matthiesen.fabric.matthiesen_lib.ExampleModFabricClient"
+      "dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabricClient"
     ]
   },
   "depends": {
-    "minecraft": "1.21.1",
-    "cobblemon": ">=1.7.3 <1.8.0"
+    "minecraft": "1.21.1"
   }
 }

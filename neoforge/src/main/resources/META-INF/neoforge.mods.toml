@@ -11,7 +11,6 @@ authors = "${mod_author}"
 description = '''
 ${mod_description}
 '''
-#logoFile = ""
 
 [[dependencies.${mod_id}]]
 modId = "minecraft"
@@ -25,11 +24,4 @@ modId = "neoforge"
 mandatory = true
 versionRange = "[21.1.182,)"
 ordering = "NONE"
-side = "BOTH"
-
-[[dependencies.${mod_id}]]
-modId = "cobblemon"
-mandatory = true
-versionRange = "[1.7.3,)"
-ordering = "AFTER"
 side = "BOTH"
