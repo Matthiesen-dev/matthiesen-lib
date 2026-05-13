@@ -2,6 +2,7 @@ plugins {
     id("com.gradleup.shadow")
     id("dev.architectury.loom")
     id("architectury-plugin")
+    id("com.vanniktech.maven.publish")
 }
 
 architectury {
@@ -32,6 +33,42 @@ dependencies {
 
     testImplementation("org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:${property("junit_version")}")
+}
+
+mavenPublishing {
+    publishToMavenCentral()
+    signAllPublications()
+    coordinates(
+        project.property("maven_group").toString(),
+        "${rootProject.property("archives_base_name")}-${project.name}",
+        "${rootProject.version}"
+    )
+
+    pom {
+        name.set(project.property("mod_name").toString())
+        description.set(project.property("mod_description").toString())
+        inceptionYear.set("2020")
+        url.set(project.property("github_url").toString())
+        licenses {
+            license {
+                name.set(project.property("mod_license").toString())
+                url.set(project.property("mod_license_url").toString())
+                distribution.set(project.property("mod_license_url").toString())
+            }
+        }
+        developers {
+            developer {
+                id.set(project.property("mod_author_id").toString())
+                name.set(project.property("mod_author").toString())
+                url.set(project.property("mod_author_url").toString())
+            }
+        }
+        scm {
+            url.set(project.property("github_url").toString())
+            connection.set("scm:git:git://${project.property("git_url").toString()}")
+            developerConnection.set("scm:git:ssh://git@${project.property("git_url").toString()}")
+        }
+    }
 }
 
 tasks {
