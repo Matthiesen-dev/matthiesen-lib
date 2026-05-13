@@ -2,11 +2,11 @@ package dev.matthiesen.neoforge.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.Constants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
-import dev.matthiesen.neoforge.matthiesen_lib.helper.NeoForgeClientRegistryHelper;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
+import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 /**
  * Client-side initialization class for MatthiesenLib on the NeoForge platform, responsible for setting up client-specific resources and event listeners.
@@ -15,8 +15,8 @@ import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 public class MatthiesenLibNeoForgeClient {
     public MatthiesenLibNeoForgeClient(IEventBus modBus) {
         Constants.createInfoLog("Loading Client resources for NeoForge Mod Loader");
-        NeoForgeClientRegistryHelper.init(modBus);
         modBus.addListener(this::clientSetup);
+        modBus.addListener(this::registerScreens);
     }
 
     /**
@@ -24,5 +24,9 @@ public class MatthiesenLibNeoForgeClient {
      */
     public void clientSetup(FMLClientSetupEvent event) {
         MatthiesenLibClient.modInitializer();
+    }
+
+    public void registerScreens(RegisterMenuScreensEvent event) {
+        MatthiesenLibClient.applyScreenRegistrations(event::register);
     }
 }

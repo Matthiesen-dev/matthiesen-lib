@@ -1,36 +1,28 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.interfaces.ScreenRegistrar;
-import dev.matthiesen.common.matthiesen_lib.platform.CommonClientPlatform;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.ServiceLoader;
-import java.util.function.Consumer;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.function.Supplier;
 
 /**
- * Client-side initialization class for MatthiesenLib. This class is responsible for setting up any client-specific features
- * or configurations required by the library. It is called during the client initialization phase of the mod loading process,
- * allowing for the registration of client-only components such as menu screens, renderers, and other visual elements.
+ * Client-side initialization class for MatthiesenLib. Stores screen registrations in a static list
+ * so each platform can apply them at the correct lifecycle stage.
  */
 @SuppressWarnings("unused")
 public class MatthiesenLibClient {
-    private static final CommonClientPlatform COMMON_CLIENT_PLATFORM =
-            ServiceLoader.load(CommonClientPlatform.class).findFirst().orElseThrow();
+    private static final List<ScreenEntry<?, ?>> REGISTERED_SCREENS = new CopyOnWriteArrayList<>();
 
-    private static final List<Consumer<ScreenRegistrar>> PENDING_SCREEN_REGISTRATIONS = new ArrayList<>();
-
-    private static ScreenRegistrar activeRegistrar;
     private static boolean initialized;
 
     /**
-     * Initializes the client-side components of MatthiesenLib. (Do not run this from an external mod. This is used to set up the MatthiesenLib Mod)
+     * Initializes the client-side components of MatthiesenLib. (Do not run this from an external mod.)
      */
     public static synchronized void modInitializer() {
         if (initialized) {
@@ -38,53 +30,43 @@ public class MatthiesenLibClient {
         }
 
         initialized = true;
-        COMMON_CLIENT_PLATFORM.registerMenuScreens(MatthiesenLibClient::bindRegistrar);
         Constants.createInfoLog("Initialized client");
     }
 
     /**
-     * Registers a menu screen for the specified menu type. This method can be called from any client-side initialization code, and it will
-     * ensure that the registration is performed at the correct time during the client lifecycle. If the client is not yet ready to register screens,
-     * the registration will be queued and executed once the client is ready.
+     * Queues a screen to be registered. Safe to call at any time — the platform applies it during its
+     * own registration event (Fabric: onInitializeClient, NeoForge: RegisterMenuScreensEvent).
      */
-    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(Supplier<? extends MenuType<? extends M>> menuTypeSupplier, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        queueOrRegister(registrar -> registrar.register(menuTypeSupplier.get(), screenConstructor));
+    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
+    void registerMenuScreen(Supplier<? extends MenuType<? extends M>> menuTypeSupplier, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
+        REGISTERED_SCREENS.add(new ScreenEntry<>(menuTypeSupplier.get(), screenConstructor));
     }
 
     /**
-     * Registers a menu screen for the specified menu type. This method can be called from any client-side initialization code, and it will
-     * ensure that the registration is performed at the correct time during the client lifecycle. If the client is not yet ready to register screens,
-     * the registration will be queued and executed once the client is ready.
+     * Queues a screen to be registered. Safe to call at any time — the platform applies it during its
+     * own registration event (Fabric: onInitializeClient, NeoForge: RegisterMenuScreensEvent).
      */
-    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        queueOrRegister(registrar -> registrar.register(menuType, screenConstructor));
+    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
+    void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
+        REGISTERED_SCREENS.add(new ScreenEntry<>(menuType, screenConstructor));
     }
 
     /**
-     * Queues a screen registration if the client is not yet ready to register screens, or registers it immediately if the client is already ready.
-     * This method is synchronized to ensure thread safety when accessing the active registrar and the pending registrations list.
+     * Applies all queued screen registrations to the provided registrar. Called by each platform at
+     * the correct lifecycle moment.
      */
-    private static synchronized void queueOrRegister(Consumer<ScreenRegistrar> registration) {
-        if (activeRegistrar != null) {
-            registration.accept(activeRegistrar);
-            return;
+    public static void applyScreenRegistrations(ScreenRegistrar registrar) {
+        for (ScreenEntry<?, ?> entry : REGISTERED_SCREENS) {
+            entry.apply(registrar);
         }
-
-        PENDING_SCREEN_REGISTRATIONS.add(registration);
     }
 
-    /**
-     * Binds the provided ScreenRegistrar to the client and executes any pending screen registrations. This method is called by the platform-specific
-     * implementation once the client is ready to register screens. It ensures that all queued registrations are processed and that the active registrar is set for
-     * any future registrations. This method is synchronized to ensure thread safety when modifying the active registrar and the pending registrations list.
-     */
-    private static synchronized void bindRegistrar(ScreenRegistrar registrar) {
-        activeRegistrar = registrar;
-
-        for (Consumer<ScreenRegistrar> registration : PENDING_SCREEN_REGISTRATIONS) {
-            registration.accept(registrar);
+    private record ScreenEntry<M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>(
+            MenuType<? extends M> menuType,
+            MenuScreens.ScreenConstructor<M, S> screenConstructor
+    ) {
+        void apply(ScreenRegistrar registrar) {
+            registrar.register(menuType, screenConstructor);
         }
-
-        PENDING_SCREEN_REGISTRATIONS.clear();
     }
 }

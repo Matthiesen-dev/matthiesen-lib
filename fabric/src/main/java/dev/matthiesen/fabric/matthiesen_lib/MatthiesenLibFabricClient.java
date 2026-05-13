@@ -2,6 +2,7 @@ package dev.matthiesen.fabric.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import net.fabricmc.api.ClientModInitializer;
+import net.minecraft.client.gui.screens.MenuScreens;
 
 /**
  * Client-side initialization class for MatthiesenLib on the Fabric platform.
@@ -14,5 +15,6 @@ public class MatthiesenLibFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MatthiesenLibClient.modInitializer();
+        MatthiesenLibClient.applyScreenRegistrations(MenuScreens::register);
     }
 }
