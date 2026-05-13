@@ -5,7 +5,6 @@ import dev.matthiesen.common.matthiesen_lib.Constants;
 import dev.matthiesen.neoforge.matthiesen_lib.platform.NeoForgeRegistryHelper;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
-import net.neoforged.neoforge.common.NeoForge;
 
 /**
  * Main class for the MatthiesenLib mod on the NeoForge platform.
@@ -16,6 +15,5 @@ public class MatthiesenLibNeoForge {
         Constants.createInfoLog("Loading for NeoForge Mod Loader");
         NeoForgeRegistryHelper.init(modBus);
         MatthiesenLib.modInitializer();
-        NeoForge.EVENT_BUS.register(this);
     }
 }
