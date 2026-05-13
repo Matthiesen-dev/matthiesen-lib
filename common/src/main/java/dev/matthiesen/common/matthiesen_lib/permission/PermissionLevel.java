@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.interfaces;
+package dev.matthiesen.common.matthiesen_lib.permission;
 
 /**
  * Enum representing different permission levels for command execution in Minecraft.
