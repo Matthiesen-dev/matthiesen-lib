@@ -13,6 +13,7 @@ architectury {
 loom {
     enableTransitiveAccessWideners.set(true)
     silentMojangMappingsLicense()
+    accessWidenerPath.set(project(":common").file("src/main/resources/matthiesen-lib.accesswidener"))
 
     mixin {
         defaultRefmapName.set("mixins.${project.name}.refmap.json")

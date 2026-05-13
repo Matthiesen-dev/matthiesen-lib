@@ -15,6 +15,7 @@
       }
     }
   },
+  "accessWidener": "matthiesen-lib.accesswidener",
   "environment": "*",
   "entrypoints": {
     "main": [

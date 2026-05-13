@@ -10,7 +10,7 @@ architectury {
 
 loom {
     silentMojangMappingsLicense()
-    accessWidenerPath.set(project(":common").file("src/main/resources/matthiesen_lib.accesswidener"))
+    accessWidenerPath.set(project(":common").file("src/main/resources/matthiesen-lib.accesswidener"))
 }
 
 dependencies {

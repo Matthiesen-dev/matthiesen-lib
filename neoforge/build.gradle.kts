@@ -13,6 +13,7 @@ architectury {
 loom {
     enableTransitiveAccessWideners.set(true)
     silentMojangMappingsLicense()
+    accessWidenerPath.set(project(":common").file("src/main/resources/matthiesen-lib.accesswidener"))
 }
 
 repositories {
@@ -102,8 +103,19 @@ tasks {
         archiveClassifier.set("dev-slim")
     }
 
+    sourcesJar {
+        val depSources = project(":common").tasks.sourcesJar
+        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        dependsOn(depSources)
+        from(depSources.get().archiveFile.map { zipTree(it) }) {
+            exclude("architectury.accessWidener")
+        }
+    }
+
     shadowJar {
         exclude("fabric.mod.json")
+        exclude("architectury-common.accessWidener")
+        exclude("architectury.common.json")
         archiveClassifier.set("dev-shadow")
         archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
         configurations = listOf(shadowBundle)
@@ -112,6 +124,7 @@ tasks {
     remapJar {
         dependsOn(shadowJar)
         inputFile.set(shadowJar.flatMap { it.archiveFile })
+        atAccessWideners.add("matthiesen-lib.accesswidener")
         archiveBaseName.set("${rootProject.property("archives_base_name")}-${project.name}")
         archiveVersion.set("${rootProject.version}")
     }
