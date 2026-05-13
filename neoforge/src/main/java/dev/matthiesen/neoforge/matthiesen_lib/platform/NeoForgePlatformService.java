@@ -1,8 +1,10 @@
 package dev.matthiesen.neoforge.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
 import dev.matthiesen.neoforge.matthiesen_lib.helper.NeoForgeRegistryHelper;
+import dev.matthiesen.neoforge.matthiesen_lib.permission.NeoForgePermissionValidator;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
@@ -68,6 +70,11 @@ public class NeoForgePlatformService implements CommonPlatform {
     @Override
     public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec) {
         return NeoForgeRegistryHelper.registerEntityEffects(name, codec);
+    }
+
+    @Override
+    public void registerPermissionValidator() {
+        MatthiesenLib.setPermissionValidator(new NeoForgePermissionValidator());
     }
 
     @Override

@@ -33,6 +33,7 @@ public interface CommonPlatform {
     <T extends MenuType<?>> Supplier<T> registerMenuType(ResourceLocation id, Supplier<T> menuType);
     <T extends DataComponentType<?>> Supplier<T> registerDataComponentType(ResourceLocation id, Supplier<T> component);
     <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec);
+    void registerPermissionValidator();
 
     // Utilities
     boolean isModLoaded(String modId);

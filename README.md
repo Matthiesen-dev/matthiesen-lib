@@ -16,6 +16,7 @@ A lightweight Architectury-style library for shared mod code across **Fabric** a
   - data components
   - enchantment entity effects
 - Unified command registration (`AbstractCommand` + common API)
+- Unified permission system (`Permission`, `PermissionLevel`, `PermissionValidator`)
 - Unified client screen registration with a static queue/map-style approach that works with loader timing differences
 
 ## Versions
@@ -101,6 +102,66 @@ MatthiesenLib.registerCommand(new PingCommand());
 ```
 
 The library queues commands if needed and binds them when Fabric/NeoForge command registration events fire.
+
+## Permission System
+
+Matthiesen Lib includes a cross-loader permission API that lets you define permissions in common code and validate them with a platform-aware validator.
+
+### Register a permission
+
+Create a `Permission` and register it through the common API:
+
+```java
+public static final Permission ADMIN_PERMISSION = new Permission() {
+    @Override
+    public ResourceLocation getIdentifier() {
+        return ResourceLocation.fromNamespaceAndPath("examplemod", "admin");
+    }
+
+    @Override
+    public String getLiteral() {
+        return "examplemod.admin";
+    }
+
+    @Override
+    public PermissionLevel getLevel() {
+        return PermissionLevel.MULTIPLAYER_MANAGEMENT;
+    }
+};
+
+MatthiesenLib.registerPermission(ADMIN_PERMISSION);
+```
+
+### Check a permission
+
+Use the active validator from common code:
+
+```java
+if (MatthiesenLib.getPermissionValidator().hasPermission(context.getSource(), ADMIN_PERMISSION)) {
+    // allowed
+}
+```
+
+You can also check by literal and level:
+
+```java
+boolean allowed = MatthiesenLib.getPermissionValidator()
+        .hasPermission(context.getSource(), "examplemod.admin", PermissionLevel.MULTIPLAYER_MANAGEMENT.getNumericalValue());
+```
+
+### Platform behavior
+
+- Default/fallback: vanilla permission levels (`source.hasPermission(level)`)
+- Fabric: uses `fabric-permissions-api-v0` when present, otherwise falls back to vanilla levels
+- NeoForge: uses NeoForge `PermissionAPI` nodes for registered permissions
+
+### Custom validators
+
+If you need another permission backend, implement `PermissionValidator` and set it:
+
+```java
+MatthiesenLib.setPermissionValidator(new MyPermissionValidator());
+```
 
 ## Unified Screen Registration
 

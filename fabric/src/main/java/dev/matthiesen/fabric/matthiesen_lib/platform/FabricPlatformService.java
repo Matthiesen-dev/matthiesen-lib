@@ -1,7 +1,9 @@
 package dev.matthiesen.fabric.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
+import dev.matthiesen.fabric.matthiesen_lib.permission.FabricPermissionValidator;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.CriterionTrigger;
@@ -69,6 +71,13 @@ public class FabricPlatformService implements CommonPlatform {
     @Override
     public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec) {
         return registerSupplier(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, name, codec);
+    }
+
+    @Override
+    public void registerPermissionValidator() {
+        if (FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0")) {
+            MatthiesenLib.setPermissionValidator(new FabricPermissionValidator());
+        }
     }
 
     @Override
