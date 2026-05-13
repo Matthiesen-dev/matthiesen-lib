@@ -42,10 +42,20 @@ public class MatthiesenLibClient {
         Constants.createInfoLog("Initialized client");
     }
 
+    /**
+     * Registers a menu screen for the specified menu type. This method can be called from any client-side initialization code, and it will
+     * ensure that the registration is performed at the correct time during the client lifecycle. If the client is not yet ready to register screens,
+     * the registration will be queued and executed once the client is ready.
+     */
     public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(Supplier<? extends MenuType<? extends M>> menuTypeSupplier, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
         queueOrRegister(registrar -> registrar.register(menuTypeSupplier.get(), screenConstructor));
     }
 
+    /**
+     * Registers a menu screen for the specified menu type. This method can be called from any client-side initialization code, and it will
+     * ensure that the registration is performed at the correct time during the client lifecycle. If the client is not yet ready to register screens,
+     * the registration will be queued and executed once the client is ready.
+     */
     public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>> void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
         queueOrRegister(registrar -> registrar.register(menuType, screenConstructor));
     }
