@@ -13,6 +13,6 @@ public class MatthiesenLibFabricClient implements ClientModInitializer {
      */
     @Override
     public void onInitializeClient() {
-        MatthiesenLibClient.initialize();
+        MatthiesenLibClient.modInitializer();
     }
 }

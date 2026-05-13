@@ -32,7 +32,7 @@ public class MatthiesenLibClient {
     /**
      * Initializes the client-side components of MatthiesenLib.
      */
-    public static synchronized void initialize() {
+    public static synchronized void modInitializer() {
         if (initialized) {
             return;
         }
