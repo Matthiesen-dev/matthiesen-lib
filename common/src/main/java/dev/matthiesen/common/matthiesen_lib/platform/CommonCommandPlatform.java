@@ -11,6 +11,7 @@ import java.util.function.Consumer;
 public interface CommonCommandPlatform {
     /**
      * Invokes the handler with a platform-specific registrar at command registration time.
+     * @param registrationHandler The handler to invoke with the platform-specific CommandRegistrar.
      */
     void registerCommands(Consumer<CommandRegistrar> registrationHandler);
 }

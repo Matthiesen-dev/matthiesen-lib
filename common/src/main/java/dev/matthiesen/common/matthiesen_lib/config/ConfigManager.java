@@ -115,6 +115,9 @@ public class ConfigManager<T> {
     /**
      * Merges the default config with the file config. If a key is missing in the file config, it will be added from the default config.
      * If a key is present in both configs and is a nested object, it will recursively merge them.
+     * @param defaultConfig The default config as a JsonObject
+     * @param fileConfig The file config as a JsonObject
+     * @return The merged config as a JsonElement
      */
     private JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
         // For every entry in the default config, check if it exists in the file config
@@ -173,6 +176,8 @@ public class ConfigManager<T> {
     /**
      * Sets the current config. This will not automatically save the config to the file system, so you should call saveConfig()
      * after setting the config if you want to persist it.
+     *
+     * @param config The new config to set
      */
     public void setConfig(T config) {
         this.config = config;

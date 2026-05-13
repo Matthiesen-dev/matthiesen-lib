@@ -39,6 +39,9 @@ public final class MatthiesenLibCommands {
 
     /**
      * Registers an AbstractCommand using the platform-specific command callback.
+     * If the callback has not yet been fired, the command is added to a pending list to be registered when the callback is received.
+     *
+     * @param command The AbstractCommand instance to register.
      */
     public static synchronized void registerCommand(AbstractCommand command) {
         if (activeRegistrar != null) {
@@ -49,6 +52,11 @@ public final class MatthiesenLibCommands {
         PENDING_COMMANDS.add(command);
     }
 
+    /**
+     * Binds the active CommandRegistrar to the static field and registers any pending commands. Called by each platform during its command registration event.
+     *
+     * @param registrar The CommandRegistrar provided by the platform's command registration event.
+     */
     private static synchronized void bindRegistrar(CommandRegistrar registrar) {
         activeRegistrar = registrar;
 
