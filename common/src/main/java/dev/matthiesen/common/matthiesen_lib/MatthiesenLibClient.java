@@ -18,6 +18,8 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class MatthiesenLibClient {
     private static final List<ScreenEntry<?, ?>> REGISTERED_SCREENS = new CopyOnWriteArrayList<>();
+    private static volatile ScreenRegistrar activeRegistrar;
+    private static int appliedRegistrations;
 
     private static boolean initialized;
 
@@ -44,7 +46,7 @@ public class MatthiesenLibClient {
      */
     public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
     void registerMenuScreen(Supplier<? extends MenuType<? extends M>> menuTypeSupplier, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        REGISTERED_SCREENS.add(new ScreenEntry<>(menuTypeSupplier.get(), screenConstructor));
+        registerMenuScreenInternal(new ScreenEntry<>(menuTypeSupplier.get(), screenConstructor));
     }
 
     /**
@@ -58,7 +60,7 @@ public class MatthiesenLibClient {
      */
     public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
     void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        REGISTERED_SCREENS.add(new ScreenEntry<>(menuType, screenConstructor));
+        registerMenuScreenInternal(new ScreenEntry<>(menuType, screenConstructor));
     }
 
     /**
@@ -67,9 +69,23 @@ public class MatthiesenLibClient {
      *
      * @param registrar The ScreenRegistrar provided by the platform, which is used to register screens with their associated menu types. This should be called during the platform's screen registration event, and it will apply all queued screen registrations to the game.
      */
-    public static void applyScreenRegistrations(ScreenRegistrar registrar) {
-        for (ScreenEntry<?, ?> entry : REGISTERED_SCREENS) {
-            entry.apply(registrar);
+    public static synchronized void applyScreenRegistrations(ScreenRegistrar registrar) {
+        activeRegistrar = registrar;
+
+        for (int i = appliedRegistrations; i < REGISTERED_SCREENS.size(); i++) {
+            REGISTERED_SCREENS.get(i).apply(registrar);
+        }
+
+        appliedRegistrations = REGISTERED_SCREENS.size();
+    }
+
+    private static synchronized void registerMenuScreenInternal(ScreenEntry<?, ?> entry) {
+        REGISTERED_SCREENS.add(entry);
+
+        // Fabric can register screens immediately once client init has provided a registrar.
+        if (activeRegistrar != null) {
+            entry.apply(activeRegistrar);
+            appliedRegistrations = REGISTERED_SCREENS.size();
         }
     }
 
