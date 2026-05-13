@@ -28,10 +28,17 @@ public class MatthiesenLib {
     private static final CommonPlatform COMMON_PLATFORM =
             ServiceLoader.load(CommonPlatform.class).findFirst().orElseThrow();
 
+    private static boolean initialized;
+
     /**
      * Initializes the MatthiesenLib mod. (Do not run this from an external mod. This is used to set up the MatthiesenLib Mod)
      */
     public static void modInitializer() {
+        if (initialized) {
+            return;
+        }
+
+        initialized = true;
         Constants.createInfoLog("Initialized common");
     }
 

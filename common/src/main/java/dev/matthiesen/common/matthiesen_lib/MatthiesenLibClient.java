@@ -30,7 +30,7 @@ public class MatthiesenLibClient {
     private static boolean initialized;
 
     /**
-     * Initializes the client-side components of MatthiesenLib.
+     * Initializes the client-side components of MatthiesenLib. (Do not run this from an external mod. This is used to set up the MatthiesenLib Mod)
      */
     public static synchronized void modInitializer() {
         if (initialized) {
@@ -60,6 +60,10 @@ public class MatthiesenLibClient {
         queueOrRegister(registrar -> registrar.register(menuType, screenConstructor));
     }
 
+    /**
+     * Queues a screen registration if the client is not yet ready to register screens, or registers it immediately if the client is already ready.
+     * This method is synchronized to ensure thread safety when accessing the active registrar and the pending registrations list.
+     */
     private static synchronized void queueOrRegister(Consumer<ScreenRegistrar> registration) {
         if (activeRegistrar != null) {
             registration.accept(activeRegistrar);
@@ -69,6 +73,11 @@ public class MatthiesenLibClient {
         PENDING_SCREEN_REGISTRATIONS.add(registration);
     }
 
+    /**
+     * Binds the provided ScreenRegistrar to the client and executes any pending screen registrations. This method is called by the platform-specific
+     * implementation once the client is ready to register screens. It ensures that all queued registrations are processed and that the active registrar is set for
+     * any future registrations. This method is synchronized to ensure thread safety when modifying the active registrar and the pending registrations list.
+     */
     private static synchronized void bindRegistrar(ScreenRegistrar registrar) {
         activeRegistrar = registrar;
 

@@ -1,4 +1,4 @@
-package dev.matthiesen.neoforge.matthiesen_lib.platform;
+package dev.matthiesen.neoforge.matthiesen_lib.helper;
 
 import dev.matthiesen.common.matthiesen_lib.interfaces.ScreenRegistrar;
 import net.neoforged.bus.api.IEventBus;

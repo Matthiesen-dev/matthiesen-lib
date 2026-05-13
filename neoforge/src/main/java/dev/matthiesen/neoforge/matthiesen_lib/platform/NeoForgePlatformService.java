@@ -2,6 +2,7 @@ package dev.matthiesen.neoforge.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
+import dev.matthiesen.neoforge.matthiesen_lib.helper.NeoForgeRegistryHelper;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;

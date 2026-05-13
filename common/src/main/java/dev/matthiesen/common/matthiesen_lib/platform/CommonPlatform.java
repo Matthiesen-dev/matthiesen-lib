@@ -21,7 +21,6 @@ import java.util.function.Supplier;
  * utilities like accessing the Minecraft server and checking if a mod is loaded. This allows mod developers to write code that is compatible with
  * multiple mod loaders without having to worry about the specific implementation details of each loader.
  */
-@SuppressWarnings("unused")
 public interface CommonPlatform {
     // Registry Helpers
     <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType);

@@ -1,4 +1,4 @@
-package dev.matthiesen.neoforge.matthiesen_lib.platform;
+package dev.matthiesen.neoforge.matthiesen_lib.helper;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.CriterionTrigger;
