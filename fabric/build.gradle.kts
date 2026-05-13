@@ -39,9 +39,9 @@ mavenPublishing {
     publishToMavenCentral()
     signAllPublications()
     coordinates(
-        project.property("maven_group").toString(),
+        project.group.toString(),
         "${rootProject.property("archives_base_name")}-${project.name}",
-        "${rootProject.version}"
+        project.version.toString()
     )
 
     pom {
