@@ -15,6 +15,6 @@ public class MatthiesenLibFabric implements ModInitializer {
     @Override
     public void onInitialize() {
         Constants.createInfoLog("Loading for Fabric Mod Loader");
-        MatthiesenLib.initialize();
+        MatthiesenLib.modInitializer();
     }
 }

@@ -2,13 +2,15 @@ package dev.matthiesen.common.matthiesen_lib.platform;
 
 import dev.matthiesen.common.matthiesen_lib.interfaces.ScreenRegistrar;
 
+import java.util.function.Consumer;
+
 /**
  * Interface for client-specific platform implementations. This allows for registering client-only features such as menu screens without causing issues on server environments.
  */
 @SuppressWarnings("unused")
 public interface CommonClientPlatform {
     /**
-     * Registers menu screens using the provided ScreenRegistrar. This method should be called during client initialization to ensure that all menu screens are properly registered.
+     * Invokes the registration callback with a platform-specific ScreenRegistrar at the correct client lifecycle stage.
      */
-    void registerMenuScreens(ScreenRegistrar registrar);
+    void registerMenuScreens(Consumer<ScreenRegistrar> registrationHandler);
 }
