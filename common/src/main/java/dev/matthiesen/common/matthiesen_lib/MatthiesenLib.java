@@ -1,6 +1,8 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import com.mojang.serialization.MapCodec;
+import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib.command.MatthiesenLibCommands;
 import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
@@ -39,7 +41,15 @@ public class MatthiesenLib {
         }
 
         initialized = true;
+        MatthiesenLibCommands.modInitializer();
         Constants.createInfoLog("Initialized common");
+    }
+
+    /**
+     * Registers a command implementation using the platform-agnostic command registry.
+     */
+    public static void registerCommand(AbstractCommand command) {
+        MatthiesenLibCommands.registerCommand(command);
     }
 
     /**

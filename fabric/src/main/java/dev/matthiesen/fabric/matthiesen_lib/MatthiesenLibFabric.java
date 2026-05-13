@@ -1,7 +1,7 @@
 package dev.matthiesen.fabric.matthiesen_lib;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import net.fabricmc.api.ModInitializer;
 
 /**
