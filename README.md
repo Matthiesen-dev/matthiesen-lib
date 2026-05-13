@@ -155,14 +155,6 @@ boolean allowed = MatthiesenLib.getPermissionValidator()
 - Fabric: uses `fabric-permissions-api-v0` when present, otherwise falls back to vanilla levels
 - NeoForge: uses NeoForge `PermissionAPI` nodes for registered permissions
 
-### Custom validators
-
-If you need another permission backend, implement `PermissionValidator` and set it:
-
-```java
-MatthiesenLib.setPermissionValidator(new MyPermissionValidator());
-```
-
 ## Unified Screen Registration
 
 Register menu screens from common/client code:
