@@ -3,6 +3,7 @@ package dev.matthiesen.neoforge.matthiesen_lib;
 import dev.matthiesen.common.matthiesen_lib.Constants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import net.neoforged.api.distmarker.Dist;
+import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
@@ -19,7 +20,7 @@ public class MatthiesenLibNeoForgeClient {
         modBus.register(this);
     }
 
-    @SubscribeEvent
+    @SubscribeEvent(priority = EventPriority.LOWEST)
     public void registerScreens(RegisterMenuScreensEvent event) {
         MatthiesenLibClient.applyScreenRegistrations(event::register);
     }
