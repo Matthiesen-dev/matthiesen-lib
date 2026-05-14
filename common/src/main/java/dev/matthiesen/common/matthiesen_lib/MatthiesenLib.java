@@ -151,6 +151,7 @@ public class MatthiesenLib {
          */
         public RegistryBuilder(String modId) {
             this.modId = modId;
+            MatthiesenLibConstants.createInfoLog("Created registry builder for mod ID: " + modId);
         }
 
         /**
