@@ -332,6 +332,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static CreativeModeTab.Builder newCreativeTabBuilder() {
         return PLATFORM.newCreativeTabBuilder();
     }
@@ -353,6 +354,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
         return PLATFORM.registerBlockEntity(id, blockEntityType);
     }
@@ -371,6 +373,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends Block> Supplier<T> registerBlock(ResourceLocation id, Supplier<T> block) {
         return PLATFORM.registerBlock(id, block);
     }
@@ -389,6 +392,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends Item> Supplier<T> registerItem(ResourceLocation id, Supplier<T> item) {
         return PLATFORM.registerItem(id, item);
     }
@@ -407,6 +411,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends SoundEvent> Supplier<T> registerSound(ResourceLocation id, Supplier<T> sound) {
         return PLATFORM.registerSound(id, sound);
     }
@@ -427,6 +432,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(ResourceLocation id, Supplier<T> tab) {
         return PLATFORM.registerCreativeModeTab(id, tab);
     }
@@ -448,6 +454,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends CriterionTrigger<?>> Supplier<T> registerCriteriaTriggers(ResourceLocation id, Supplier<T> criterionTrigger) {
         return PLATFORM.registerCriteriaTriggers(id, criterionTrigger);
     }
@@ -468,6 +475,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends ResourceLocation> Supplier<T> registerStats(ResourceLocation id, Supplier<T> stats) {
         return PLATFORM.registerStats(id, stats);
     }
@@ -486,6 +494,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends MenuType<?>> Supplier<T> registerMenuType(ResourceLocation id, Supplier<T> menuType) {
         return PLATFORM.registerMenuType(id, menuType);
     }
@@ -504,6 +513,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends DataComponentType<?>> Supplier<T> registerDataComponentType(ResourceLocation id, Supplier<T> component) {
         return PLATFORM.registerDataComponentType(id, component);
     }
@@ -526,6 +536,7 @@ public class MatthiesenLib {
      * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
      * for consistency and improved usability.
      */
+    @Deprecated(forRemoval = true)
     public static <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation id, Supplier<T> codec) {
         return PLATFORM.registerEntityEffects(id, codec);
     }
