@@ -13,7 +13,8 @@ import java.util.function.Supplier;
 
 /**
  * Client-side facade for MatthiesenLib. Public registration methods are exposed here,
- * while internal screen queue/state management lives in MatthiesenLibScreenManager.
+ * while internal management lives in their own classes to keep the public API clean and focused.
+ * <p>Do not call modInitializer or applyScreenRegistrations from an external mod — these are called by the platform at the correct lifecycle moments.</p>
  */
 @SuppressWarnings("unused")
 public class MatthiesenLibClient {
