@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib;
 
-import dev.matthiesen.common.matthiesen_lib.core.client.MatthiesenLibScreenManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
