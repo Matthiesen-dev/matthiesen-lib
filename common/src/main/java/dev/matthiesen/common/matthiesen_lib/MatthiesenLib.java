@@ -132,8 +132,195 @@ public class MatthiesenLib {
     }
 
     /**
+     * A builder class for registering various types of content (e.g., items, blocks, block entities, etc.) with automatic prefixing of the mod ID to the ResourceLocation IDs.
+     */
+    public static class RegistryBuilder {
+        /**
+         * The mod ID to use as a prefix for all registered content. This should be the unique identifier for your mod (e.g., "mymod"),
+         * and it will be automatically prefixed to the names of all registered items, blocks, etc. when creating their ResourceLocation IDs.
+         * This helps to ensure that all registered content is properly namespaced and avoids potential conflicts with other mods.
+         */
+        private final String modId;
+
+        /**
+         * Creates a new RegistryBuilder instance for the specified mod ID. This builder provides convenient methods for registering various types of
+         * content (e.g., items, blocks, block entities, etc.) with automatic prefixing of the mod ID to the ResourceLocation IDs. This helps to ensure that
+         * all registered content is properly namespaced and avoids potential conflicts with other mods.
+         * @param modId The mod ID to use as a prefix for all registered content. This should be the unique identifier for your mod (e.g., "mymod"),
+         *              and it will be automatically prefixed to the names of all registered items, blocks, etc. when creating their ResourceLocation IDs.
+         */
+        public RegistryBuilder(String modId) {
+            this.modId = modId;
+        }
+
+        /**
+         * Creates a new CreativeModeTab.Builder instance using the platform-specific implementation provided by the CommonPlatform service.
+         * @return a new CreativeModeTab.Builder instance
+         */
+        public CreativeModeTab.Builder newCreativeTabBuilder() {
+            return PLATFORM.newCreativeTabBuilder();
+        }
+
+        /**
+         * Registers a new item with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the item being registered. This should be a subclass of Item, and it will be used to create instances of the item when needed.
+         * @param name The name to register the item under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param item A Supplier that provides an instance of the Item to register. This supplier will be called when the item needs
+         *             to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered Item. This allows other parts of the mod to access the item after it has
+         * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
+            return PLATFORM.registerItem(ResourceLocation.fromNamespaceAndPath(modId, name), item);
+        }
+
+        /**
+         * Registers a new block with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the block being registered. This should be a subclass of Block, and it will be used to create instances of the block when needed.
+         * @param name The name to register the block under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param block A Supplier that provides an instance of the Block to register. This supplier will be called when the block
+         *              needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered Block. This allows other parts of the mod to access the block after it has
+         * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends Block> Supplier<T> registerBlock(String name, Supplier<T> block) {
+            return PLATFORM.registerBlock(ResourceLocation.fromNamespaceAndPath(modId, name), block);
+        }
+
+        /**
+         * Registers a new block entity type with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the block entity being registered. This should be a subclass of BlockEntity, and it will be
+         *           used to create instances of the block entity when needed.
+         * @param name The name to register the block entity type under. This should be unique within the mod and should follow the standard
+         *             format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param blockEntitySupplier A Supplier that provides an instance of the BlockEntityType to register. This supplier will be called when the block entity type needs to be created,
+         *                            allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered BlockEntityType. This allows other parts of the mod to access the block entity type after it has been registered,
+         *                        and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(String name, Supplier<BlockEntityType<T>> blockEntitySupplier) {
+            return PLATFORM.registerBlockEntity(ResourceLocation.fromNamespaceAndPath(modId, name), blockEntitySupplier);
+        }
+
+        /**
+         * Registers a new creative mode tab with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the creative mode tab being registered. This should be a subclass of CreativeModeTab, and it will be
+         *           used to create instances of the creative mode tab when needed.
+         * @param name The name to register the creative mode tab under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param tab A Supplier that provides an instance of the CreativeModeTab to register. This supplier will be called when the
+         *            creative mode tab needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered CreativeModeTab. This allows other parts of the mod to access the creative
+         * mode tab after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(String name, Supplier<T> tab) {
+            return PLATFORM.registerCreativeModeTab(ResourceLocation.fromNamespaceAndPath(modId, name), tab);
+        }
+
+        /**
+         * Registers a new sound event with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the sound event being registered. This should be a subclass of SoundEvent, and it will be used to create instances of the sound event when needed.
+         * @param name The name to register the sound event under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param sound A Supplier that provides an instance of the SoundEvent to register. This supplier will be called when the sound
+         *              event needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered SoundEvent. This allows other parts of the mod to access the sound event after
+         * it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends SoundEvent> Supplier<T> registerSound(String name, Supplier<T> sound) {
+            return PLATFORM.registerSound(ResourceLocation.fromNamespaceAndPath(modId, name), sound);
+        }
+
+        /**
+         * Registers a new custom criterion trigger with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the criterion trigger being registered. This should be a subclass of CriterionTrigger, and it will be
+         *           used to create instances of the criterion trigger when needed.
+         * @param name The name to register the criterion trigger under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param criterionTrigger A Supplier that provides an instance of the CriterionTrigger to register. This supplier will be called
+         *                         when the criterion trigger needs to be created, allowing for lazy initialization and avoiding potential
+         *                         issues with static initialization order.
+         * @return A Supplier that provides the registered CriterionTrigger. This allows other parts of the mod to access the criterion
+         * trigger after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends CriterionTrigger<?>> Supplier<T> registerCriteriaTriggers(String name, Supplier<T> criterionTrigger) {
+            return PLATFORM.registerCriteriaTriggers(ResourceLocation.fromNamespaceAndPath(modId, name), criterionTrigger);
+        }
+
+        /**
+         * Registers a new custom statistic with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the statistic being registered. This should be a subclass of ResourceLocation, and it will be used to
+         *           create instances of the statistic when needed.
+         * @param name The name to register the statistic under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param stats A Supplier that provides an instance of the statistic to register. This supplier will be called when the statistic
+         *              needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered statistic. This allows other parts of the mod to access the statistic after it
+         * has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends ResourceLocation> Supplier<T> registerStats(String name, Supplier<T> stats) {
+            return PLATFORM.registerStats(ResourceLocation.fromNamespaceAndPath(modId, name), stats);
+        }
+
+        /**
+         * Registers a new MenuType with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the menu being registered. This should be a subclass of MenuType, and it will be used to create instances of the menu when needed.
+         * @param name The name to register the menu under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param menuType A Supplier that provides an instance of the MenuType to register. This supplier will be called when the menu type
+         *                 needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered MenuType. This allows other parts of the mod to access the menu type after it has
+         * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends MenuType<?>> Supplier<T> registerMenuType(String name, Supplier<T> menuType) {
+            return PLATFORM.registerMenuType(ResourceLocation.fromNamespaceAndPath(modId, name), menuType);
+        }
+
+        /**
+         * Registers a new DataComponentType with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the data component being registered. This should be a subclass of DataComponentType, and it will be used to create instances of the data component when needed.
+         * @param name The name to register the data component type under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param component A Supplier that provides an instance of the DataComponentType to register. This supplier will be called when the
+         *                  data component type needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered DataComponentType. This allows other parts of the mod to access the data component
+         * type after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         */
+        public <T extends DataComponentType<?>> Supplier<T> registerDataComponentType(String name, Supplier<T> component) {
+            return PLATFORM.registerDataComponentType(ResourceLocation.fromNamespaceAndPath(modId, name), component);
+        }
+
+        /**
+         * Registers a new EnchantmentEntityEffect type with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         *
+         * @param <T> The type of the enchantment entity effect being registered. This should be a subclass of MapCodec that produces
+         *           instances of EnchantmentEntityEffect, and it will be used to create instances of the enchantment entity effect when needed.
+         * @param name The name to register the enchantment entity effect under. This should be unique within the mod and should follow the standard
+         *             format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param codec A Supplier that provides an instance of the MapCodec to register for the enchantment entity effect. This supplier
+         *              will be called when the enchantment entity effect needs to be created, allowing for lazy initialization and avoiding
+         *              potential issues with static initialization order.
+         * @return A Supplier that provides the registered MapCodec for the enchantment entity effect. This allows other parts of the mod to
+         * access the enchantment entity effect codec after it has been registered, and it will return the correct instance regardless of when
+         * it is called during the mod's initialization process.
+         */
+        public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(String name, Supplier<T> codec) {
+            return PLATFORM.registerEntityEffects(ResourceLocation.fromNamespaceAndPath(modId, name), codec);
+        }
+    }
+
+    // TODO: DEPRECATED - TO BE REMOVED
+
+    /**
      * Creates a new CreativeModeTab.Builder instance using the platform-specific implementation provided by the CommonPlatform service.
      * @return a new CreativeModeTab.Builder instance
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static CreativeModeTab.Builder newCreativeTabBuilder() {
         return PLATFORM.newCreativeTabBuilder();
@@ -151,6 +338,10 @@ public class MatthiesenLib {
      *                        allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered BlockEntityType. This allows other parts of the mod to access the block entity type after it has been registered,
      *                        and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
         return PLATFORM.registerBlockEntity(id, blockEntityType);
@@ -165,6 +356,10 @@ public class MatthiesenLib {
      *              needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered Block. This allows other parts of the mod to access the block after it has
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends Block> Supplier<T> registerBlock(ResourceLocation id, Supplier<T> block) {
         return PLATFORM.registerBlock(id, block);
@@ -179,6 +374,10 @@ public class MatthiesenLib {
      *             to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered Item. This allows other parts of the mod to access the item after it has
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends Item> Supplier<T> registerItem(ResourceLocation id, Supplier<T> item) {
         return PLATFORM.registerItem(id, item);
@@ -193,6 +392,10 @@ public class MatthiesenLib {
      *              event needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered SoundEvent. This allows other parts of the mod to access the sound event after
      * it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends SoundEvent> Supplier<T> registerSound(ResourceLocation id, Supplier<T> sound) {
         return PLATFORM.registerSound(id, sound);
@@ -209,6 +412,10 @@ public class MatthiesenLib {
      *            creative mode tab needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered CreativeModeTab. This allows other parts of the mod to access the creative
      * mode tab after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(ResourceLocation id, Supplier<T> tab) {
         return PLATFORM.registerCreativeModeTab(id, tab);
@@ -226,6 +433,10 @@ public class MatthiesenLib {
      *                         issues with static initialization order.
      * @return A Supplier that provides the registered CriterionTrigger. This allows other parts of the mod to access the criterion
      * trigger after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends CriterionTrigger<?>> Supplier<T> registerCriteriaTriggers(ResourceLocation id, Supplier<T> criterionTrigger) {
         return PLATFORM.registerCriteriaTriggers(id, criterionTrigger);
@@ -242,6 +453,10 @@ public class MatthiesenLib {
      *              needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered statistic. This allows other parts of the mod to access the statistic after it
      * has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends ResourceLocation> Supplier<T> registerStats(ResourceLocation id, Supplier<T> stats) {
         return PLATFORM.registerStats(id, stats);
@@ -256,6 +471,10 @@ public class MatthiesenLib {
      *                 needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered MenuType. This allows other parts of the mod to access the menu type after it has
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends MenuType<?>> Supplier<T> registerMenuType(ResourceLocation id, Supplier<T> menuType) {
         return PLATFORM.registerMenuType(id, menuType);
@@ -270,6 +489,10 @@ public class MatthiesenLib {
      *                  data component type needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
      * @return A Supplier that provides the registered DataComponentType. This allows other parts of the mod to access the data component
      * type after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends DataComponentType<?>> Supplier<T> registerDataComponentType(ResourceLocation id, Supplier<T> component) {
         return PLATFORM.registerDataComponentType(id, component);
@@ -288,6 +511,10 @@ public class MatthiesenLib {
      * @return A Supplier that provides the registered MapCodec for the enchantment entity effect. This allows other parts of the mod to
      * access the enchantment entity effect codec after it has been registered, and it will return the correct instance regardless of when
      * it is called during the mod's initialization process.
+     *
+     * @deprecated Use the new RegistryBuilder API instead, which allows for automatic prefixing of the mod ID and better organization of registrations.
+     * This method will still work, but it is recommended to switch to the RegistryBuilder API for new code and to eventually migrate existing code to it
+     * for consistency and improved usability.
      */
     public static <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation id, Supplier<T> codec) {
         return PLATFORM.registerEntityEffects(id, codec);
