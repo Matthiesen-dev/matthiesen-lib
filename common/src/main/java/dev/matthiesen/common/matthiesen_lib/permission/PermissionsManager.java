@@ -66,11 +66,11 @@ public class PermissionsManager {
     }
 
     /**
-     * Gets the count of registered permissions.
+     * Gets the count of registered pending permissions.
      *
-     * @return The number of permissions registered.
+     * @return The number of permissions pending registration.
      */
-    public int getPermissionCount() {
-        return PERMISSIONS.size();
+    public int getPendingPermissionCount() {
+        return PENDING_PERMISSIONS.size();
     }
 }

@@ -115,7 +115,7 @@ public class NeoForgePermissionValidator implements PermissionValidator {
      */
     private List<PermissionNode<?>> createNodes() {
         var permManager = MatthiesenLib.getPermissionsManager();
-        Constants.createInfoLog("Trying to Register " + permManager.getPermissionCount() + " NeoForge permission nodes");
+        Constants.createInfoLog("Trying to Register " + permManager.getPendingPermissionCount() + " NeoForge permission nodes");
         return permManager.all().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
                     permission.getIdentifier(),
