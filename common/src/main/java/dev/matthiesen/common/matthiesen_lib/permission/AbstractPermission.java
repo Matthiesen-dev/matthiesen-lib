@@ -37,10 +37,8 @@ public abstract class AbstractPermission implements Permission {
      * The permission namespace is not used for generating the identifier or literal string, but is purely for providing a more descriptive
      * toString representation of the permission for debugging purposes.
      * <p>
-     *     Example for a permission that would be part of the Matthiesen Lib library:
-     *     <ul>
-     *          <li>getPermissionNamespace() would return "MatthiesenLib"</li>
-     *     </ul>
+     *     Example for a permission that would be part of the Matthiesen Lib library: <br />
+     *     getPermissionNamespace() would return "MatthiesenLib"
      * </p>
      * @return The permission namespace for this permission, which is used in the toString method for debugging purposes. This should be a string that represents
      * the category or grouping of permissions that this permission belongs to, and is used to provide a more descriptive representation of the permission when debugging.
