@@ -112,7 +112,9 @@ public class NeoForgePermissionValidator implements PermissionValidator {
      * @return A list of PermissionNode objects representing the permissions registered in the MatthiesenLib PermissionsManager, which will be added to the PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
      */
     private List<PermissionNode<?>> createNodes() {
-        return MatthiesenLib.getPermissionsManager().all().stream().map(permission -> {
+        var permManager = MatthiesenLib.getPermissionsManager();
+        Constants.createInfoLog("Trying to Register " + permManager.getPermissionCount() + " NeoForge permission nodes");
+        return permManager.all().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
                     permission.getIdentifier(),
                     PermissionTypes.BOOLEAN,
