@@ -1,6 +1,5 @@
-package dev.matthiesen.common.matthiesen_lib.interfaces;
+package dev.matthiesen.common.matthiesen_lib.permission;
 
-import dev.matthiesen.common.matthiesen_lib.permission.PermissionLevel;
 import net.minecraft.resources.ResourceLocation;
 
 /**

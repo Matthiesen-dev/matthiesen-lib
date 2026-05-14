@@ -7,7 +7,7 @@ import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibPermissionsManager
 import dev.matthiesen.common.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
-import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
+import dev.matthiesen.common.matthiesen_lib.permission.Permission;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;

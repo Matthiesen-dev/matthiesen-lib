@@ -9,7 +9,6 @@ import net.minecraft.world.inventory.MenuType;
 /**
  * Utility interface for registering menu screens. This is used to avoid having to duplicate registration across platforms.
  */
-@SuppressWarnings("unused")
 @FunctionalInterface
 public interface MatthiesenLibScreenRegistrar {
     /**

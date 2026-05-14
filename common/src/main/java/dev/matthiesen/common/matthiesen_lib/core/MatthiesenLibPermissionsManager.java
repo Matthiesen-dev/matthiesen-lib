@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
-import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
+import dev.matthiesen.common.matthiesen_lib.permission.Permission;
 
 import java.util.ArrayList;
 import java.util.List;
