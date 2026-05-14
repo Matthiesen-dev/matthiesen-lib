@@ -89,6 +89,11 @@ public class MatthiesenLibClient {
         appliedRegistrations = REGISTERED_SCREENS.size();
     }
 
+    /**
+     * Internal method to register a screen entry. This method is synchronized to ensure thread safety when adding entries to the list and applying registrations.
+     * @param entry The ScreenEntry to register, which contains the menu type and screen constructor for the screen. This entry will be added to the list of registered
+     *              screens, and if the active registrar is already set, it will be applied immediately.
+     */
     private static synchronized void registerMenuScreenInternal(ScreenEntry<?, ?> entry) {
         REGISTERED_SCREENS.add(entry);
 
