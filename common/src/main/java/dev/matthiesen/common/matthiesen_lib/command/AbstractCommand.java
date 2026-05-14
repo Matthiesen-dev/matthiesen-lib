@@ -27,7 +27,8 @@ public abstract class AbstractCommand {
     /**
      * Function to execute when the command is run. This is called by the CommandManager when the command is executed.
      * @param context The command context containing information about the command execution.
-      * @return The result of the command execution. This is used to determine if the command was successful or not. A return value of 0 indicates failure, while a positive value indicates success.
+      * @return The result of the command execution. This is used to determine if the command was successful or not.
+     * A return value of 0 indicates failure, while a positive value indicates success.
      */
     public abstract int action(CommandContext<CommandSourceStack> context);
 }

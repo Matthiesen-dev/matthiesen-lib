@@ -9,18 +9,21 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 
 /**
- * Utility class for decoding items from strings. If the string cannot be decoded, it will return the provided fallback item and log an error.
+ * Utility class for decoding items from strings. If the string cannot be decoded, it will return the provided fallback
+ * item and log an error.
  */
 @SuppressWarnings("unused")
 public class ItemDecoder {
 
     /**
-     * Default constructor for the ItemDecoder class. This constructor is used when creating a new instance of the ItemDecoder class. Since all methods in this class are static, there is no need to create an instance of the class to use its methods.
+     * Default constructor for the ItemDecoder class. This constructor is used when creating a new instance of the ItemDecoder
+     * class. Since all methods in this class are static, there is no need to create an instance of the class to use its methods.
      */
     public ItemDecoder() {}
 
     /**
-     * Decodes an item from a string. The string should be in the format "namespace:path". If the string cannot be decoded, it will return the provided fallback item and log an error.
+     * Decodes an item from a string. The string should be in the format "namespace:path". If the string cannot be decoded,
+     * it will return the provided fallback item and log an error.
      *
      * @param string The string to decode, in the format "namespace:path".
      * @param fallback The item to return if the string cannot be decoded.
@@ -38,7 +41,8 @@ public class ItemDecoder {
     }
 
     /**
-     * Decodes a block from a string. The string should be in the format "namespace:path". If the string cannot be decoded, it will return the provided fallback block and log an error.
+     * Decodes a block from a string. The string should be in the format "namespace:path". If the string cannot be decoded,
+     * it will return the provided fallback block and log an error.
      *
      * @param string The string to decode, in the format "namespace:path".
      * @param fallback The block to return if the string cannot be decoded.

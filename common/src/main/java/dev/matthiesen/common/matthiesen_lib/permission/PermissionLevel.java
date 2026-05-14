@@ -2,7 +2,8 @@ package dev.matthiesen.common.matthiesen_lib.permission;
 
 /**
  * Enum representing different permission levels for command execution in Minecraft.
- * These levels are based on the standard Minecraft permission levels, which determine what commands a player can execute based on their permissions. The levels are as follows:
+ * These levels are based on the standard Minecraft permission levels, which determine what commands a player can execute based on their permissions.
+ * The levels are as follows:
  * <ul>
  *     <li>NONE (0): No permissions. The player cannot execute any commands.</li>
  *     <li>SPAWN_PROTECTION_BYPASS (1): The player can bypass spawn protection, but cannot execute any other commands.</li>
@@ -43,18 +44,22 @@ public enum PermissionLevel {
     }
 
     /**
-     * Gets the numerical value associated with this permission level. This is used for comparing permission levels and determining if a player has sufficient permissions to execute a command.
+     * Gets the numerical value associated with this permission level. This is used for comparing permission levels and determining if a player has
+     * sufficient permissions to execute a command.
      *
-     * @return The numerical value of this permission level, where higher values indicate higher permissions. For example, ALL_COMMANDS has a value of 4, which is the highest permission level, while NONE has a value of 0, which is the lowest permission level.
+     * @return The numerical value of this permission level, where higher values indicate higher permissions. For example, ALL_COMMANDS has a value of 4,
+     * which is the highest permission level, while NONE has a value of 0, which is the lowest permission level.
      */
     public int getNumericalValue() {
         return numericalValue;
     }
 
     /**
-     * Gets the PermissionLevel corresponding to the given numerical value. This is used for converting between numerical permission levels and their corresponding enum values. If the provided value does not correspond to any PermissionLevel, an IllegalArgumentException is thrown.
+     * Gets the PermissionLevel corresponding to the given numerical value. This is used for converting between numerical permission levels and their
+     * corresponding enum values. If the provided value does not correspond to any PermissionLevel, an IllegalArgumentException is thrown.
      *
-     * @param value The numerical value of the permission level to retrieve. This should be a value between 0 and 4, where 0 corresponds to NONE and 4 corresponds to ALL_COMMANDS.
+     * @param value The numerical value of the permission level to retrieve. This should be a value between 0 and 4, where 0 corresponds to NONE and 4
+     *              corresponds to ALL_COMMANDS.
      * @return The PermissionLevel corresponding to the given numerical value.
      */
     public static PermissionLevel byNumericValue(int value) {

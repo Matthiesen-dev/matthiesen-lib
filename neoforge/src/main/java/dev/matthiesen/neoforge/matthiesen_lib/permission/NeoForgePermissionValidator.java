@@ -108,8 +108,10 @@ public class NeoForgePermissionValidator implements PermissionValidator {
     }
 
     /**
-     * Creates permission nodes for all permissions registered in the MatthiesenLib PermissionsManager and adds them to the internal nodes map for lookup when validating permissions.
-     * @return A list of PermissionNode objects representing the permissions registered in the MatthiesenLib PermissionsManager, which will be added to the PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
+     * Creates permission nodes for all permissions registered in the MatthiesenLib PermissionsManager and adds them to the internal nodes map for lookup
+     * when validating permissions.
+     * @return A list of PermissionNode objects representing the permissions registered in the MatthiesenLib PermissionsManager, which will be added to the
+     * PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
      */
     private List<PermissionNode<?>> createNodes() {
         var permManager = MatthiesenLib.getPermissionsManager();
@@ -127,7 +129,8 @@ public class NeoForgePermissionValidator implements PermissionValidator {
     }
 
     /**
-     * Finds the PermissionNode associated with the given Permission. This method looks up the permission node in the internal nodes map using the permission's ResourceLocation identifier.
+     * Finds the PermissionNode associated with the given Permission. This method looks up the permission node in the internal nodes map using the permission's
+     * ResourceLocation identifier.
      * @param permission The Permission for which to find the associated PermissionNode.
      * @return The PermissionNode associated with the given Permission, or null if no node is found for the permission's identifier.
      */
@@ -136,7 +139,8 @@ public class NeoForgePermissionValidator implements PermissionValidator {
     }
 
     /**
-     * Extracts the ServerPlayer from a CommandSourceStack. This method checks if the command source is a player and returns the associated ServerPlayer object, or null if the source is not a player.
+     * Extracts the ServerPlayer from a CommandSourceStack. This method checks if the command source is a player and returns the associated ServerPlayer
+     * object, or null if the source is not a player.
      * @param source The CommandSourceStack from which to extract the ServerPlayer.
      * @return The ServerPlayer associated with the command source, or null if the source is not a player.
      */

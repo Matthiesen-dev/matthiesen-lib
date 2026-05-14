@@ -11,7 +11,8 @@ import net.minecraft.world.Container;
 public class NoHighlightSlotButton extends SlotButton {
 
     /**
-     * Default constructor for the NoHighlightSlotButton class. This constructor is used when creating a new instance of the NoHighlightSlotButton class. It takes in the container, slot index, and x and y coordinates for the button, and passes them to the superclass constructor
+     * Default constructor for the NoHighlightSlotButton class. This constructor is used when creating a new instance of the NoHighlightSlotButton class.
+     * It takes in the container, slot index, and x and y coordinates for the button, and passes them to the superclass constructor
      * @param container The current container for the button
      * @param slot The index of the slot that this button represents in the container
      * @param x The x coordinate of the button in the GUI. This is used to position the button correctly within the GUI layout.

@@ -47,10 +47,14 @@ public abstract class AbstractSimpleScreen<T extends AbstractContainerMenu> exte
     private final ResourceLocation BACKGROUND = getBackgroundTexture();
 
     /**
-     * Default constructor for the AbstractSimpleScreen class. This constructor initializes the screen with the specified menu, inventory, and title component,
-     * @param abstractContainerMenu The menu that this screen is associated with. This should be an instance of a subclass of AbstractContainerMenu that matches the menu type used for the screen's container.
-     * @param inventory The player's inventory. This is used to display the player's inventory in the screen and to allow the player to interact with it as needed.
-     * @param component The title component for this screen. This is used to display the title of the screen, and it can be set to an empty component if the screen does not need a title.
+     * Default constructor for the AbstractSimpleScreen class. This constructor initializes the screen with the specified
+     * menu, inventory, and title component,
+     * @param abstractContainerMenu The menu that this screen is associated with. This should be an instance of a subclass of
+     *                              AbstractContainerMenu that matches the menu type used for the screen's container.
+     * @param inventory The player's inventory. This is used to display the player's inventory in the screen and to allow the player
+     *                  to interact with it as needed.
+     * @param component The title component for this screen. This is used to display the title of the screen, and it can be set to an
+     *                  empty component if the screen does not need a title.
      */
     public AbstractSimpleScreen(T abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
