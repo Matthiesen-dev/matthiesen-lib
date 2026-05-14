@@ -1,12 +1,10 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
-import dev.matthiesen.common.matthiesen_lib.command.MatthiesenLibCommands;
+import dev.matthiesen.common.matthiesen_lib.command.*;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
 import dev.matthiesen.common.matthiesen_lib.interfaces.PermissionValidator;
-import dev.matthiesen.common.matthiesen_lib.permission.PermissionsManager;
-import dev.matthiesen.common.matthiesen_lib.permission.VanillaPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.permission.*;
 import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
@@ -39,7 +37,9 @@ public class MatthiesenLib {
     private static boolean initialized;
 
     /**
-     * Default constructor for the MatthiesenLib class. This constructor does not perform any initialization, as the mod's setup is handled in the modInitializer method. The constructor is provided for completeness and to allow for potential future use if instance-specific initialization is needed, but currently, all functionality is static and does not require an instance of the MatthiesenLib class.
+     * Default constructor for the MatthiesenLib class. This constructor does not perform any initialization, as the mod's setup is handled in the modInitializer method.
+     * The constructor is provided for completeness and to allow for potential future use if instance-specific initialization is needed, but currently, all functionality is
+     * static and does not require an instance of the MatthiesenLib class.
      */
     public MatthiesenLib() {}
 
