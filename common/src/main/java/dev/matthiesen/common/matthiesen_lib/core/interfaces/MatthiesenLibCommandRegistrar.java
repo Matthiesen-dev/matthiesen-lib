@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.interfaces;
+package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
 import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
 
@@ -6,7 +6,7 @@ import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
  * Utility interface for registering Brigadier commands through platform callbacks.
  */
 @FunctionalInterface
-public interface CommandRegistrar {
+public interface MatthiesenLibCommandRegistrar {
 
     /**
      * Registers a command with the platform's command dispatcher. The provided AbstractCommand will be registered according

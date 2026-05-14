@@ -21,20 +21,20 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Supplier;
 
 /**
- * NeoForgeRegistryHelper is a utility class that provides static methods for registering various types of game content
+ * MatthiesenLibNeoForgeRegistryHelper is a utility class that provides static methods for registering various types of game content
  * (such as blocks, items, sounds, etc.) using the NeoForge mod loader's DeferredRegister system. It maintains a cache of DeferredRegister
  * instances to ensure that each registry is only created once per namespace, and it requires initialization with an IEventBus to function
  * properly. This class serves as a centralized helper for mod developers to easily register their content without having to manage multiple
  * DeferredRegister instances themselves.
  */
-public final class NeoForgeRegistryHelper {
+public final class MatthiesenLibNeoForgeRegistryHelper {
     private static final Map<String, DeferredRegister<?>> DEFERRED_REGISTERS = new ConcurrentHashMap<>();
     private static volatile IEventBus modBus;
 
     /**
      * Private constructor to prevent instantiation of this utility class. All methods are static and should be accessed directly through the class name.
      */
-    private NeoForgeRegistryHelper() {
+    private MatthiesenLibNeoForgeRegistryHelper() {
     }
 
     /**

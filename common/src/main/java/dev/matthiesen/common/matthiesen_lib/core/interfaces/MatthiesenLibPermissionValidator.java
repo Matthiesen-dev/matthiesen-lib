@@ -1,12 +1,13 @@
-package dev.matthiesen.common.matthiesen_lib.interfaces;
+package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
+import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
 /**
  * Interface for validating permissions for players and command sources. This is used to allow mods to implement their own permission systems,
  * such as integrating with a permissions mod or using a custom permission system.
- * The PermissionValidator is used by the CommandManager to validate permissions for commands. When a command is executed, the CommandManager will call
+ * The MatthiesenLibPermissionValidator is used by the CommandManager to validate permissions for commands. When a command is executed, the CommandManager will call
  * the appropriate hasPermission method on the PermissionValidator to determine if the player or command source has the required permission to execute the
  * command. The PermissionValidator can be implemented to check permissions based on a variety of factors, such as the player's UUID, their permission level,
  * or any other criteria that the mod developer chooses to implement. This allows for a high degree of flexibility in how permissions are handled, and allows
@@ -17,7 +18,7 @@ import net.minecraft.server.level.ServerPlayer;
  * </p>
  */
 @SuppressWarnings("unused")
-public interface PermissionValidator {
+public interface MatthiesenLibPermissionValidator {
     /**
      * Invoked when the validator replaces the existing one.
      */

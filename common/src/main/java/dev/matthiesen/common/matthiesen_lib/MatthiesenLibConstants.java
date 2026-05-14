@@ -7,12 +7,12 @@ import org.apache.logging.log4j.Logger;
  * This class contains constants and logging utilities for the Matthiesen Lib mod.
  * It defines the mod ID, mod name, and provides methods for creating info and error logs.
  */
-public class Constants {
+public class MatthiesenLibConstants {
     /**
      * Default constructor for the Constants class. This constructor is private to prevent instantiation of this utility class,
      * as all members are static and there is no need to create an instance of this class.
      */
-    public Constants() {}
+    public MatthiesenLibConstants() {}
 
     /**
      * The unique identifier for the Matthiesen Lib mod. This constant is used for registration and identification purposes

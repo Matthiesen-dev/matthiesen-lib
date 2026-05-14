@@ -1,8 +1,9 @@
-package dev.matthiesen.common.matthiesen_lib.command;
+package dev.matthiesen.common.matthiesen_lib.core;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
-import dev.matthiesen.common.matthiesen_lib.interfaces.CommandRegistrar;
-import dev.matthiesen.common.matthiesen_lib.platform.CommonCommandPlatform;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
+import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,17 +12,16 @@ import java.util.ServiceLoader;
 /**
  * Unified command registry for all supported loaders.
  */
-@SuppressWarnings("unused")
-public final class MatthiesenLibCommands {
-    private static final CommonCommandPlatform COMMON_COMMAND_PLATFORM =
-            ServiceLoader.load(CommonCommandPlatform.class).findFirst().orElseThrow();
+public final class MatthiesenLibCommandsManager {
+    private static final MatthiesenLibCommandPlatform COMMON_COMMAND_PLATFORM =
+            ServiceLoader.load(MatthiesenLibCommandPlatform.class).findFirst().orElseThrow();
 
     private static final List<AbstractCommand> PENDING_COMMANDS = new ArrayList<>();
 
-    private static CommandRegistrar activeRegistrar;
+    private static MatthiesenLibCommandRegistrar activeRegistrar;
     private static boolean initialized;
 
-    private MatthiesenLibCommands() {
+    private MatthiesenLibCommandsManager() {
     }
 
     /**
@@ -33,8 +33,8 @@ public final class MatthiesenLibCommands {
         }
 
         initialized = true;
-        COMMON_COMMAND_PLATFORM.registerCommands(MatthiesenLibCommands::bindRegistrar);
-        Constants.createInfoLog("Initialized command registry");
+        COMMON_COMMAND_PLATFORM.registerCommands(MatthiesenLibCommandsManager::bindRegistrar);
+        MatthiesenLibConstants.createInfoLog("Initialized command registry");
     }
 
     /**
@@ -57,7 +57,7 @@ public final class MatthiesenLibCommands {
      *
      * @param registrar The CommandRegistrar provided by the platform's command registration event.
      */
-    private static synchronized void bindRegistrar(CommandRegistrar registrar) {
+    private static synchronized void bindRegistrar(MatthiesenLibCommandRegistrar registrar) {
         activeRegistrar = registrar;
 
         for (AbstractCommand command : PENDING_COMMANDS) {

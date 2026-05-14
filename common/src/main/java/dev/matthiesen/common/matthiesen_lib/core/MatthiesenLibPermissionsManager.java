@@ -1,6 +1,6 @@
-package dev.matthiesen.common.matthiesen_lib.permission;
+package dev.matthiesen.common.matthiesen_lib.core;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.List;
  * This registry allows permissions to be registered dynamically, either immediately or through a pending queue
  * if the registrar is not yet available. This follows the same pattern as MatthiesenLibCommands and MatthiesenLibClient.
  */
-public class PermissionsManager {
+public class MatthiesenLibPermissionsManager {
     private static final List<Permission> PERMISSIONS = new ArrayList<>();
     private static final List<Permission> PENDING_PERMISSIONS = new ArrayList<>();
     private static boolean initialized;
@@ -19,7 +19,7 @@ public class PermissionsManager {
     /**
      * Default constructor for the PermissionsManager class. No initialization is required as setup is handled in the modInitializer method.
      */
-    public PermissionsManager() {}
+    public MatthiesenLibPermissionsManager() {}
 
     /**
      * Initializes the permission registry. This should be called during the mod's initialization phase.
@@ -30,7 +30,7 @@ public class PermissionsManager {
         }
 
         initialized = true;
-        Constants.createInfoLog("Initialized permission registry");
+        MatthiesenLibConstants.createInfoLog("Initialized permission registry");
     }
 
     /**

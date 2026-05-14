@@ -1,6 +1,6 @@
 package dev.matthiesen.neoforge.matthiesen_lib;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -12,7 +12,7 @@ import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 /**
  * Client-side initialization class for MatthiesenLib on the NeoForge platform, responsible for setting up client-specific resources and event listeners.
  */
-@Mod(value = Constants.MOD_ID, dist = Dist.CLIENT)
+@Mod(value = MatthiesenLibConstants.MOD_ID, dist = Dist.CLIENT)
 public class MatthiesenLibNeoForgeClient {
 
     /**
@@ -21,7 +21,7 @@ public class MatthiesenLibNeoForgeClient {
      *               allowing the mod to listen for client-specific events such as screen registration.
      */
     public MatthiesenLibNeoForgeClient(IEventBus modBus) {
-        Constants.createInfoLog("Loading Client resources for NeoForge Mod Loader");
+        MatthiesenLibConstants.createInfoLog("Loading Client resources for NeoForge Mod Loader");
         MatthiesenLibClient.modInitializer();
         modBus.register(this);
     }

@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib;
 
-import dev.matthiesen.common.matthiesen_lib.interfaces.ScreenRegistrar;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -18,7 +18,7 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public class MatthiesenLibClient {
     private static final List<ScreenEntry<?, ?>> REGISTERED_SCREENS = new CopyOnWriteArrayList<>();
-    private static volatile ScreenRegistrar activeRegistrar;
+    private static volatile MatthiesenLibScreenRegistrar activeRegistrar;
     private static int appliedRegistrations;
 
     private static boolean initialized;
@@ -37,7 +37,7 @@ public class MatthiesenLibClient {
         }
 
         initialized = true;
-        Constants.createInfoLog("Initialized client");
+        MatthiesenLibConstants.createInfoLog("Initialized client");
     }
 
     /**
@@ -79,7 +79,7 @@ public class MatthiesenLibClient {
      * @param registrar The ScreenRegistrar provided by the platform, which is used to register screens with their associated menu types. This should be
      *                  called during the platform's screen registration event, and it will apply all queued screen registrations to the game.
      */
-    public static synchronized void applyScreenRegistrations(ScreenRegistrar registrar) {
+    public static synchronized void applyScreenRegistrations(MatthiesenLibScreenRegistrar registrar) {
         activeRegistrar = registrar;
 
         for (int i = appliedRegistrations; i < REGISTERED_SCREENS.size(); i++) {
@@ -125,7 +125,7 @@ public class MatthiesenLibClient {
          *                  be called during the platform's screen registration event, and it will register the screen with the game so that it can be opened
          *                  when the associated menu is opened.
          */
-        void apply(ScreenRegistrar registrar) {
+        void apply(MatthiesenLibScreenRegistrar registrar) {
             registrar.register(menuType, screenConstructor);
         }
     }

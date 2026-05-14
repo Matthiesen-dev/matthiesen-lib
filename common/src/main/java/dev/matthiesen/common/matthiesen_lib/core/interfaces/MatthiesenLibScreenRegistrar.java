@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.interfaces;
+package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
@@ -11,7 +11,7 @@ import net.minecraft.world.inventory.MenuType;
  */
 @SuppressWarnings("unused")
 @FunctionalInterface
-public interface ScreenRegistrar {
+public interface MatthiesenLibScreenRegistrar {
     /**
      * Registers a menu screen for a given menu type. This should be called during client initialization to ensure that the screen
      * is properly registered and can be opened when needed.

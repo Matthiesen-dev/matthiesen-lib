@@ -1,8 +1,8 @@
-package dev.matthiesen.common.matthiesen_lib.permission;
+package dev.matthiesen.common.matthiesen_lib.core.permission;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
-import dev.matthiesen.common.matthiesen_lib.interfaces.PermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -10,15 +10,15 @@ import net.minecraft.server.level.ServerPlayer;
  * Implementation of the PermissionValidator interface that checks permissions using Minecraft's built-in permission level system.
  * This validator will check if a player has the required permission level to execute a command or perform an action.
  */
-public class VanillaPermissionValidator implements PermissionValidator {
+public class MatthiesenLibVanillaMatthiesenLibPermissionValidator implements MatthiesenLibPermissionValidator {
     /**
      * Creates a new instance of the VanillaPermissionValidator. This constructor does not perform any initialization, as there are no resources to set up for this validator.
      */
-    public VanillaPermissionValidator() {}
+    public MatthiesenLibVanillaMatthiesenLibPermissionValidator() {}
 
     @Override
     public void initialize() {
-        Constants.createInfoLog("Booting VanillaPermissionValidator, permissions will be checked using Minecraft's permission level system, see https://minecraft.wiki/w/Permission_level");
+        MatthiesenLibConstants.createInfoLog("Booting VanillaPermissionValidator, permissions will be checked using Minecraft's permission level system, see https://minecraft.wiki/w/Permission_level");
     }
 
     @Override

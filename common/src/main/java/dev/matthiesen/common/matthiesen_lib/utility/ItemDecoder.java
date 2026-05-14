@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.utility;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -34,7 +34,7 @@ public class ItemDecoder {
         Item item = BuiltInRegistries.ITEM.get(rsLoc);
         if (item == Items.AIR) {
             var fallbackKey = BuiltInRegistries.ITEM.getKey(fallback);
-            Constants.createErrorLog("Failed to decode item from string: " + string + ". Defaulting to fallback item: " + fallbackKey);
+            MatthiesenLibConstants.createErrorLog("Failed to decode item from string: " + string + ". Defaulting to fallback item: " + fallbackKey);
             return fallback;
         }
         return item;
@@ -53,7 +53,7 @@ public class ItemDecoder {
         Block block = BuiltInRegistries.BLOCK.get(rsLoc);
         if (block == Blocks.AIR) {
             var fallbackKey = BuiltInRegistries.BLOCK.getKey(fallback);
-            Constants.createErrorLog("Failed to decode block from string: " + string + ". Defaulting to fallback block: " + fallbackKey);
+            MatthiesenLibConstants.createErrorLog("Failed to decode block from string: " + string + ". Defaulting to fallback block: " + fallbackKey);
             return fallback;
         }
         return block;

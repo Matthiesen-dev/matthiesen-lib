@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.platform;
+package dev.matthiesen.common.matthiesen_lib.core.platform;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.CriterionTrigger;
@@ -16,12 +16,12 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import java.util.function.Supplier;
 
 /**
- * CommonPlatform is an interface that abstracts away the differences between various Minecraft mod loaders (like Fabric and Forge).
+ * MatthiesenLibPlatform is an interface that abstracts away the differences between various Minecraft mod loaders (like Fabric and Forge).
  * It provides methods for registering blocks, items, sounds, creative tabs, criteria triggers, stats, and menu types, as well as general
  * utilities like accessing the Minecraft server and checking if a mod is loaded. This allows mod developers to write code that is compatible with
  * multiple mod loaders without having to worry about the specific implementation details of each loader.
  */
-public interface CommonPlatform {
+public interface MatthiesenLibPlatform {
 
     /**
      * Register a block entity type for the mod. This method allows you to register a new block entity type that can be used in your mod's content, such as for

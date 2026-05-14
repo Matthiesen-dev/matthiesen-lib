@@ -1,9 +1,9 @@
 package dev.matthiesen.neoforge.matthiesen_lib.permission;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
-import dev.matthiesen.common.matthiesen_lib.interfaces.PermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * which allows for integration with various permissions mods that support the API. For more information on NeoForge's PermissionAPI,
  * see <a href="https://docs.minecraftforge.net/en/latest/">...</a> and <a href="https://minecraft.fandom.com/wiki/Permission_level">...</a>
  */
-public class NeoForgePermissionValidator implements PermissionValidator {
+public class MatthiesenLibNeoForgePermissionValidator implements MatthiesenLibPermissionValidator {
     private final Map<ResourceLocation, PermissionNode<Boolean>> nodes = new HashMap<>();
 
     /**
@@ -35,7 +35,7 @@ public class NeoForgePermissionValidator implements PermissionValidator {
      * PermissionsManager and add them to the event. This allows the permissions to be registered with NeoForge's PermissionAPI and used for permission checks
      * when validating permissions for players and command sources.
      */
-    public NeoForgePermissionValidator() {
+    public MatthiesenLibNeoForgePermissionValidator() {
         NeoForge.EVENT_BUS.addListener(this::onPermissionGatherNodes);
     }
 
@@ -45,14 +45,14 @@ public class NeoForgePermissionValidator implements PermissionValidator {
      */
     @SubscribeEvent
     public void onPermissionGatherNodes(PermissionGatherEvent.Nodes event) {
-        Constants.LOGGER.info("Starting Forge permission node registry");
+        MatthiesenLibConstants.LOGGER.info("Starting Forge permission node registry");
         event.addNodes(this.createNodes());
-        Constants.LOGGER.debug("Finished Forge permission node registry");
+        MatthiesenLibConstants.LOGGER.debug("Finished Forge permission node registry");
     }
 
     @Override
     public void initialize() {
-        Constants.LOGGER.info("Booting ForgePermissionApiPermissionValidator, player permissions will be checked using MinecraftForge' PermissionAPI, non player command sources will use Minecraft' permission level system, see https://docs.minecraftforge.net/en/latest/ and https://minecraft.fandom.com/wiki/Permission_level");
+        MatthiesenLibConstants.LOGGER.info("Booting ForgePermissionApiPermissionValidator, player permissions will be checked using MinecraftForge' PermissionAPI, non player command sources will use Minecraft' permission level system, see https://docs.minecraftforge.net/en/latest/ and https://minecraft.fandom.com/wiki/Permission_level");
     }
 
     @Override
@@ -115,7 +115,7 @@ public class NeoForgePermissionValidator implements PermissionValidator {
      */
     private List<PermissionNode<?>> createNodes() {
         var permManager = MatthiesenLib.getPermissionsManager();
-        Constants.createInfoLog("Trying to Register " + permManager.getPendingPermissionCount() + " NeoForge permission nodes");
+        MatthiesenLibConstants.createInfoLog("Trying to Register " + permManager.getPendingPermissionCount() + " NeoForge permission nodes");
         return permManager.all().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
                     permission.getIdentifier(),
@@ -123,7 +123,7 @@ public class NeoForgePermissionValidator implements PermissionValidator {
                     (player, uuid, context) -> player != null && player.hasPermissions(permission.getLevel().getNumericalValue())
             );
             this.nodes.put(permission.getIdentifier(), node);
-            Constants.LOGGER.debug("Registered Forge permission node {}", node.getNodeName());
+            MatthiesenLibConstants.LOGGER.debug("Registered Forge permission node {}", node.getNodeName());
             return node;
         }).collect(Collectors.toList());
     }

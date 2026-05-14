@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib.config;
 
 import com.google.gson.*;
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 
 import java.io.File;
 import java.io.FileReader;
@@ -42,7 +42,7 @@ public class ConfigManager<T> {
             gsonField.setAccessible(true);
             return (Gson) gsonField.get(null);
         } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-            Constants.createInfoLog("No GSON field found in " + configClass.getSimpleName() + ", using default Gson instance");
+            MatthiesenLibConstants.createInfoLog("No GSON field found in " + configClass.getSimpleName() + ", using default Gson instance");
             return new GsonBuilder()
                     .disableHtmlEscaping()
                     .setPrettyPrinting()
@@ -57,7 +57,7 @@ public class ConfigManager<T> {
         try {
             return configClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            Constants.createErrorLog("Failed to create default instance of " + configClass.getSimpleName());
+            MatthiesenLibConstants.createErrorLog("Failed to create default instance of " + configClass.getSimpleName());
             throw new RuntimeException(e);
         }
     }
@@ -68,13 +68,13 @@ public class ConfigManager<T> {
      */
     public T loadConfig() {
         String configFileLoc = System.getProperty("user.dir") + File.separator + "config" +
-                File.separator + Constants.MOD_ID + File.separator + configName + ".json";
-        Constants.createInfoLog("Loading config file found at: " + configFileLoc);
+                File.separator + MatthiesenLibConstants.MOD_ID + File.separator + configName + ".json";
+        MatthiesenLibConstants.createInfoLog("Loading config file found at: " + configFileLoc);
         File configFile = new File(configFileLoc);
         boolean madeDir = configFile.getParentFile().mkdirs();
 
         if (madeDir) {
-            Constants.createInfoLog("Config Directory exists");
+            MatthiesenLibConstants.createInfoLog("Config Directory exists");
         }
 
         // Check config existence and load if it exists, otherwise create default.
@@ -102,7 +102,7 @@ public class ConfigManager<T> {
 
                 fileReader.close();
             } catch (Exception e) {
-                Constants.createErrorLog("Failed to load the config! Using default config as fallback", e);
+                MatthiesenLibConstants.createErrorLog("Failed to load the config! Using default config as fallback", e);
                 config = createDefaultConfig();
             }
         } else {
@@ -123,14 +123,14 @@ public class ConfigManager<T> {
      */
     private JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
         // For every entry in the default config, check if it exists in the file config
-        Constants.createInfoLog("Checking for config merge.");
+        MatthiesenLibConstants.createInfoLog("Checking for config merge.");
         boolean merged = false;
 
         for (String key : defaultConfig.keySet()) {
             if (!fileConfig.has(key)) {
                 // If the file config does not have the key, add it from the default config
                 fileConfig.add(key, defaultConfig.get(key));
-                Constants.createInfoLog(key + " not found in file config, adding from default.");
+                MatthiesenLibConstants.createInfoLog(key + " not found in file config, adding from default.");
                 merged = true;
             } else {
                 // If it's a nested object, recursively merge it
@@ -141,7 +141,7 @@ public class ConfigManager<T> {
         }
 
         if (merged) {
-            Constants.createInfoLog("Successfully merged config.");
+            MatthiesenLibConstants.createInfoLog("Successfully merged config.");
         }
 
         return fileConfig;
@@ -153,15 +153,15 @@ public class ConfigManager<T> {
     public void saveConfig() {
         try {
             String configFileLoc = System.getProperty("user.dir") + File.separator + "config" +
-                    File.separator + Constants.MOD_ID + File.separator + configName + ".json";
-            Constants.createInfoLog("Saving config to: " + configFileLoc);
+                    File.separator + MatthiesenLibConstants.MOD_ID + File.separator + configName + ".json";
+            MatthiesenLibConstants.createInfoLog("Saving config to: " + configFileLoc);
             File configFile = new File(configFileLoc);
             FileWriter fileWriter = new FileWriter(configFile);
             gson.toJson(config, fileWriter);
             fileWriter.flush();
             fileWriter.close();
         } catch (Exception e) {
-            Constants.createErrorLog("Failed to save config", e);
+            MatthiesenLibConstants.createErrorLog("Failed to save config", e);
         }
     }
 

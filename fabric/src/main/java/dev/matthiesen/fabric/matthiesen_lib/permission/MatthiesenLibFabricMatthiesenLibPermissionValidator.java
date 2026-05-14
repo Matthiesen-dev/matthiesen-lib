@@ -1,8 +1,8 @@
 package dev.matthiesen.fabric.matthiesen_lib.permission;
 
-import dev.matthiesen.common.matthiesen_lib.Constants;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
-import dev.matthiesen.common.matthiesen_lib.interfaces.PermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -13,16 +13,16 @@ import net.minecraft.server.level.ServerPlayer;
  * using the fabric-permissions-api, which allows for integration with various permissions mods that support the API.
  * For more information on the fabric-permissions-api. See <a href="https://github.com/lucko/fabric-permissions-api">...</a>
  */
-public class FabricPermissionValidator implements PermissionValidator {
+public class MatthiesenLibFabricMatthiesenLibPermissionValidator implements MatthiesenLibPermissionValidator {
     /**
      * Creates a new instance of the FabricPermissionValidator. This constructor does not perform any initialization,
      * as the initialize method is called separately when the validator is registered.
      */
-    public FabricPermissionValidator() {}
+    public MatthiesenLibFabricMatthiesenLibPermissionValidator() {}
 
     @Override
     public void initialize() {
-        Constants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
+        MatthiesenLibConstants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
     }
 
     @Override

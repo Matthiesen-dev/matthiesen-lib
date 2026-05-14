@@ -1,11 +1,13 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.command.*;
+import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCommandsManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibPermissionsManager;
+import dev.matthiesen.common.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
 import dev.matthiesen.common.matthiesen_lib.interfaces.Permission;
-import dev.matthiesen.common.matthiesen_lib.interfaces.PermissionValidator;
-import dev.matthiesen.common.matthiesen_lib.permission.*;
-import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
@@ -29,11 +31,10 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 public class MatthiesenLib {
-    private static final CommonPlatform COMMON_PLATFORM =
-            ServiceLoader.load(CommonPlatform.class).findFirst().orElseThrow();
-    private static final PermissionsManager permissionsManager = new PermissionsManager();
-    private static PermissionValidator permissionValidator;
-
+    private static final MatthiesenLibPlatform PLATFORM =
+            ServiceLoader.load(MatthiesenLibPlatform.class).findFirst().orElseThrow();
+    private static final MatthiesenLibPermissionsManager permissionsManager = new MatthiesenLibPermissionsManager();
+    private static MatthiesenLibPermissionValidator permissionValidator;
     private static boolean initialized;
 
     /**
@@ -56,12 +57,12 @@ public class MatthiesenLib {
         permissionsManager.modInitializer();
 
         // Pre-register the Vanilla MC permissions validator
-        setPermissionValidator(new VanillaPermissionValidator());
+        setPermissionValidator(new MatthiesenLibVanillaMatthiesenLibPermissionValidator());
 
         // Register any platform permission validator available through the CommonPlatform service.
-        COMMON_PLATFORM.registerPermissionValidator();
-        MatthiesenLibCommands.modInitializer();
-        Constants.createInfoLog("Initialized common");
+        PLATFORM.registerPermissionValidator();
+        MatthiesenLibCommandsManager.modInitializer();
+        MatthiesenLibConstants.createInfoLog("Initialized common");
     }
 
     /**
@@ -71,7 +72,7 @@ public class MatthiesenLib {
      * is responsible for checking if a given permission is granted to a specific user or context, and it can be used by
      * external code to perform permission checks when necessary.
      */
-    public static PermissionValidator getPermissionValidator() {
+    public static MatthiesenLibPermissionValidator getPermissionValidator() {
         return permissionValidator;
     }
 
@@ -83,7 +84,7 @@ public class MatthiesenLib {
      *                 of a class that implements the PermissionValidator interface, and it will be used by MatthiesenLib
      *                 to validate permissions when needed.
      */
-    public static void setPermissionValidator(PermissionValidator newValue) {
+    public static void setPermissionValidator(MatthiesenLibPermissionValidator newValue) {
         permissionValidator = newValue;
         newValue.initialize();
     }
@@ -93,7 +94,7 @@ public class MatthiesenLib {
      * @return the PermissionsManager instance used by MatthiesenLib for handling permissions. This allows external code
      * to register permissions and interact with the permission system as needed.
      */
-    public static PermissionsManager getPermissionsManager() {
+    public static MatthiesenLibPermissionsManager getPermissionsManager() {
         return permissionsManager;
     }
 
@@ -110,7 +111,7 @@ public class MatthiesenLib {
      * @param command The command to register
      */
     public static void registerCommand(AbstractCommand command) {
-        MatthiesenLibCommands.registerCommand(command);
+        MatthiesenLibCommandsManager.registerCommand(command);
     }
 
     /**
@@ -119,7 +120,7 @@ public class MatthiesenLib {
      * @return true if the mod is loaded, false otherwise
      */
     public static boolean isModLoaded(String modId) {
-        return COMMON_PLATFORM.isModLoaded(modId);
+        return PLATFORM.isModLoaded(modId);
     }
 
     /**
@@ -127,7 +128,7 @@ public class MatthiesenLib {
      * @return true if the current environment is a development environment, false otherwise
      */
     public static boolean isDevelopmentEnvironment() {
-        return COMMON_PLATFORM.isDevelopmentEnvironment();
+        return PLATFORM.isDevelopmentEnvironment();
     }
 
     /**
@@ -135,7 +136,7 @@ public class MatthiesenLib {
      * @return a new CreativeModeTab.Builder instance
      */
     public static CreativeModeTab.Builder newCreativeTabBuilder() {
-        return COMMON_PLATFORM.newCreativeTabBuilder();
+        return PLATFORM.newCreativeTabBuilder();
     }
 
     /**
@@ -152,7 +153,7 @@ public class MatthiesenLib {
      *                        and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
-        return COMMON_PLATFORM.registerBlockEntity(id, blockEntityType);
+        return PLATFORM.registerBlockEntity(id, blockEntityType);
     }
 
     /**
@@ -166,7 +167,7 @@ public class MatthiesenLib {
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends Block> Supplier<T> registerBlock(ResourceLocation id, Supplier<T> block) {
-        return COMMON_PLATFORM.registerBlock(id, block);
+        return PLATFORM.registerBlock(id, block);
     }
 
     /**
@@ -180,7 +181,7 @@ public class MatthiesenLib {
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends Item> Supplier<T> registerItem(ResourceLocation id, Supplier<T> item) {
-        return COMMON_PLATFORM.registerItem(id, item);
+        return PLATFORM.registerItem(id, item);
     }
 
     /**
@@ -194,7 +195,7 @@ public class MatthiesenLib {
      * it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends SoundEvent> Supplier<T> registerSound(ResourceLocation id, Supplier<T> sound) {
-        return COMMON_PLATFORM.registerSound(id, sound);
+        return PLATFORM.registerSound(id, sound);
     }
 
     /**
@@ -210,7 +211,7 @@ public class MatthiesenLib {
      * mode tab after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends CreativeModeTab> Supplier<T> registerCreativeModeTab(ResourceLocation id, Supplier<T> tab) {
-        return COMMON_PLATFORM.registerCreativeModeTab(id, tab);
+        return PLATFORM.registerCreativeModeTab(id, tab);
     }
 
     /**
@@ -227,7 +228,7 @@ public class MatthiesenLib {
      * trigger after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends CriterionTrigger<?>> Supplier<T> registerCriteriaTriggers(ResourceLocation id, Supplier<T> criterionTrigger) {
-        return COMMON_PLATFORM.registerCriteriaTriggers(id, criterionTrigger);
+        return PLATFORM.registerCriteriaTriggers(id, criterionTrigger);
     }
 
     /**
@@ -243,7 +244,7 @@ public class MatthiesenLib {
      * has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends ResourceLocation> Supplier<T> registerStats(ResourceLocation id, Supplier<T> stats) {
-        return COMMON_PLATFORM.registerStats(id, stats);
+        return PLATFORM.registerStats(id, stats);
     }
 
     /**
@@ -257,7 +258,7 @@ public class MatthiesenLib {
      * been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends MenuType<?>> Supplier<T> registerMenuType(ResourceLocation id, Supplier<T> menuType) {
-        return COMMON_PLATFORM.registerMenuType(id, menuType);
+        return PLATFORM.registerMenuType(id, menuType);
     }
 
     /**
@@ -271,7 +272,7 @@ public class MatthiesenLib {
      * type after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
      */
     public static <T extends DataComponentType<?>> Supplier<T> registerDataComponentType(ResourceLocation id, Supplier<T> component) {
-        return COMMON_PLATFORM.registerDataComponentType(id, component);
+        return PLATFORM.registerDataComponentType(id, component);
     }
 
     /**
@@ -289,6 +290,6 @@ public class MatthiesenLib {
      * it is called during the mod's initialization process.
      */
     public static <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation id, Supplier<T> codec) {
-        return COMMON_PLATFORM.registerEntityEffects(id, codec);
+        return PLATFORM.registerEntityEffects(id, codec);
     }
 }
