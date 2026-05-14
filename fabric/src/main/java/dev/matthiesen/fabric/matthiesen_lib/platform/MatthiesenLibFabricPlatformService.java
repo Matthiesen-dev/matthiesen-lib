@@ -1,7 +1,9 @@
 package dev.matthiesen.fabric.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.platform.CommonPlatform;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.fabric.matthiesen_lib.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.CriterionTrigger;
@@ -20,7 +22,19 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.Supplier;
 
-public class FabricPlatformService implements CommonPlatform {
+/**
+ * MatthiesenLibFabricPlatformService is the implementation of the MatthiesenLibPlatform interface for the Fabric mod loader. It provides
+ * methods for registering blocks, items, sounds, creative tabs, criteria triggers, stats, menu types, data component
+ * types, and entity effects using the Fabric API. It also includes utilities for checking if a mod is loaded and if
+ * the environment is a development environment. This class serves as the bridge between the common code in MatthiesenLib
+ * and the specific implementation details of the Fabric platform.
+ */
+public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform {
+    /**
+     * Default constructor for the FabricPlatformService. No initialization is required as all methods are stateless and rely on the Fabric API for registration and utilities.
+     */
+    public MatthiesenLibFabricPlatformService() {}
+
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
         return registerSupplier(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, blockEntityType);
@@ -69,6 +83,13 @@ public class FabricPlatformService implements CommonPlatform {
     @Override
     public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec) {
         return registerSupplier(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, name, codec);
+    }
+
+    @Override
+    public void registerPermissionValidator() {
+        if (FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0")) {
+            MatthiesenLib.setPermissionValidator(new MatthiesenLibFabricMatthiesenLibPermissionValidator());
+        }
     }
 
     @Override

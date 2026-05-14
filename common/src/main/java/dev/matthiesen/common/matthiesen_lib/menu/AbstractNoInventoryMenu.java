@@ -14,6 +14,11 @@ import org.jetbrains.annotations.Nullable;
  */
 @SuppressWarnings("unused")
 public abstract class AbstractNoInventoryMenu extends AbstractContainerMenu {
+    /**
+     * Default constructor for the AbstractNoInventoryMenu class. This constructor is used when creating a new menu instance without a specific menu type.
+     * @param menuType The menu type for this menu. This can be null if the menu does not have a specific type.
+     * @param i The container ID for this menu. This is used to identify the menu instance and should be unique for each menu instance.
+     */
     protected AbstractNoInventoryMenu(@Nullable MenuType<?> menuType, int i) {
         super(menuType, i);
     }

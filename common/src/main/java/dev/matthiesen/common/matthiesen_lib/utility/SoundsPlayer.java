@@ -7,7 +7,8 @@ import net.minecraft.sounds.SoundSource;
 /**
  * A utility class for playing sounds to players with customizable volume and pitch.
  * <p>
- * This class allows you to create a sound player for a specific sound event and configure its volume and pitch before playing it to a player. The sound will be played on the master sound channel by default, but this can be changed if needed.
+ * This class allows you to create a sound player for a specific sound event and configure its volume and pitch before
+ * playing it to a player. The sound will be played on the master sound channel by default, but this can be changed if needed.
  * <p>
  * Example usage:
  * <pre>
@@ -27,6 +28,13 @@ public class SoundsPlayer {
     private Float volume = 1.0F;
     private Float pitch = 1.0F;
 
+    /**
+     * Default constructor for the SoundsPlayer class. This constructor is used when creating a new instance of the SoundsPlayer class.
+     * It takes in a SoundEvent and initializes the sound player with that sound event. The volume and pitch are set to their default values
+     * of 1.0F, which means the sound will be played at full volume and normal pitch unless they are changed using the setVolume and setPitch methods.
+     * @param sound The SoundEvent that this SoundsPlayer will play when the play method is called. This should be a valid SoundEvent instance that
+     *              represents the sound you want to play to the player.
+     */
     public SoundsPlayer(SoundEvent sound) {
         this.soundEvent = sound;
     }
