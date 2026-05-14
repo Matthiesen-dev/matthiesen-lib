@@ -19,13 +19,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+/**
+ * Implementation of the PermissionValidator interface that checks permissions using NeoForge's PermissionAPI.
+ * This validator will check if a player has the required permission level to execute a command or perform an action using NeoForge's PermissionAPI,
+ * which allows for integration with various permissions mods that support the API. For more information on NeoForge's PermissionAPI,
+ * see <a href="https://docs.minecraftforge.net/en/latest/">...</a> and <a href="https://minecraft.fandom.com/wiki/Permission_level">...</a>
+ */
 public class NeoForgePermissionValidator implements PermissionValidator {
     private final Map<ResourceLocation, PermissionNode<Boolean>> nodes = new HashMap<>();
 
+    /**
+     * Creates a new instance of the NeoForgePermissionValidator. This constructor registers an event listener for the PermissionGatherEvent.Nodes event,
+     * which is used to gather permission nodes from the mod and register them with NeoForge's PermissionAPI. When the PermissionGatherEvent.Nodes event is
+     * fired, the onPermissionGatherNodes method will be called, which will create permission nodes for all permissions registered in the MatthiesenLib
+     * PermissionsManager and add them to the event. This allows the permissions to be registered with NeoForge's PermissionAPI and used for permission checks
+     * when validating permissions for players and command sources.
+     */
     public NeoForgePermissionValidator() {
         NeoForge.EVENT_BUS.addListener(this::onPermissionGatherNodes);
     }
 
+    /**
+     * Event handler for the PermissionGatherEvent.Nodes event. This method is called when NeoForge is gathering permission nodes from mods to register with the PermissionAPI.
+     * @param event The PermissionGatherEvent.Nodes event, which contains a method for adding permission nodes to be registered with the PermissionAPI.
+     */
     @SubscribeEvent
     public void onPermissionGatherNodes(PermissionGatherEvent.Nodes event) {
         Constants.LOGGER.info("Starting Forge permission node registry");
@@ -90,6 +107,10 @@ public class NeoForgePermissionValidator implements PermissionValidator {
         return PermissionAPI.getPermission(player, node);
     }
 
+    /**
+     * Creates permission nodes for all permissions registered in the MatthiesenLib PermissionsManager and adds them to the internal nodes map for lookup when validating permissions.
+     * @return A list of PermissionNode objects representing the permissions registered in the MatthiesenLib PermissionsManager, which will be added to the PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
+     */
     private List<PermissionNode<?>> createNodes() {
         return MatthiesenLib.getPermissionsManager().all().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
@@ -103,10 +124,20 @@ public class NeoForgePermissionValidator implements PermissionValidator {
         }).collect(Collectors.toList());
     }
 
+    /**
+     * Finds the PermissionNode associated with the given Permission. This method looks up the permission node in the internal nodes map using the permission's ResourceLocation identifier.
+     * @param permission The Permission for which to find the associated PermissionNode.
+     * @return The PermissionNode associated with the given Permission, or null if no node is found for the permission's identifier.
+     */
     private PermissionNode<Boolean> findNode(Permission permission) {
         return this.nodes.get(permission.getIdentifier());
     }
 
+    /**
+     * Extracts the ServerPlayer from a CommandSourceStack. This method checks if the command source is a player and returns the associated ServerPlayer object, or null if the source is not a player.
+     * @param source The CommandSourceStack from which to extract the ServerPlayer.
+     * @return The ServerPlayer associated with the command source, or null if the source is not a player.
+     */
     private ServerPlayer extractPlayerFromSource(CommandSourceStack source) {
         return source.getPlayer();
     }

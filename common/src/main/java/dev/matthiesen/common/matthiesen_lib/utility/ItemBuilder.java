@@ -25,10 +25,18 @@ import java.util.stream.Stream;
 public class ItemBuilder {
     private final ItemStack stack;
 
+    /**
+     * Creates a new ItemBuilder with the specified item. This will create a new ItemStack with the given item, and it will be used as the base for building the final ItemStack.
+     * @param item The item to create the ItemStack with. This is used to specify the type of item that the final ItemStack will be, and it will be the base for all other properties that are set on the ItemBuilder.
+     */
     public ItemBuilder(Item item) {
         this.stack = new ItemStack(item);
     }
 
+    /**
+     * Creates a new ItemBuilder with the specified ItemStack. This will use the given ItemStack as the base for building the final ItemStack, and it will allow for modifying an existing ItemStack with the provided methods.
+     * @param item The ItemStack to use as the base for building the final ItemStack. This is used to specify an existing ItemStack that will be modified with the provided methods, and it will be the base for all other properties that are set on the ItemBuilder.
+     */
     public ItemBuilder(ItemStack item) {
         this.stack = item;
     }

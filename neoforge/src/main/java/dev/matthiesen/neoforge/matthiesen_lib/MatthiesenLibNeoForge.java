@@ -11,6 +11,12 @@ import net.neoforged.fml.common.Mod;
  */
 @Mod(Constants.MOD_ID)
 public class MatthiesenLibNeoForge {
+
+    /**
+     * Default constructor for the MatthiesenLibNeoForge class. No initialization is required as setup is handled in the constructor that takes an IEventBus parameter.
+     *
+     * @param modBus The event bus to register mod events on. This constructor is used for NeoForge's event-driven initialization process.
+     */
     public MatthiesenLibNeoForge(IEventBus modBus) {
         Constants.createInfoLog("Loading for NeoForge Mod Loader");
         NeoForgeRegistryHelper.init(modBus);

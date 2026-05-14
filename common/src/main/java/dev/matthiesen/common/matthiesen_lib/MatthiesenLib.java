@@ -39,6 +39,11 @@ public class MatthiesenLib {
     private static boolean initialized;
 
     /**
+     * Default constructor for the MatthiesenLib class. This constructor does not perform any initialization, as the mod's setup is handled in the modInitializer method. The constructor is provided for completeness and to allow for potential future use if instance-specific initialization is needed, but currently, all functionality is static and does not require an instance of the MatthiesenLib class.
+     */
+    public MatthiesenLib() {}
+
+    /**
      * Initializes the MatthiesenLib mod. (Do not run this from an external mod. This is used to set up the MatthiesenLib Mod)
      */
     public static void modInitializer() {

@@ -11,6 +11,7 @@ import java.lang.reflect.Field;
 /**
  * A generic configuration manager for handling JSON-based config files.
  * It supports loading, saving, and merging default values with existing config files.
+ * @param <T> The type of the config class to manage
  */
 @SuppressWarnings("unused")
 public class ConfigManager<T> {
@@ -63,6 +64,7 @@ public class ConfigManager<T> {
 
     /**
      * Loads the config from the file system. If the config file does not exist, it will create a new one with default values.
+     * @return The loaded config instance
      */
     public T loadConfig() {
         String configFileLoc = System.getProperty("user.dir") + File.separator + "config" +
@@ -165,6 +167,7 @@ public class ConfigManager<T> {
 
     /**
      * Gets the current config. If the config is null, it will attempt to load it from the file system.
+     * @return The current config instance
      */
     public T getConfig() {
         if (config == null) {

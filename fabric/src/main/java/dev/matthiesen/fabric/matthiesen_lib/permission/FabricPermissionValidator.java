@@ -7,7 +7,19 @@ import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
 
+/**
+ * Implementation of the PermissionValidator interface that checks permissions using the fabric-permissions-api.
+ * This validator will check if a player has the required permission level to execute a command or perform an action
+ * using the fabric-permissions-api, which allows for integration with various permissions mods that support the API.
+ * For more information on the fabric-permissions-api. See <a href="https://github.com/lucko/fabric-permissions-api">...</a>
+ */
 public class FabricPermissionValidator implements PermissionValidator {
+    /**
+     * Creates a new instance of the FabricPermissionValidator. This constructor does not perform any initialization,
+     * as the initialize method is called separately when the validator is registered.
+     */
+    public FabricPermissionValidator() {}
+
     @Override
     public void initialize() {
         Constants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");

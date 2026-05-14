@@ -38,6 +38,7 @@ public interface PermissionValidator {
      * @param player The target ServerPlayer.
      * @param permission The permission string being queried such.
      * @param level The permission level being queried. 4 is generally used for cheats.
+     * @return If the player has the permission.
      */
     boolean hasPermission(ServerPlayer player, String permission, int level);
 

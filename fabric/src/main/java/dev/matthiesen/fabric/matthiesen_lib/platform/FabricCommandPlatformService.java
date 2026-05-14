@@ -7,8 +7,16 @@ import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import java.util.function.Consumer;
 
+/**
+ * Implementation of the CommonCommandPlatform interface for the Fabric mod loader, utilizing Fabric's CommandRegistrationCallback to register commands.
+ */
 @SuppressWarnings("unused")
 public class FabricCommandPlatformService implements CommonCommandPlatform {
+    /**
+     * Default constructor for the FabricCommandPlatformService. No initialization is required as command registration is handled through the registerCommands method.
+     */
+    public FabricCommandPlatformService() {}
+
     @Override
     public void registerCommands(Consumer<CommandRegistrar> registrationHandler) {
         CommandRegistrationCallback.EVENT.register((dispatcher, registry, context) ->

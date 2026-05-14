@@ -16,10 +16,25 @@ package dev.matthiesen.common.matthiesen_lib.permission;
  */
 @SuppressWarnings("unused")
 public enum PermissionLevel {
+    /**
+     * No permissions. The player cannot execute any commands.
+     */
     NONE(0),
+    /**
+     * The player can bypass spawn protection, but cannot execute any other commands.
+     */
     SPAWN_PROTECTION_BYPASS(1),
+    /**
+     * The player can execute cheat commands and use command blocks, but cannot manage multiplayer or execute all commands.
+     */
     CHEAT_COMMANDS_AND_COMMAND_BLOCKS(2),
+    /**
+     * The player can manage multiplayer features, such as kicking and banning players, but cannot execute all commands.
+     */
     MULTIPLAYER_MANAGEMENT(3),
+    /**
+     * The player can execute all commands, including those that require cheats and multiplayer management.
+     */
     ALL_COMMANDS(4);
 
     private final int numericalValue;

@@ -24,6 +24,9 @@ public class PermissionsManager {
     private static PermissionRegistrar activeRegistrar;
     private static boolean initialized;
 
+    /**
+     * Default constructor for the PermissionsManager class. No initialization is required as setup is handled in the modInitializer method.
+     */
     public PermissionsManager() {}
 
     /**

@@ -21,7 +21,18 @@ import net.neoforged.fml.loading.FMLEnvironment;
 
 import java.util.function.Supplier;
 
+/**
+ * NeoForgePlatformService is the implementation of the CommonPlatform interface for the NeoForge mod loader. It provides
+ * methods for registering blocks, items, sounds, creative tabs, criteria triggers, stats, menu types, data component types,
+ * and entity effects using the NeoForge API. It also includes utilities for checking if a mod is loaded and if the environment
+ * is a development environment. This class serves as the bridge between the common code in MatthiesenLib and the specific implementation details of the NeoForge platform.
+ */
 public class NeoForgePlatformService implements CommonPlatform {
+    /**
+     * Default constructor for the NeoForgePlatformService. No initialization is required as all methods are stateless and rely on the NeoForge API for registration and utilities.
+     */
+    public NeoForgePlatformService() {}
+
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
         return NeoForgeRegistryHelper.registerBlockEntity(id, blockEntityType);

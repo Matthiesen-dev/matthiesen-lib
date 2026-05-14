@@ -24,6 +24,11 @@ public class MatthiesenLibClient {
     private static boolean initialized;
 
     /**
+     * Default constructor for the MatthiesenLibClient class. No initialization is required as setup is handled in the modInitializer method.
+     */
+    public MatthiesenLibClient() {}
+
+    /**
      * Initializes the client-side components of MatthiesenLib. (Do not run this from an external mod.)
      */
     public static synchronized void modInitializer() {

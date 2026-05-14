@@ -22,7 +22,19 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.function.Supplier;
 
+/**
+ * FabricPlatformService is the implementation of the CommonPlatform interface for the Fabric mod loader. It provides
+ * methods for registering blocks, items, sounds, creative tabs, criteria triggers, stats, menu types, data component
+ * types, and entity effects using the Fabric API. It also includes utilities for checking if a mod is loaded and if
+ * the environment is a development environment. This class serves as the bridge between the common code in MatthiesenLib
+ * and the specific implementation details of the Fabric platform.
+ */
 public class FabricPlatformService implements CommonPlatform {
+    /**
+     * Default constructor for the FabricPlatformService. No initialization is required as all methods are stateless and rely on the Fabric API for registration and utilities.
+     */
+    public FabricPlatformService() {}
+
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {
         return registerSupplier(BuiltInRegistries.BLOCK_ENTITY_TYPE, id, blockEntityType);

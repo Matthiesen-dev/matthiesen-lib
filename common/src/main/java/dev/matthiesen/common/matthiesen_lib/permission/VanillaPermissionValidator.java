@@ -11,6 +11,11 @@ import net.minecraft.server.level.ServerPlayer;
  * This validator will check if a player has the required permission level to execute a command or perform an action.
  */
 public class VanillaPermissionValidator implements PermissionValidator {
+    /**
+     * Creates a new instance of the VanillaPermissionValidator. This constructor does not perform any initialization, as there are no resources to set up for this validator.
+     */
+    public VanillaPermissionValidator() {}
+
     @Override
     public void initialize() {
         Constants.createInfoLog("Booting VanillaPermissionValidator, permissions will be checked using Minecraft's permission level system, see https://minecraft.wiki/w/Permission_level");

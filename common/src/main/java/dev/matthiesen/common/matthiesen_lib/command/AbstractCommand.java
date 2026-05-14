@@ -12,6 +12,11 @@ import net.minecraft.commands.Commands;
 @SuppressWarnings("unused")
 public abstract class AbstractCommand {
     /**
+     * Default constructor for the AbstractCommand class. No initialization is required as setup is handled in the register method.
+     */
+    public AbstractCommand() {}
+
+    /**
      * Function to register the command. This is called by the CommandManager when the command is being registered.
      * @param dispatcher The command dispatcher to register the command with.
      * @param registry The command build context to register the command with.
