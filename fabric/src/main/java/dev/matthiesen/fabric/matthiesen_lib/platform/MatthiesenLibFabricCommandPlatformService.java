@@ -15,7 +15,7 @@ public class MatthiesenLibFabricCommandPlatformService implements MatthiesenLibC
     /**
      * Default constructor for the MatthiesenLibFabricCommandPlatformService. No initialization is required as command registration is handled through the registerCommands method.
      */
-    public MatthiesenLibFabricCommandPlatformService() {}
+    private MatthiesenLibFabricCommandPlatformService() {}
 
     @Override
     public void registerCommands(Consumer<MatthiesenLibCommandRegistrar> registrationHandler) {

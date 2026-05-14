@@ -33,7 +33,7 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
     /**
      * Default constructor for the FabricPlatformService. No initialization is required as all methods are stateless and rely on the Fabric API for registration and utilities.
      */
-    public MatthiesenLibFabricPlatformService() {}
+    private MatthiesenLibFabricPlatformService() {}
 
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {

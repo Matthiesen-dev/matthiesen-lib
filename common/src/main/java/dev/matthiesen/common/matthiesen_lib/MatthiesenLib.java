@@ -20,6 +20,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.List;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
@@ -33,7 +34,6 @@ import java.util.function.Supplier;
 public class MatthiesenLib {
     private static final MatthiesenLibPlatform PLATFORM =
             ServiceLoader.load(MatthiesenLibPlatform.class).findFirst().orElseThrow();
-    private static final MatthiesenLibPermissionsManager permissionsManager = new MatthiesenLibPermissionsManager();
     private static MatthiesenLibPermissionValidator permissionValidator;
     private static boolean initialized;
 
@@ -42,7 +42,7 @@ public class MatthiesenLib {
      * The constructor is provided for completeness and to allow for potential future use if instance-specific initialization is needed, but currently, all functionality is
      * static and does not require an instance of the MatthiesenLib class.
      */
-    public MatthiesenLib() {}
+    private MatthiesenLib() {}
 
     /**
      * Initializes the MatthiesenLib mod. (Do not run this from an external mod. This is used to set up the MatthiesenLib Mod)
@@ -54,7 +54,7 @@ public class MatthiesenLib {
 
         initialized = true;
         // Initialize the permissions registry
-        permissionsManager.modInitializer();
+        MatthiesenLibPermissionsManager.modInitializer();
 
         // Pre-register the Vanilla MC permissions validator
         setPermissionValidator(new MatthiesenLibVanillaMatthiesenLibPermissionValidator());
@@ -62,7 +62,7 @@ public class MatthiesenLib {
         // Register any platform permission validator available through the CommonPlatform service.
         PLATFORM.registerPermissionValidator();
         MatthiesenLibCommandsManager.modInitializer();
-        MatthiesenLibConstants.createInfoLog("Initialized common");
+        MatthiesenLibConstants.createInfoLog("Initialized core");
     }
 
     /**
@@ -90,20 +90,29 @@ public class MatthiesenLib {
     }
 
     /**
-     * Provides access to the PermissionsManager instance for registering permissions and managing the permission system.
-     * @return the PermissionsManager instance used by MatthiesenLib for handling permissions. This allows external code
-     * to register permissions and interact with the permission system as needed.
-     */
-    public static MatthiesenLibPermissionsManager getPermissionsManager() {
-        return permissionsManager;
-    }
-
-    /**
      * Registers a permission to the permissions' registry.
      * @param permission The permission to register
      */
     public static void registerPermission(Permission permission) {
-        permissionsManager.registerPermission(permission);
+        MatthiesenLibPermissionsManager.registerPermission(permission);
+    }
+
+    /**
+     * Retrieves all registered permissions.
+     *
+     * @return An unmodifiable list of all permissions.
+     */
+    public static List<Permission> getAllRegisteredPermissions() {
+        return MatthiesenLibPermissionsManager.all();
+    }
+
+    /**
+     * Gets the count of registered pending permissions.
+     *
+     * @return The number of permissions pending registration.
+     */
+    public static int getPendingPermissionCount() {
+        return MatthiesenLibPermissionsManager.getPendingPermissionCount();
     }
 
     /**

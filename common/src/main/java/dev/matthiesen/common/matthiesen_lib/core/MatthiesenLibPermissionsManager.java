@@ -19,12 +19,12 @@ public class MatthiesenLibPermissionsManager {
     /**
      * Default constructor for the PermissionsManager class. No initialization is required as setup is handled in the modInitializer method.
      */
-    public MatthiesenLibPermissionsManager() {}
+    private MatthiesenLibPermissionsManager() {}
 
     /**
      * Initializes the permission registry. This should be called during the mod's initialization phase.
      */
-    public synchronized void modInitializer() {
+    public static synchronized void modInitializer() {
         if (initialized) {
             return;
         }
@@ -39,7 +39,7 @@ public class MatthiesenLibPermissionsManager {
      *
      * @param permission The Permission to register.
      */
-    public synchronized void registerPermission(Permission permission) {
+    public static synchronized void registerPermission(Permission permission) {
         PENDING_PERMISSIONS.add(permission);
     }
 
@@ -48,7 +48,7 @@ public class MatthiesenLibPermissionsManager {
      *
      * @param permission The permission to add.
      */
-    private void addPermission(Permission permission) {
+    private static void addPermission(Permission permission) {
         PERMISSIONS.add(permission);
     }
 
@@ -57,7 +57,7 @@ public class MatthiesenLibPermissionsManager {
      *
      * @return An unmodifiable list of all permissions.
      */
-    public List<Permission> all() {
+    public static List<Permission> all() {
         for (Permission permission : PENDING_PERMISSIONS) {
             addPermission(permission);
         }
@@ -70,7 +70,7 @@ public class MatthiesenLibPermissionsManager {
      *
      * @return The number of permissions pending registration.
      */
-    public int getPendingPermissionCount() {
+    public static int getPendingPermissionCount() {
         return PENDING_PERMISSIONS.size();
     }
 }

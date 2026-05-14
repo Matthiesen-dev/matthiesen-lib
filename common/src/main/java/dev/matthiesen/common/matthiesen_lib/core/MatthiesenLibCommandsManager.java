@@ -21,8 +21,7 @@ public final class MatthiesenLibCommandsManager {
     private static MatthiesenLibCommandRegistrar activeRegistrar;
     private static boolean initialized;
 
-    private MatthiesenLibCommandsManager() {
-    }
+    private MatthiesenLibCommandsManager() {}
 
     /**
      * Initializes command hooks for the active platform.

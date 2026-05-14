@@ -12,7 +12,7 @@ public class MatthiesenLibConstants {
      * Default constructor for the Constants class. This constructor is private to prevent instantiation of this utility class,
      * as all members are static and there is no need to create an instance of this class.
      */
-    public MatthiesenLibConstants() {}
+    private MatthiesenLibConstants() {}
 
     /**
      * The unique identifier for the Matthiesen Lib mod. This constant is used for registration and identification purposes

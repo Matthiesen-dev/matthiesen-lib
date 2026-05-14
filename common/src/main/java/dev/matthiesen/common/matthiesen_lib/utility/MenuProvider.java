@@ -18,7 +18,7 @@ public class MenuProvider {
      * MenuProvider class. Since all methods in this class are static, there is no need to create an instance of the class
      * to use its methods.
      */
-    public MenuProvider() {}
+    private MenuProvider() {}
 
     /**
      * Creates a SimpleMenuProvider from a MenuConstructor and a title. This is used to avoid having to duplicate code

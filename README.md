@@ -209,6 +209,17 @@ or
 MatthiesenLibClient.registerMenuScreen(MY_MENU_TYPE, MyMenuScreen::new);
 ```
 
+To register multiple screens at once:
+
+```java
+MatthiesenLibClient.registerMenuScreens(register -> {
+    register.register(MY_MENU_TYPE_SUPPLIER, MyMenuScreen::new);
+    register.register(OTHER_MENU_TYPE_SUPPLIER, OtherMenuScreen::new);
+});
+```
+
+This bulk registration API is the preferred way to queue multiple menu screens.
+
 ### Why this works on both loaders
 
 Screens are stored in a shared static list first, then applied when each loader reaches the correct lifecycle stage:
