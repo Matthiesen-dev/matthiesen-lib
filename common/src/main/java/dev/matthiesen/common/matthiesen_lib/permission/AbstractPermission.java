@@ -64,10 +64,10 @@ public abstract class AbstractPermission implements Permission {
      *              depending on the permission system being used, but it generally indicates the required level of permission a player must have to be granted this permission.
      */
     public AbstractPermission(String node, PermissionLevel level) {
-        this.node = node;
+        this.node = getModId() + "." + node;
         this.level = level;
         this.identifier = ResourceLocation.fromNamespaceAndPath(getModId(), node);
-        this.literal = getModId() + "." + this.node;
+        this.literal = this.node;
     }
 
     @Override
