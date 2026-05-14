@@ -16,7 +16,7 @@ public class MatthiesenLibNeoForgeCommandPlatformService implements MatthiesenLi
     /**
      * Default constructor for the MatthiesenLibNeoForgeCommandPlatformService. No initialization is required as command registration is handled through the registerCommands method.
      */
-    private MatthiesenLibNeoForgeCommandPlatformService() {}
+    public MatthiesenLibNeoForgeCommandPlatformService() {}
 
     /**
      * Default constructor for the MatthiesenLibNeoForgeCommandPlatformService. No initialization is required as command registration is handled through the registerCommands method.

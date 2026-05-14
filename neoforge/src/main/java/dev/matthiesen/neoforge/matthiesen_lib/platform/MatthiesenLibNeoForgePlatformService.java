@@ -31,7 +31,7 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
     /**
      * Default constructor for the NeoForgePlatformService. No initialization is required as all methods are stateless and rely on the NeoForge API for registration and utilities.
      */
-    private MatthiesenLibNeoForgePlatformService() {}
+    public MatthiesenLibNeoForgePlatformService() {}
 
     @Override
     public <T extends BlockEntity> Supplier<BlockEntityType<T>> registerBlockEntity(ResourceLocation id, Supplier<BlockEntityType<T>> blockEntityType) {

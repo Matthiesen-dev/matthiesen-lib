@@ -11,7 +11,7 @@ public class MatthiesenLibFabric implements ModInitializer {
     /**
      * Default constructor for the MatthiesenLibFabric class. No initialization is required as setup is handled in the onInitialize method.
      */
-    private MatthiesenLibFabric() {}
+    public MatthiesenLibFabric() {}
 
     /**
      * Initializes the MatthiesenLib mod for the Fabric platform.
