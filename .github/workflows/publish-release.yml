@@ -32,6 +32,15 @@ jobs:
           echo "VERSION=$VERSION" >> $GITHUB_ENV
           echo "FABRIC_NAME=Matthiesen Lib $VERSION - Fabric" >> $GITHUB_ENV
           echo "NEOFORGE_NAME=Matthiesen Lib $VERSION - NeoForge" >> $GITHUB_ENV
+          
+          # check if the version is a snapshot
+          if [[ "$VERSION" == *"-SNAPSHOT" ]]; then
+            echo "This is a snapshot version."
+            echo "IS_SNAPSHOT=true" >> $GITHUB_ENV
+          else
+            echo "This is a release version."
+            echo "IS_SNAPSHOT=false" >> $GITHUB_ENV
+          fi
 
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
@@ -44,9 +53,11 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
 
       - name: Copy jars for publishing
+        if: ${{ env.IS_SNAPSHOT == 'false' }}
         run: ./gradlew copyJars
 
       - name: Publish Fabric mod to Modrinth
+        if: ${{ env.IS_SNAPSHOT == 'false' }}
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
@@ -59,6 +70,7 @@ jobs:
           files: output/matthiesen-lib-fabric-${{ env.VERSION }}.jar
 
       - name: Publish NeoForge mod to Modrinth
+        if: ${{ env.IS_SNAPSHOT == 'false' }}
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
@@ -71,6 +83,7 @@ jobs:
           files: output/matthiesen-lib-neoforge-${{ env.VERSION }}.jar
 
       - name: Sync Project Description on Modrinth
+        if: ${{ env.IS_SNAPSHOT == 'false' }}
         uses: funnyboy-roks/modrinth-auto-desc@v1.7
         with:
           auth-token: ${{ secrets.MODRINTH_TOKEN }}
