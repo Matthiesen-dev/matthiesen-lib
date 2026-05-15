@@ -28,7 +28,7 @@ From `gradle.properties`:
 
 - Minecraft: `1.21.1`
 - Fabric Loader: `0.17.2+`
-- Fabric API: `0.116.6+1.21.1`
+- Fabric API: `0.116.6+1.21.1+`
 - NeoForge: `21.1.182+`
 - Java target: `21`
 
