@@ -1,6 +1,5 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;

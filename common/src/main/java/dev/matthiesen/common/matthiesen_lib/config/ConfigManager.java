@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib.config;
 
 import com.google.gson.*;
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 
 import java.io.File;
 import java.io.FileReader;

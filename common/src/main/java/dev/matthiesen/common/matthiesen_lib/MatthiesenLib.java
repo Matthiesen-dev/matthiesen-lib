@@ -3,6 +3,7 @@ package dev.matthiesen.common.matthiesen_lib;
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCommandsManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibPermissionsManager;
 import dev.matthiesen.common.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;

@@ -69,3 +69,9 @@ jobs:
           loaders: neoforge
           game-versions: 1.21.1
           files: output/matthiesen-lib-neoforge-${{ env.VERSION }}.jar
+
+      - name: Sync Project Description on Modrinth
+        uses: funnyboy-roks/modrinth-auto-desc@v1.7
+        with:
+          auth-token: ${{ secrets.MODRINTH_TOKEN }}
+          slug: ${{ secrets.MODRINTH_ID }}

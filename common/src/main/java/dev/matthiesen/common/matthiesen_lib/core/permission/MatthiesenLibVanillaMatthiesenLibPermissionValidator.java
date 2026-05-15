@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.core.permission;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;

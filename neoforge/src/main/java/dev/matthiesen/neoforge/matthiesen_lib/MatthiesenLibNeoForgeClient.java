@@ -1,6 +1,6 @@
 package dev.matthiesen.neoforge.matthiesen_lib;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
