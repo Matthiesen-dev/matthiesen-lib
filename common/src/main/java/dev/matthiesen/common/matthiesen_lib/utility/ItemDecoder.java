@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.utility;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;

@@ -2,6 +2,9 @@
 
 A lightweight Architectury-style library for shared mod code across **Fabric** and **NeoForge** (Minecraft **1.21.1**).
 
+> Note: For regular users, this library does nothing on its own. It's a tool for mod developers to write shared code that works on both Fabric and NeoForge without needing separate implementations.
+> All you need to do is drop the mod JAR in your `mods` folder, and it will work as a dependency for any mods that use it.
+
 ## What This Library Provides
 
 - Unified content registration from common code:
@@ -25,7 +28,7 @@ From `gradle.properties`:
 
 - Minecraft: `1.21.1`
 - Fabric Loader: `0.17.2+`
-- Fabric API: `0.116.6+1.21.1`
+- Fabric API: `0.116.6+1.21.1+`
 - NeoForge: `21.1.182+`
 - Java target: `21`
 
