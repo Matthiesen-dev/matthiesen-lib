@@ -24,7 +24,6 @@ configure<PublishingExtension> {
 }
 
 configure<MavenPublishBaseExtension> {
-    publishToMavenCentral()
     signAllPublications()
     coordinates(
         project.group.toString(),
