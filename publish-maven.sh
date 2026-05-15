@@ -1,1 +1,1 @@
-./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository publishAllPublicationsToMavenCentralRepository
+./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
