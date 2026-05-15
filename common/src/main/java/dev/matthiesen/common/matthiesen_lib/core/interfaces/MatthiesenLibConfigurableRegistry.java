@@ -11,7 +11,7 @@ public interface MatthiesenLibConfigurableRegistry<R> {
     /**
      * Initializes the registry. This method can be used to perform any necessary setup before registration. You should call this from your Mod Entrypoint
      */
-    void init();
+    static void init() {}
 
     /**
      * Registers an object with the given name and extra data. The extra data is provided as a Supplier, allowing for lazy initialization if needed.

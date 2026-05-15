@@ -16,8 +16,5 @@ public abstract class AbstractRegistry<T> implements MatthiesenLibConfigurableRe
     public AbstractRegistry() {}
 
     @Override
-    public void init() {}
-
-    @Override
     public abstract <T1 extends T> Supplier<T1> register(String name, Supplier<T1> entry);
 }
