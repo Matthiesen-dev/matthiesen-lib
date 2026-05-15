@@ -1,0 +1,36 @@
+[versions]
+# Kotlin
+kotlin = "2.2.20"
+
+# Plugins
+idea-ext = "1.1.7"
+publish = "0.35.0"
+shadow = "9.3.1"
+
+# Minecraft Development
+minecraft = "1.21.1"
+loom = "1.11-SNAPSHOT"
+architectury-plugin = "3.4-SNAPSHOT"
+neoforge = "21.1.182"
+fabric_loader_version = "0.17.2"
+fabric_api_version = "0.116.6+1.21.1"
+fabric_permissions_api_version = "0.3.1"
+sponge_mixin_version = "0.8.5"
+
+[libraries]
+# General Buildscript Plugins
+kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
+loom = { group = "dev.architectury", name = "architectury-loom", version.ref = "loom" }
+ideaExt = { group = "org.jetbrains.gradle.plugin.idea-ext", name = "org.jetbrains.gradle.plugin.idea-ext.gradle.plugin", version.ref = "idea-ext"}
+architectury = { group = "architectury-plugin", name = "architectury-plugin.gradle.plugin", version.ref = "architectury-plugin" }
+publish = { group = "com.vanniktech", name = "gradle-maven-publish-plugin", version.ref = "publish" }
+shadow = { group = "com.gradleup.shadow", name = "shadow-gradle-plugin", version.ref = "shadow" }
+
+# Development Libraries
+minecraft = { group = "com.mojang", name = "minecraft", version.ref = "minecraft" }
+minecraftNet = { group = "net.minecraft", name = "minecraft", version.ref = "minecraft" }
+neoforge = { group = "net.neoforged", name = "neoforge", version.ref = "neoforge" }
+fabric = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric_loader_version" }
+fabricApi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric_api_version" }
+fabricPermissionsApi = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric_permissions_api_version" }
+spongeMixin = { group = "org.spongepowered", name = "mixin", version.ref = "sponge_mixin_version" }
