@@ -1,7 +1,7 @@
 package dev.matthiesen.neoforge.matthiesen_lib.permission;
 
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;
@@ -114,9 +114,8 @@ public class MatthiesenLibNeoForgePermissionValidator implements MatthiesenLibPe
      * PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
      */
     private List<PermissionNode<?>> createNodes() {
-        var permManager = MatthiesenLib.getPermissionsManager();
-        MatthiesenLibConstants.createInfoLog("Trying to Register " + permManager.getPendingPermissionCount() + " NeoForge permission nodes");
-        return permManager.all().stream().map(permission -> {
+        MatthiesenLibConstants.createInfoLog("Trying to Register " + MatthiesenLib.getPendingPermissionCount() + " NeoForge permission nodes");
+        return MatthiesenLib.getAllRegisteredPermissions().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
                     permission.getIdentifier(),
                     PermissionTypes.BOOLEAN,

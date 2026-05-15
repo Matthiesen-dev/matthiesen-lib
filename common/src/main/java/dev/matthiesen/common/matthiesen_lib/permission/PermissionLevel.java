@@ -39,6 +39,11 @@ public enum PermissionLevel {
     ALL_COMMANDS(4);
 
     private final int numericalValue;
+
+    /**
+     * Constructor for the PermissionLevel enum. This constructor is used to associate a numerical value with each permission level, which is used for comparing permission levels and determining if a player has sufficient permissions to execute a command.
+     * @param numericalValue The numerical value associated with this permission level, where higher values indicate higher permissions. For example, ALL_COMMANDS has a value of 4, which is the highest permission level, while NONE has a value of 0, which is the lowest permission level.
+     */
     PermissionLevel(int numericalValue) {
         this.numericalValue = numericalValue;
     }

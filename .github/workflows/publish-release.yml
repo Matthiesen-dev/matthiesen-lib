@@ -1,0 +1,71 @@
+name: Publish Release to Maven and Modrinth
+
+on:
+  release:
+    types: [ published ]
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Setup JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: "21"
+          distribution: "temurin"
+
+      - name: Setup Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Parse the version number from the event tag
+        id: parsed_version
+        run: |
+          RAW_TAG="${{ github.event.release.tag_name }}"
+          # Remove leading 'v' if it exists
+          VERSION="${RAW_TAG#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "FABRIC_NAME=Matthiesen Lib $VERSION - Fabric" >> $GITHUB_ENV
+          echo "NEOFORGE_NAME=Matthiesen Lib $VERSION - NeoForge" >> $GITHUB_ENV
+
+      - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
+        run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
+        env:
+          RELEASE_VERSION: ${{ env.VERSION }}
+          ORG_GRADLE_PROJECT_devMatthiesenMavenUsername: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENUSERNAME }}
+          ORG_GRADLE_PROJECT_devMatthiesenMavenPassword: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENPASSWORD }}
+          ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyId: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYID }}
+          ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
+
+      - name: Copy jars for publishing
+        run: ./gradlew copyJars
+
+      - name: Publish Fabric mod to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ${{ secrets.MODRINTH_ID }}
+          name: ${{ env.FABRIC_NAME }}
+          version: ${{ env.VERSION }}
+          changelog: ${{ github.event.release.body }}
+          loaders: fabric
+          game-versions: 1.21.1
+          files: output/matthiesen-lib-fabric-${{ env.VERSION }}.jar
+
+      - name: Publish NeoForge mod to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ${{ secrets.MODRINTH_ID }}
+          name: ${{ env.NEOFORGE_NAME }}
+          version: ${{ env.VERSION }}
+          changelog: ${{ github.event.release.body }}
+          loaders: neoforge
+          game-versions: 1.21.1
+          files: output/matthiesen-lib-neoforge-${{ env.VERSION }}.jar
