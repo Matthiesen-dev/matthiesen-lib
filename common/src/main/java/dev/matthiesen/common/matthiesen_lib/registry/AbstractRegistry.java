@@ -45,6 +45,7 @@ public abstract class AbstractRegistry<T> implements MatthiesenLibConfigurableRe
     }
 
     /**
+     * Registers an entry with the given name and value.
      * @return the registry builder backing this registry
      */
     protected final MatthiesenLib.RegistryBuilder getRegistryBuilder() {
@@ -52,6 +53,7 @@ public abstract class AbstractRegistry<T> implements MatthiesenLibConfigurableRe
     }
 
     /**
+     * Gets the supported registry category used by this registry.
      * @return the supported registry category used by this registry
      */
     protected final SupportedRegistries<T> getSupportedRegistry() {

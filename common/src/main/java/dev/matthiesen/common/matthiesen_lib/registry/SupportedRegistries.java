@@ -93,6 +93,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #ITEM}.
      */
     final class ItemRegistry implements SupportedRegistries<Item> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public ItemRegistry() {}
+
         @Override
         public <R extends Item> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerItem(name, entry);
@@ -103,6 +108,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #BLOCK}.
      */
     final class BlockRegistry implements SupportedRegistries<Block> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public BlockRegistry() {}
+
         @Override
         public <R extends Block> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerBlock(name, entry);
@@ -113,6 +123,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #BLOCK_ENTITY}.
      */
     final class BlockEntityRegistry implements SupportedRegistries<BlockEntityType<?>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public BlockEntityRegistry() {}
+
         @Override
         @SuppressWarnings({"unchecked", "rawtypes"})
         public <R extends BlockEntityType<?>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
@@ -135,6 +150,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #CREATIVE_MODE_TAB}.
      */
     final class CreativeModeTabRegistry implements SupportedRegistries<CreativeModeTab> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public CreativeModeTabRegistry() {}
+
         @Override
         public <R extends CreativeModeTab> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerCreativeModeTab(name, entry);
@@ -145,6 +165,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #SOUND}.
      */
     final class SoundRegistry implements SupportedRegistries<SoundEvent> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public SoundRegistry() {}
+
         @Override
         public <R extends SoundEvent> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerSound(name, entry);
@@ -155,6 +180,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #CRITERIA_TRIGGER}.
      */
     final class CriteriaTriggerRegistry implements SupportedRegistries<CriterionTrigger<?>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public CriteriaTriggerRegistry() {}
+
         @Override
         public <R extends CriterionTrigger<?>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerCriteriaTriggers(name, entry);
@@ -165,6 +195,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #STAT}.
      */
     final class StatsRegistry implements SupportedRegistries<ResourceLocation> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public StatsRegistry() {}
+
         @Override
         public <R extends ResourceLocation> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerStats(name, entry);
@@ -175,6 +210,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #MENU_TYPE}.
      */
     final class MenuTypeRegistry implements SupportedRegistries<MenuType<?>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public MenuTypeRegistry() {}
+
         @Override
         public <R extends MenuType<?>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerMenuType(name, entry);
@@ -185,6 +225,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #DATA_COMPONENT_TYPE}.
      */
     final class DataComponentTypeRegistry implements SupportedRegistries<DataComponentType<?>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public DataComponentTypeRegistry() {}
+
         @Override
         public <R extends DataComponentType<?>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerDataComponentType(name, entry);
@@ -195,6 +240,11 @@ public sealed interface SupportedRegistries<T>
      * Implementation for {@link #ENTITY_EFFECT}.
      */
     final class EntityEffectsRegistry implements SupportedRegistries<MapCodec<? extends EnchantmentEntityEffect>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public EntityEffectsRegistry() {}
+
         @Override
         public <R extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerEntityEffects(name, entry);
