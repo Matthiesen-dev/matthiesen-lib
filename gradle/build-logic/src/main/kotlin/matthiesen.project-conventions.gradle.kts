@@ -12,8 +12,13 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
 }
 
+val resolvedModVersion = providers.environmentVariable("RELEASE_VERSION")
+    .orElse(providers.gradleProperty("mod_version"))
+    .orNull
+    ?: error("Set RELEASE_VERSION or mod_version (e.g. in gradle.properties / -Pmod_version=...)")
+
 group = property("maven_group").toString()
-version = property("mod_version").toString()
+version = resolvedModVersion
 
 project.repositories {
     mavenCentral()

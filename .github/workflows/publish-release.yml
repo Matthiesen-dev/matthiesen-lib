@@ -23,9 +23,20 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Parse the version number from the event tag
+        id: parsed_version
+        run: |
+          RAW_TAG="${{ github.event.release.tag_name }}"
+          # Remove leading 'v' if it exists
+          VERSION="${RAW_TAG#v}"
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+          echo "FABRIC_NAME=Matthiesen Lib $VERSION - Fabric" >> $GITHUB_ENV
+          echo "NEOFORGE_NAME=Matthiesen Lib $VERSION - NeoForge" >> $GITHUB_ENV
+
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
         env:
+          RELEASE_VERSION: ${{ env.VERSION }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenUsername: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENUSERNAME }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenPassword: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
@@ -34,16 +45,6 @@ jobs:
 
       - name: Copy jars for publishing
         run: ./gradlew copyJars
-
-      - name: Parse the version number from the event tag
-        id: parsed_version
-        run: |
-            RAW_TAG="${{ github.event.release.tag_name }}"
-            # Remove leading 'v' if it exists
-            VERSION="${RAW_TAG#v}"
-            echo "VERSION=$VERSION" >> $GITHUB_ENV
-            echo "FABRIC_NAME=Matthiesen Lib $VERSION - Fabric" >> $GITHUB_ENV
-            echo "NEOFORGE_NAME=Matthiesen Lib $VERSION - NeoForge" >> $GITHUB_ENV
 
       - name: Publish Fabric mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
