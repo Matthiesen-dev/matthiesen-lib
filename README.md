@@ -35,40 +35,21 @@ From `gradle.properties`:
 - Artifact: `matthiesen-lib-<platform>`
 - Version: `${matthiesen_lib_version}` (defined in your `gradle.properties`)
 
-Available on Maven Central as well as the Matthiesen Dev Maven repository. Add the appropriate repository to your `repositories` block if needed.
-
-### Maven Central
+You can depend on the common API artifact in your shared code, and optionally the platform-specific artifact in your platform-specific code if you need loader-specific features.
 
 ```kotlin
 repositories {
-    mavenCentral()
+    maven("https://maven.matthiesen.dev/releases")
 }
-```
 
-> You can find the latest version for your platform on [Maven Central](https://central.sonatype.com/search?q=matthiesen-lib).
-
-### Matthiesen Dev Maven
-
-```kotlin
-repositories {
-    maven("https://maven.matthiesen.dev/releases") {
-      name = "devMatthiesenMavenReleases"
-      content {
-        includeGroup("dev.matthiesen")
-      }
-    }
-}
-```
-
-> You can find the latest version for your platform on [Matthiesen Dev Maven](https://maven.matthiesen.dev/).
-
-```kotlin
 dependencies {
     modImplementation("dev.matthiesen:matthiesen-lib-common:${property("matthiesen_lib_version")}") // for common API
     modImplementation("dev.matthiesen:matthiesen-lib-fabric:${property("matthiesen_lib_version")}") // for Fabric-specific API
     modImplementation("dev.matthiesen:matthiesen-lib-neoforge:${property("matthiesen_lib_version")}") // for NeoForge-specific API
 }
 ```
+
+> You can find the latest version for your platform on [Matthiesen Dev Maven](https://maven.matthiesen.dev/).
 
 
 If you publish platform-specific artifacts, depend on the matching one for your loader and keep `common` on compile/runtime classpath as needed by your build setup.
