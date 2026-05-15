@@ -37,9 +37,16 @@ From `gradle.properties`:
 
 You can depend on the common API artifact in your shared code, and optionally the platform-specific artifact in your platform-specific code if you need loader-specific features.
 
+> Note: While there is artifacts on MavenCentral, these versions are no longer being updated. Please use the ones from [Matthiesen Dev Maven](https://maven.matthiesen.dev/) for the latest versions.
+
 ```kotlin
 repositories {
-    maven("https://maven.matthiesen.dev/releases")
+    maven("https://maven.matthiesen.dev/releases") {
+      name = "devMatthiesenMaven-releases"
+      content {
+        includeGroup("dev.matthiesen")
+      }
+    }
 }
 
 dependencies {
@@ -50,7 +57,6 @@ dependencies {
 ```
 
 > You can find the latest version for your platform on [Matthiesen Dev Maven](https://maven.matthiesen.dev/).
-
 
 If you publish platform-specific artifacts, depend on the matching one for your loader and keep `common` on compile/runtime classpath as needed by your build setup.
 
