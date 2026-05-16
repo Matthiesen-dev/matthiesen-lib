@@ -70,7 +70,7 @@ If you publish platform-specific artifacts, depend on the matching one for your 
 Register content from common code using `RegistryBuilder` for automatic mod ID prefixing:
 
 ```java
-public static final RegistryBuilder REGISTRY = new RegistryBuilder("examplemod");
+public static final RegistryBuilder REGISTRY = new MatthiesenLib.RegistryBuilder("examplemod");
 
 public static final Supplier<Item> MY_ITEM = REGISTRY.registerItem(
         "my_item",
@@ -103,6 +103,50 @@ The `RegistryBuilder` automatically prefixes your mod ID to all registered conte
 - enchantment entity effects
 
 All registration methods return `Supplier<T>` so you can safely reference values before actual loader registration runs.
+
+### Advanced: Typed Abstract Registries
+
+If you prefer class-based registries, use `AbstractRegistry` with `SupportedRegistries` (or one of the convenience abstract base classes).
+
+This constrains your registry to one of the currently supported `RegistryBuilder` categories and prevents accidental mismatches.
+
+```java
+public final class ModItems extends AbstractItemRegistry {
+    public static final ModItems INSTANCE = new ModItems();
+
+    private ModItems() {
+        super("examplemod");
+    }
+
+    public static final Supplier<Item> EXAMPLE_ITEM = INSTANCE.register(
+            "example_item",
+            () -> new Item(new Item.Properties())
+    );
+}
+```
+
+You can also wire directly with an existing builder:
+
+```java
+public final class ModSounds extends AbstractRegistry<SoundEvent> {
+    public ModSounds(MatthiesenLib.RegistryBuilder builder) {
+        super(builder, SupportedRegistries.SOUND);
+    }
+}
+```
+
+Convenience base classes currently available:
+
+- `AbstractItemRegistry`
+- `AbstractBlockRegistry`
+- `AbstractBlockEntityRegistry`
+- `AbstractCreativeModeTabRegistry`
+- `AbstractSoundRegistry`
+- `AbstractCriteriaTriggerRegistry`
+- `AbstractStatsRegistry`
+- `AbstractMenuTypeRegistry`
+- `AbstractDataComponentTypeRegistry`
+- `AbstractEntityEffectRegistry`
 
 ### Legacy: Direct Registration Methods (Deprecated)
 
