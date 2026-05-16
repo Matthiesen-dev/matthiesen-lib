@@ -7,6 +7,7 @@ import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 
 /**
@@ -36,5 +37,16 @@ public class MatthiesenLibNeoForgeClient {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void registerScreens(RegisterMenuScreensEvent event) {
         MatthiesenLibClient.applyScreenRegistrations(event::register);
+    }
+
+    /**
+     * Event handler for registering custom entity renderers. This method listens for the EntityRenderersEvent.RegisterRenderers event and allows for the
+     * registration of custom entity renderers. Currently, this method is empty, but it can be filled in with calls to register custom renderers as needed.
+     * @param event The event object containing the context for entity renderer registration. This method is called with the lowest priority to ensure that
+     *              it runs after all other renderer registrations, allowing MatthiesenLib to add its renderers without interfering with other mods' registrations.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
+        MatthiesenLibClient.applyEntityRendererRegistrations(event::registerEntityRenderer, event::registerBlockEntityRenderer);
     }
 }

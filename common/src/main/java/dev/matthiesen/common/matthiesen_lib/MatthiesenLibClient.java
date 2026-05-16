@@ -1,13 +1,22 @@
 package dev.matthiesen.common.matthiesen_lib;
 
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibEntityRendererManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEntityRendererRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
+import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
@@ -28,7 +37,12 @@ public class MatthiesenLibClient {
      */
     public static synchronized void modInitializer() {
         MatthiesenLibScreenManager.modInitializer();
+        MatthiesenLibEntityRendererManager.modInitializer();
     }
+
+    // -------------------------------------------------------------------------
+    // Screen registration
+    // -------------------------------------------------------------------------
 
     /**
      * Queues multiple screens to be registered. Safe to call at any time — the platform applies it during its own registration event
@@ -80,5 +94,93 @@ public class MatthiesenLibClient {
      */
     public static synchronized void applyScreenRegistrations(MatthiesenLibScreenRegistrar registrar) {
         MatthiesenLibScreenManager.applyScreenRegistrations(registrar);
+    }
+
+    // -------------------------------------------------------------------------
+    // Entity / block entity renderer registration
+    // -------------------------------------------------------------------------
+
+    /**
+     * Queues multiple entity and block entity renderers to be registered. Safe to call at any time — the platform applies them during its own
+     * registration event (Fabric: onInitializeClient, NeoForge: EntityRenderersEvent.RegisterRenderers).
+     *
+     * @param registrarConsumer A consumer that receives a registrar helper. Call {@code registrar.registerEntityRenderer(...)} or
+     *                          {@code registrar.registerBlockEntityRenderer(...)} once for each renderer you want to queue.
+     */
+    public static void registerEntityRenderers(Consumer<MatthiesenLibEntityRendererRegistrar> registrarConsumer) {
+        MatthiesenLibEntityRendererManager.registerEntityRenderers(registrarConsumer);
+    }
+
+    /**
+     * Queues an entity renderer to be registered. Safe to call at any time — the platform applies it during its own registration event
+     * (Fabric: onInitializeClient, NeoForge: EntityRenderersEvent.RegisterRenderers).
+     *
+     * @param <T>                The type of entity.
+     * @param entityTypeSupplier A supplier that provides the EntityType associated with the renderer. This allows for lazy evaluation,
+     *                           so you can pass a reference to an entity type that may not be initialized yet.
+     * @param rendererProvider   The provider used to construct the renderer instance.
+     */
+    public static <T extends Entity> void registerEntityRenderer(Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibEntityRendererManager.registerEntityRenderer(entityTypeSupplier, rendererProvider);
+    }
+
+    /**
+     * Queues an entity renderer to be registered. Safe to call at any time — the platform applies it during its own registration event
+     * (Fabric: onInitializeClient, NeoForge: EntityRenderersEvent.RegisterRenderers).
+     *
+     * @param <T>              The type of entity.
+     * @param entityType       The EntityType associated with the renderer.
+     * @param rendererProvider The provider used to construct the renderer instance.
+     */
+    public static <T extends Entity> void registerEntityRenderer(EntityType<? extends T> entityType, EntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibEntityRendererManager.registerEntityRenderer(entityType, rendererProvider);
+    }
+
+    /**
+     * Queues a block entity renderer to be registered. Safe to call at any time — the platform applies it during its own registration event
+     * (Fabric: onInitializeClient, NeoForge: EntityRenderersEvent.RegisterRenderers).
+     *
+     * @param <T>                        The type of block entity.
+     * @param blockEntityTypeSupplier    A supplier that provides the BlockEntityType associated with the renderer. This allows for lazy evaluation,
+     *                                   so you can pass a reference to a block entity type that may not be initialized yet.
+     * @param rendererProvider           The provider used to construct the block entity renderer instance.
+     */
+    public static <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<? extends BlockEntityType<? extends T>> blockEntityTypeSupplier, BlockEntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibEntityRendererManager.registerBlockEntityRenderer(blockEntityTypeSupplier, rendererProvider);
+    }
+
+    /**
+     * Queues a block entity renderer to be registered. Safe to call at any time — the platform applies it during its own registration event
+     * (Fabric: onInitializeClient, NeoForge: EntityRenderersEvent.RegisterRenderers).
+     *
+     * @param <T>              The type of block entity.
+     * @param blockEntityType  The BlockEntityType associated with the renderer.
+     * @param rendererProvider The provider used to construct the block entity renderer instance.
+     */
+    public static <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibEntityRendererManager.registerBlockEntityRenderer(blockEntityType, rendererProvider);
+    }
+
+    /**
+     * Applies all queued entity and block entity renderer registrations. Called by each platform at the correct lifecycle moment.
+     * (Do not call this from an external mod.)
+     *
+     * @param entityRenderers      A BiConsumer used to register entity renderers on the platform.
+     * @param blockEntityRenderers A BiConsumer used to register block entity renderers on the platform.
+     */
+    @SuppressWarnings("rawtypes")
+    public static synchronized void applyEntityRendererRegistrations(BiConsumer<EntityType<? extends Entity>, EntityRendererProvider> entityRenderers,
+                                                                     BiConsumer<BlockEntityType<? extends BlockEntity>, BlockEntityRendererProvider> blockEntityRenderers) {
+        MatthiesenLibEntityRendererManager.applyEntityRendererRegistrations(new MatthiesenLibEntityRendererRegistrar() {
+            @Override
+            public <T extends Entity> void registerEntityRenderer(EntityType<? extends T> entityType, EntityRendererProvider<T> rendererProvider) {
+                entityRenderers.accept(entityType, rendererProvider);
+            }
+
+            @Override
+            public <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider<T> rendererProvider) {
+                blockEntityRenderers.accept(blockEntityType, rendererProvider);
+            }
+        });
     }
 }
