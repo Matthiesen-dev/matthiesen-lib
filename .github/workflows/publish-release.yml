@@ -7,6 +7,8 @@ on:
 jobs:
   publish:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -55,6 +57,14 @@ jobs:
       - name: Copy jars for publishing
         if: ${{ env.IS_SNAPSHOT == 'false' }}
         run: ./gradlew copyJars
+
+      - name: Upload Jars to GitHub Release
+        if: ${{ env.IS_SNAPSHOT == 'false' }}
+        uses: softprops/action-gh-release@v1
+        with:
+          files: output/*.jar
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Publish Fabric mod to Modrinth
         if: ${{ env.IS_SNAPSHOT == 'false' }}
