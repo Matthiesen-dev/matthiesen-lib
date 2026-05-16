@@ -9,11 +9,6 @@ import java.util.function.Supplier;
 @SuppressWarnings("unused")
 public interface MatthiesenLibConfigurableRegistry<R> {
     /**
-     * Initializes the registry. This method can be used to perform any necessary setup before registration. You should call this from your Mod Entrypoint
-     */
-    static void init() {}
-
-    /**
      * Registers an object with the given name and extra data. The extra data is provided as a Supplier, allowing for lazy initialization if needed.
      * @param name The name of the object being registered.
      * @param entry A Supplier that provides additional data associated with the registered object. This allows for lazy initialization of the extra data if necessary.
