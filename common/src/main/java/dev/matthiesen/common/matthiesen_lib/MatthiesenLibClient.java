@@ -2,11 +2,19 @@ package dev.matthiesen.common.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibEntityRendererManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibBlockOutlineManager;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineContext;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineListener;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEntityRendererRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
+import net.minecraft.client.Camera;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
+import net.minecraft.client.multiplayer.ClientLevel;
+import com.mojang.blaze3d.vertex.PoseStack;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.world.entity.Entity;
@@ -15,6 +23,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.phys.BlockHitResult;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -23,7 +32,6 @@ import java.util.function.Supplier;
 /**
  * Client-side facade for MatthiesenLib. Public registration methods are exposed here,
  * while internal management lives in their own classes to keep the public API clean and focused.
- * <p>Do not call modInitializer or applyScreenRegistrations from an external mod — these are called by the platform at the correct lifecycle moments.</p>
  */
 @SuppressWarnings("unused")
 public class MatthiesenLibClient {
@@ -38,6 +46,7 @@ public class MatthiesenLibClient {
     public static synchronized void modInitializer() {
         MatthiesenLibScreenManager.modInitializer();
         MatthiesenLibEntityRendererManager.modInitializer();
+        MatthiesenLibBlockOutlineManager.modInitializer();
     }
 
     // -------------------------------------------------------------------------
@@ -182,5 +191,89 @@ public class MatthiesenLibClient {
                 blockEntityRenderers.accept(blockEntityType, rendererProvider);
             }
         });
+    }
+
+    // -------------------------------------------------------------------------
+    // Block outline highlight listeners
+    // -------------------------------------------------------------------------
+
+    /**
+     * Queues multiple block outline listeners.
+     *
+     * @param registrarConsumer A consumer that receives a helper to register listeners.
+     */
+    public static void registerBlockOutlineListeners(Consumer<MatthiesenLibBlockOutlineRegistrar> registrarConsumer) {
+        MatthiesenLibBlockOutlineManager.registerBlockOutlineListeners(registrarConsumer);
+    }
+
+    /**
+     * Queues a block outline listener.
+     *
+     * @param listener The listener to invoke when the player highlights a block.
+     *
+     * <p>Example:</p>
+     * <pre>{@code
+     * MatthiesenLibClient.registerBlockOutlineListener(context -> {
+     *     BlockPos basePos = MyClientLogic.resolveBasePos(context.level(), context.blockHitResult().getBlockPos());
+     *     if (basePos == null) {
+     *         return true; // Keep vanilla outline when there is no override target.
+     *     }
+     *
+     *     BlockState baseState = context.level().getBlockState(basePos);
+     *     VoxelShape shape = baseState.getShape(context.level(), basePos);
+     *
+     *     double x = basePos.getX() - context.camera().getPosition().x();
+     *     double y = basePos.getY() - context.camera().getPosition().y();
+     *     double z = basePos.getZ() - context.camera().getPosition().z();
+     *
+     *     LevelRenderer.renderVoxelShape(
+     *             context.poseStack(),
+     *             context.multiBufferSource().getBuffer(RenderType.lines()),
+     *             shape,
+     *             x, y, z,
+     *             0.0F, 0.0F, 0.0F, 0.4F,
+     *             false
+     *     );
+     *
+     *     return false; // Cancel vanilla box because custom outline was drawn.
+     * });
+     * }</pre>
+     */
+    public static void registerBlockOutlineListener(MatthiesenLibBlockOutlineListener listener) {
+        MatthiesenLibBlockOutlineManager.registerBlockOutlineListener(listener);
+    }
+
+    /**
+     * Applies registered block outline listeners to a platform-neutral context.
+     *
+     * @param context The block outline context for the current frame.
+     * @return {@code true} to continue with vanilla outline rendering, {@code false} to cancel it.
+     */
+    public static boolean applyBlockOutlineListeners(MatthiesenLibBlockOutlineContext context) {
+        return MatthiesenLibBlockOutlineManager.fireBlockOutlineEvent(context);
+    }
+
+    /**
+     * Applies registered block outline listeners to event data.
+     *
+     * @param level             The current client level.
+     * @param blockHitResult    The targeted block hit result.
+     * @param poseStack         The active pose stack.
+     * @param camera            The active camera.
+     * @param multiBufferSource The active render buffer source.
+     * @return {@code true} to continue with vanilla outline rendering, {@code false} to cancel it.
+     */
+    public static boolean applyBlockOutlineListeners(ClientLevel level,
+                                                     BlockHitResult blockHitResult,
+                                                     PoseStack poseStack,
+                                                     Camera camera,
+                                                     MultiBufferSource multiBufferSource) {
+        return MatthiesenLibBlockOutlineManager.fireBlockOutlineEvent(new MatthiesenLibBlockOutlineContext(
+                level,
+                blockHitResult,
+                poseStack,
+                camera,
+                multiBufferSource
+        ));
     }
 }
