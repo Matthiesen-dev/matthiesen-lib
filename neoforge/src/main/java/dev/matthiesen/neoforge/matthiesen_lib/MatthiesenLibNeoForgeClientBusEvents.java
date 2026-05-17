@@ -2,12 +2,14 @@ package dev.matthiesen.neoforge.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudOrdering;
 import net.minecraft.client.Minecraft;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.EntityRenderersEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 
@@ -20,6 +22,10 @@ public class MatthiesenLibNeoForgeClientBusEvents {
      * Default constructor for MatthiesenLibNeoForgeClientBusEvents.
      */
     public MatthiesenLibNeoForgeClientBusEvents() {}
+
+    // -------------------------------------------------------------------------
+    // MOD BUS EVENTS
+    // -------------------------------------------------------------------------
 
     /**
      * Event handler for registering custom menu screens. This method listens for the RegisterMenuScreensEvent and applies any screen registrations
@@ -43,6 +49,36 @@ public class MatthiesenLibNeoForgeClientBusEvents {
     public static void registerRenderers(final EntityRenderersEvent.RegisterRenderers event) {
         MatthiesenLibClient.applyEntityRendererRegistrations(event::registerEntityRenderer, event::registerBlockEntityRenderer);
     }
+
+    /**
+     * Event handler for registering custom HUD layers. This method listens for the RegisterGuiLayersEvent and applies any
+     * HUD layer registrations defined in MatthiesenLibClient.
+     * @param event The event object containing the context for HUD layer registration. This method is called with the lowest
+     *              priority to ensure that it runs after all other HUD layer registrations have been processed, allowing MatthiesenLib
+     *              to add its layers without interfering with other mods' registrations.
+     */
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onRegisterLayers(RegisterGuiLayersEvent event) {
+        MatthiesenLibClient.applyHudLayerRegistrations((ordering, other, key, layer) -> {
+            if (ordering == MatthiesenLibHudOrdering.BEFORE) {
+                if (other == null) {
+                    event.registerBelowAll(key, layer);
+                } else {
+                    event.registerBelow(other, key, layer);
+                }
+            } else {
+                if (other == null) {
+                    event.registerAboveAll(key, layer);
+                } else {
+                    event.registerAbove(other, key, layer);
+                }
+            }
+        });
+    }
+
+    // -------------------------------------------------------------------------
+    // NEOFORGE EVENT BUS
+    // -------------------------------------------------------------------------
 
     /**
      * Event handler for customizing block outline rendering. This method listens for the RenderHighlightEvent.Block event and allows registered block outline listeners

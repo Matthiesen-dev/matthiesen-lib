@@ -3,12 +3,18 @@ package dev.matthiesen.common.matthiesen_lib;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibEntityRendererManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibBlockOutlineManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibHudManager;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineContext;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineListener;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEntityRendererRegistrar;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudOrdering;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
 import net.minecraft.client.Camera;
+import net.minecraft.client.DeltaTracker;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
@@ -17,6 +23,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -24,6 +31,7 @@ import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
@@ -47,6 +55,7 @@ public class MatthiesenLibClient {
         MatthiesenLibScreenManager.modInitializer();
         MatthiesenLibEntityRendererManager.modInitializer();
         MatthiesenLibBlockOutlineManager.modInitializer();
+        MatthiesenLibHudManager.modInitializer();
     }
 
     // -------------------------------------------------------------------------
@@ -275,5 +284,86 @@ public class MatthiesenLibClient {
                 camera,
                 multiBufferSource
         ));
+    }
+
+    // -------------------------------------------------------------------------
+    // HUD Rendering
+    // -------------------------------------------------------------------------
+
+    /**
+     * Queues multiple HUD layers to be registered.
+     *
+     * <p>Example:</p>
+     * <pre>{@code
+     * MatthiesenLibClient.registerHudLayers(registrar -> {
+     *     registrar.registerBelow(
+     *             NeoForgeVanillaGuiLayers.CHAT,
+     *             ResourceLocation.fromNamespaceAndPath("examplemod", "status_hud"),
+     *             (guiGraphics, deltaTracker) -> {
+     *                 // Your HUD rendering logic
+     *             }
+     *     );
+     *
+     *     registrar.registerAboveAll(
+     *             ResourceLocation.fromNamespaceAndPath("examplemod", "debug_hud"),
+     *             (guiGraphics, deltaTracker) -> {
+     *                 // Another HUD layer
+     *             }
+     *     );
+     * });
+     * }</pre>
+     */
+    public static void registerHudLayers(Consumer<MatthiesenLibHudRegistrar> registrarConsumer) {
+        MatthiesenLibHudManager.registerHudLayers(registrarConsumer);
+    }
+
+    /**
+     * Queues a HUD layer that renders above all others.
+     *
+     * <p>Example:</p>
+     * <pre>{@code
+     * MatthiesenLibClient.registerHudLayer(
+     *         ResourceLocation.fromNamespaceAndPath("examplemod", "simple_hud"),
+     *         (guiGraphics, deltaTracker) -> {
+     *             // Render a simple always-on-top HUD layer
+     *         }
+     * );
+     * }</pre>
+     */
+    public static void registerHudLayer(ResourceLocation key, LayeredDraw.Layer layer) {
+        MatthiesenLibHudManager.registerHudLayer(key, layer);
+    }
+
+    /**
+     * Queues a HUD layer with explicit ordering information.
+     *
+     * <p>Example:</p>
+     * <pre>{@code
+     * MatthiesenLibClient.registerHudLayer(
+     *         MatthiesenLibHudOrdering.BEFORE,
+     *         NeoForgeVanillaGuiLayers.CHAT,
+     *         ResourceLocation.fromNamespaceAndPath("examplemod", "chat_background_hud"),
+     *         (guiGraphics, deltaTracker) -> {
+     *             // Render a layer before chat
+     *         }
+     * );
+     * }</pre>
+     */
+    public static void registerHudLayer(MatthiesenLibHudOrdering ordering, @Nullable ResourceLocation other, ResourceLocation key, LayeredDraw.Layer layer) {
+        MatthiesenLibHudManager.registerHudLayer(ordering, other, key, layer);
+    }
+
+    /**
+     * Applies queued HUD layer registrations to a platform registrar.
+     */
+    public static synchronized void applyHudLayerRegistrations(MatthiesenLibHudRegistrar registrar) {
+        MatthiesenLibHudManager.applyHudLayerRegistrations(registrar);
+    }
+
+    /**
+     * Renders registered HUD layers for Fabric's HUD callback.
+     */
+    public static void applyFabricHudRendering(GuiGraphics drawContext, DeltaTracker tickCounter) {
+        MatthiesenLibHudManager.renderHudLayers(drawContext, tickCounter);
     }
 }

@@ -3,6 +3,7 @@ package dev.matthiesen.fabric.matthiesen_lib;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityRendererRegistry;
+import net.fabricmc.fabric.api.client.rendering.v1.HudRenderCallback;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderEvents;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderers;
@@ -29,6 +30,7 @@ public class MatthiesenLibFabricClient implements ClientModInitializer {
         MatthiesenLibClient.applyEntityRendererRegistrations(EntityRendererRegistry::register, BlockEntityRenderers::register);
 
         // Setup Listeners
+        HudRenderCallback.EVENT.register(MatthiesenLibClient::applyFabricHudRendering);
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, hitResult) -> {
             if (!(hitResult instanceof BlockHitResult blockHitResult)) {
                 return true;
