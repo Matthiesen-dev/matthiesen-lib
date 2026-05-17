@@ -8,8 +8,15 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
+/**
+ * MatthiesenLibNeoForgeServerBusEvents is a server-side event subscriber class for the NeoForge mod loader.
+ */
 @EventBusSubscriber(modid = MatthiesenLibConstants.MOD_ID, value = Dist.DEDICATED_SERVER)
 public class MatthiesenLibNeoForgeServerBusEvents {
+    /**
+     * Default constructor for MatthiesenLibNeoForgeServerBusEvents.
+     */
+    public MatthiesenLibNeoForgeServerBusEvents() {}
 
     /**
      * Event handler for server starting events. This method listens for the ServerStartingEvent and sets the MC_SERVER field to the current

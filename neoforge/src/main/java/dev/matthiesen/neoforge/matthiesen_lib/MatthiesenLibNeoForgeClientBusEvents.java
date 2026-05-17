@@ -11,8 +11,16 @@ import net.neoforged.neoforge.client.event.EntityRenderersEvent;
 import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
 import net.neoforged.neoforge.client.event.RenderHighlightEvent;
 
+/**
+ * MatthiesenLibNeoForgeClientBusEvents is a client-side event subscriber class for the NeoForge mod loader.
+ */
 @EventBusSubscriber(modid = MatthiesenLibConstants.MOD_ID, value = Dist.CLIENT)
 public class MatthiesenLibNeoForgeClientBusEvents {
+    /**
+     * Default constructor for MatthiesenLibNeoForgeClientBusEvents.
+     */
+    public MatthiesenLibNeoForgeClientBusEvents() {}
+
     /**
      * Event handler for registering custom menu screens. This method listens for the RegisterMenuScreensEvent and applies any screen registrations
      * defined in MatthiesenLibClient.

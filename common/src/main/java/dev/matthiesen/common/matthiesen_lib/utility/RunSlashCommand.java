@@ -11,6 +11,11 @@ import net.minecraft.server.level.ServerPlayer;
 @SuppressWarnings("unused")
 public class RunSlashCommand {
     /**
+     * Default constructor for RunSlashCommand. This class is not meant to be instantiated, so the constructor is private to prevent instantiation.
+     */
+    private RunSlashCommand() {}
+
+    /**
      * Executes a slash command as the server. This method allows you to run any command with the server's permissions and context.
      * @param command The command string to execute, without the leading slash. For example, "say Hello world!".
      */
