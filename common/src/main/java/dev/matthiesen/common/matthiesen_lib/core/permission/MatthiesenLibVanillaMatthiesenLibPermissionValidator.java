@@ -10,7 +10,7 @@ import net.minecraft.server.level.ServerPlayer;
  * Implementation of the PermissionValidator interface that checks permissions using Minecraft's built-in permission level system.
  * This validator will check if a player has the required permission level to execute a command or perform an action.
  */
-public class MatthiesenLibVanillaMatthiesenLibPermissionValidator implements MatthiesenLibPermissionValidator {
+public final class MatthiesenLibVanillaMatthiesenLibPermissionValidator implements MatthiesenLibPermissionValidator {
     /**
      * Creates a new instance of the VanillaPermissionValidator. This constructor does not perform any initialization, as there are no resources to set up for this validator.
      */

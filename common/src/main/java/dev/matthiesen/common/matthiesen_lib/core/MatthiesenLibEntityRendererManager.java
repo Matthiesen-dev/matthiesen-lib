@@ -16,7 +16,7 @@ import java.util.function.Supplier;
 /**
  * Internal entity renderer registration manager used by MatthiesenLibClient.
  */
-public class MatthiesenLibEntityRendererManager {
+public final class MatthiesenLibEntityRendererManager {
     private static final List<RendererRegistration> REGISTERED_ENTITY_RENDERERS = new CopyOnWriteArrayList<>();
     private static final List<RendererRegistration> REGISTERED_BLOCK_ENTITY_RENDERERS = new CopyOnWriteArrayList<>();
 

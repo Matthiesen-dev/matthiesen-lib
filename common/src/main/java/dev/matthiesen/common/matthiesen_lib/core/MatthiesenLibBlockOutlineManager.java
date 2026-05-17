@@ -11,7 +11,7 @@ import java.util.function.Consumer;
 /**
  * Internal block outline listener manager used by MatthiesenLibClient.
  */
-public class MatthiesenLibBlockOutlineManager {
+public final class MatthiesenLibBlockOutlineManager {
     private static final List<MatthiesenLibBlockOutlineListener> REGISTERED_LISTENERS = new CopyOnWriteArrayList<>();
     private static boolean initialized;
 

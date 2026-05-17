@@ -10,7 +10,7 @@ import java.util.List;
  * This registry allows permissions to be registered dynamically, either immediately or through a pending queue
  * if the registrar is not yet available. This follows the same pattern as MatthiesenLibCommands and MatthiesenLibClient.
  */
-public class MatthiesenLibPermissionsManager {
+public final class MatthiesenLibPermissionsManager {
     private static final List<Permission> PERMISSIONS = new ArrayList<>();
     private static final List<Permission> PENDING_PERMISSIONS = new ArrayList<>();
     private static boolean initialized;
