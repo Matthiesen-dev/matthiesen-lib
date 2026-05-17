@@ -292,6 +292,7 @@ public class MatthiesenLibClient {
 
     /**
      * Queues multiple HUD layers to be registered.
+     * @param registrarConsumer A consumer that accepts a {@link MatthiesenLibHudRegistrar} to register layers with. This is typically a method
      *
      * <p>Example:</p>
      * <pre>{@code
@@ -319,6 +320,8 @@ public class MatthiesenLibClient {
 
     /**
      * Queues a HUD layer that renders above all others.
+     * @param key A unique id for the layer, used for ordering and debugging.
+     * @param layer The layer implementation.
      *
      * <p>Example:</p>
      * <pre>{@code
@@ -336,6 +339,10 @@ public class MatthiesenLibClient {
 
     /**
      * Queues a HUD layer with explicit ordering information.
+     * @param key A unique id for the layer, used for ordering and debugging.
+     * @param other The layer id to order against, or {@code null} to target the top or bottom of the stack depending on {@code ordering}.
+     * @param ordering Whether the new layer should render before or after {@code other}, or whether it should target the top or bottom of the stack if {@code other} is null.
+     * @param layer The layer implementation.
      *
      * <p>Example:</p>
      * <pre>{@code
@@ -355,6 +362,7 @@ public class MatthiesenLibClient {
 
     /**
      * Applies queued HUD layer registrations to a platform registrar.
+     * @param registrar The platform-specific registrar to apply HUD layer registrations with. This is typically provided by the platform's HUD layer registration event (e.g. RegisterGuiLayersEvent for NeoForge).
      */
     public static synchronized void applyHudLayerRegistrations(MatthiesenLibHudRegistrar registrar) {
         MatthiesenLibHudManager.applyHudLayerRegistrations(registrar);
@@ -362,6 +370,8 @@ public class MatthiesenLibClient {
 
     /**
      * Renders registered HUD layers for Fabric's HUD callback.
+     * @param drawContext The rendering context to draw with.
+     * @param tickCounter The tick counter to pass to layers.
      */
     public static void applyFabricHudRendering(GuiGraphics drawContext, DeltaTracker tickCounter) {
         MatthiesenLibHudManager.renderHudLayers(drawContext, tickCounter);

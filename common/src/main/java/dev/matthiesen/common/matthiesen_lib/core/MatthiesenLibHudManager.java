@@ -73,6 +73,8 @@ public final class MatthiesenLibHudManager {
 
     /**
      * Registers multiple HUD layers.
+     * @param registrarConsumer A consumer that accepts a {@link MatthiesenLibHudRegistrar} to register layers with. This is typically a method
+     *                          reference to the platform-specific HUD layer registration event handler (e.g. {@code event::registerBelowAll} for NeoForge).
      */
     public static void registerHudLayers(Consumer<MatthiesenLibHudRegistrar> registrarConsumer) {
         registrarConsumer.accept(MatthiesenLibHudManager::registerHudLayer);
@@ -80,6 +82,8 @@ public final class MatthiesenLibHudManager {
 
     /**
      * Registers a HUD layer above all others.
+     * @param key A unique id for the layer.
+     * @param layer The layer implementation.
      */
     public static void registerHudLayer(ResourceLocation key, LayeredDraw.Layer layer) {
         registerHudLayer(MatthiesenLibHudOrdering.AFTER, null, key, layer);
@@ -87,6 +91,10 @@ public final class MatthiesenLibHudManager {
 
     /**
      * Registers a HUD layer with explicit ordering information.
+     * @param layer The layer implementation.
+     * @param key A unique id for the layer.
+     * @param ordering Whether the new layer should render before or after {@code other}.
+     * @param other The layer id to order against, or {@code null} to target the top or bottom of the stack.
      */
     public static void registerHudLayer(MatthiesenLibHudOrdering ordering, @Nullable ResourceLocation other, ResourceLocation key, LayeredDraw.Layer layer) {
         registerHudLayerInternal(new HudLayerRegistration(ordering, other, key, layer));
@@ -94,6 +102,7 @@ public final class MatthiesenLibHudManager {
 
     /**
      * Applies all queued HUD layer registrations.
+     * @param registrar The registrar to apply registrations with. This is typically provided by the platform-specific event handler for HUD layer registration events.
      */
     public static synchronized void applyHudLayerRegistrations(MatthiesenLibHudRegistrar registrar) {
         activeRegistrar = registrar;
@@ -107,6 +116,8 @@ public final class MatthiesenLibHudManager {
 
     /**
      * Renders all registered HUD layers, approximating NeoForge ordering for Fabric.
+     * @param drawContext The rendering context to draw with.
+     * @param tickCounter The tick counter to pass to layers.
      */
     public static void renderHudLayers(GuiGraphics drawContext, DeltaTracker tickCounter) {
         for (HudLayerRegistration registration : resolveRenderOrder()) {
