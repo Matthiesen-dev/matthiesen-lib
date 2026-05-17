@@ -23,8 +23,12 @@ public class MatthiesenLibFabricClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
         MatthiesenLibClient.modInitializer();
+
+        // Apply Registrations
         MatthiesenLibClient.applyScreenRegistrations(MenuScreens::register);
         MatthiesenLibClient.applyEntityRendererRegistrations(EntityRendererRegistry::register, BlockEntityRenderers::register);
+
+        // Setup Listeners
         WorldRenderEvents.BEFORE_BLOCK_OUTLINE.register((context, hitResult) -> {
             if (!(hitResult instanceof BlockHitResult blockHitResult)) {
                 return true;
