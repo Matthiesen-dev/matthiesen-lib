@@ -15,7 +15,7 @@ import java.util.function.Supplier;
 /**
  * Internal screen registration manager used by MatthiesenLibClient.
  */
-public class MatthiesenLibScreenManager {
+public final class MatthiesenLibScreenManager {
 	private static final List<ScreenRegistration> REGISTERED_SCREENS = new CopyOnWriteArrayList<>();
 	private static volatile MatthiesenLibScreenRegistrar activeRegistrar;
 	private static int appliedRegistrations;

@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -239,4 +240,13 @@ public interface MatthiesenLibPlatform {
      * @return A new instance of CreativeModeTab.Builder that can be used to create and register a creative mode tab.
      */
     CreativeModeTab.Builder newCreativeTabBuilder();
+
+    /**
+     * Get the Minecraft server instance. This method provides access to the Minecraft server, which can be used to perform various server-side operations,
+     * such as managing players, handling commands, or interacting with the world. The implementation of this method may vary depending on the mod loader,
+     * but it generally returns the current instance of the Minecraft server that is running the game. This allows mod developers to access server functionality
+     * in a way that is compatible with multiple mod loaders without having to worry about the specific implementation details of each loader.
+     * @return The current instance of the Minecraft server.
+     */
+    MinecraftServer getMinecraftServer();
 }

@@ -12,6 +12,7 @@ import dev.matthiesen.common.matthiesen_lib.permission.Permission;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -122,6 +123,14 @@ public class MatthiesenLib {
      */
     public static void registerCommand(AbstractCommand command) {
         MatthiesenLibCommandsManager.registerCommand(command);
+    }
+
+    /**
+     * Retrieves the current instance of the Minecraft server. This method is thread-safe and returns null if the server is not currently running.
+     * @return The current MinecraftServer instance, or null if the server is not running.
+     */
+    public static MinecraftServer getMinecraftServer() {
+        return PLATFORM.getMinecraftServer();
     }
 
     /**
