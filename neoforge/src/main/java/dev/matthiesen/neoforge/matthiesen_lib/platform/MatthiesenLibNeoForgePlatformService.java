@@ -3,11 +3,13 @@ package dev.matthiesen.neoforge.matthiesen_lib.platform;
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.neoforge.matthiesen_lib.MatthiesenLibNeoForge;
 import dev.matthiesen.neoforge.matthiesen_lib.helper.MatthiesenLibNeoForgeRegistryHelper;
 import dev.matthiesen.neoforge.matthiesen_lib.permission.MatthiesenLibNeoForgePermissionValidator;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -101,5 +103,10 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
     @Override
     public CreativeModeTab.Builder newCreativeTabBuilder() {
         return CreativeModeTab.builder();
+    }
+
+    @Override
+    public MinecraftServer getMinecraftServer() {
+        return MatthiesenLibNeoForge.getMinecraftServer();
     }
 }

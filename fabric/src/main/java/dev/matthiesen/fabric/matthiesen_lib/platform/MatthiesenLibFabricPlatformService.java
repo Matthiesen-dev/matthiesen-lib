@@ -3,6 +3,7 @@ package dev.matthiesen.fabric.matthiesen_lib.platform;
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabric;
 import dev.matthiesen.fabric.matthiesen_lib.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
@@ -11,6 +12,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.item.CreativeModeTab;
@@ -105,6 +107,11 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
     @Override
     public CreativeModeTab.Builder newCreativeTabBuilder() {
         return FabricItemGroup.builder();
+    }
+
+    @Override
+    public MinecraftServer getMinecraftServer() {
+        return MatthiesenLibFabric.getMinecraftServer();
     }
 
     @SuppressWarnings("unchecked")
