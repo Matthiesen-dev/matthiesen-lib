@@ -34,6 +34,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * @param player The player to send the message to.
      * @param message The message to send, represented as an Object for compatibility with the Embers mod's message format.
      */
+    @Override
     public void sendMessage(ServerPlayer player, /* ImmersiveMessage */ Object message) {
         MESSAGING_PLATFORM.sendMessage(player, message);
     }
@@ -44,6 +45,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * @param messageId The ID of the message to update.
      * @param message The new message content, represented as an Object for compatibility with the Embers mod's message format.
      */
+    @Override
     public void sendUpdateMessage(ServerPlayer player, String messageId, /* ImmersiveMessage */ Object message) {
         MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message);
     }
@@ -53,6 +55,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * @param player The player to close the message for.
      * @param messageId The ID of the message to close.
      */
+    @Override
     public void sendCloseMessage(ServerPlayer player, String messageId) {
         MESSAGING_PLATFORM.sendCloseMessage(player, messageId);
     }
@@ -61,6 +64,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * Closes all messages for the specified player using the Embers messaging platform.
      * @param player The player to close all messages for.
      */
+    @Override
     public void sendCloseAllMessages(ServerPlayer player) {
         MESSAGING_PLATFORM.sendCloseAllMessages(player);
     }
