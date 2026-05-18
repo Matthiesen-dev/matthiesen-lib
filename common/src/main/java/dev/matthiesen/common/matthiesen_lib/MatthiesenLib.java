@@ -61,17 +61,12 @@ public class MatthiesenLib {
 
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
-
-        // Pre-register the Vanilla MC permissions validator
+        // Initialize Permissions Validators
         setPermissionValidator(new MatthiesenLibVanillaMatthiesenLibPermissionValidator());
-
-        // Register any platform permission validator available through the CommonPlatform service.
         PLATFORM.registerPermissionValidator();
-
         // Initialize the command registry
         MatthiesenLibCommandsManager.modInitializer();
-
-        // Initialize the Text Parser Manager
+        // Initialize the text parser registry
         MatthiesenLibTextParserManager.modInitializer();
 
         // Final step: Log that the core has been initialized.
