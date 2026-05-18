@@ -9,14 +9,14 @@ import net.tysontheember.emberstextapi.platform.NetworkHelper;
 
 public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements MatthiesenLibEmbersMessagingPlatform {
     @Override
-    public void sendMessage(ServerPlayer player, Object message) {
+    public void sendMessage(ServerPlayer player, /* ImmersiveMessage */ Object message) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendMessage(player, (ImmersiveMessage) message);
         }
     }
 
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, Object message) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, /* ImmersiveMessage */ Object message) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendUpdateMessage(player, messageId, (ImmersiveMessage) message);
         }
