@@ -31,7 +31,7 @@ if (compat != null) {
 
 This sends a simple text message to the player for 100 ticks (5 seconds).
 
-### Customized Message with Builder
+### Customized Message with Inline Builder (Convenience)
 
 ```java
 // Get the Ember's Text API compatibility layer
@@ -39,17 +39,17 @@ MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltI
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
-    MatthiesenLibImmersiveMessageBuilder builder = MatthiesenLibImmersiveMessageBuilder.create()
+    compat.sendMessage(player, "Customized Message", 100f, builder -> builder
         .anchor(MatthiesenLibImmersiveMessageBuilder.TextAnchor.TOP_CENTER)
         .align(MatthiesenLibImmersiveMessageBuilder.TextAlign.CENTER)
         .scale(1.5f)
         .shadow(true)
         .fadeInTicks(10)
-        .fadeOutTicks(20);
-
-    compat.sendMessage(player, "Customized Message", 100f, builder);
+        .fadeOutTicks(20));
 }
 ```
+
+The `builder -> ...` overload creates a new builder internally so you do not need to pre-create one.
 
 ## API Reference
 
@@ -79,11 +79,17 @@ Main interface for sending immersive messages.
 | Method | Description |
 |--------|-------------|
 | `sendMessage(ServerPlayer, Component, float)` | Send a message using a Minecraft `Component` |
+| `sendMessage(ServerPlayer, Component, float, Builder)` | Send a Component message with custom formatting via builder |
+| `sendMessage(ServerPlayer, Component, float, Consumer<Builder>)` | Send a Component message with inline builder configuration (`builder -> ...`) |
 | `sendMessage(ServerPlayer, String, float)` | Send a message using plain text (string) |
 | `sendMessage(ServerPlayer, String, float, Builder)` | Send a message with custom formatting via builder |
+| `sendMessage(ServerPlayer, String, float, Consumer<Builder>)` | Send a message with inline builder configuration (`builder -> ...`) |
 | `sendUpdateMessage(ServerPlayer, String, Component, float)` | Update an existing message by ID using a Component |
+| `sendUpdateMessage(ServerPlayer, String, Component, float, Builder)` | Update a Component message with custom formatting |
+| `sendUpdateMessage(ServerPlayer, String, Component, float, Consumer<Builder>)` | Update a Component message with inline builder configuration (`builder -> ...`) |
 | `sendUpdateMessage(ServerPlayer, String, String, float)` | Update an existing message by ID using plain text |
 | `sendUpdateMessage(ServerPlayer, String, String, float, Builder)` | Update an existing message with custom formatting |
+| `sendUpdateMessage(ServerPlayer, String, String, float, Consumer<Builder>)` | Update a message with inline builder configuration (`builder -> ...`) |
 | `sendCloseMessage(ServerPlayer, String)` | Close a specific message by ID |
 | `sendCloseAllMessages(ServerPlayer)` | Close all active messages for a player |
 
@@ -164,6 +170,23 @@ if (compat != null) {
 
 Appears at the center with double size, fades in/out gracefully.
 
+### Example 2b: Styled Component Message with Inline Builder
+
+```java
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
+
+if (compat != null) {
+    Component msg = Component.literal("Dungeon Cleared!");
+
+    compat.sendMessage(player, msg, 120f, builder -> builder
+        .anchor(MatthiesenLibImmersiveMessageBuilder.TextAnchor.MIDDLE)
+        .scale(1.8f)
+        .fadeInTicks(6)
+        .fadeOutTicks(10));
+}
+```
+
 ### Example 3: Typewriter Effect
 
 ```java
@@ -211,18 +234,32 @@ if (compat != null) {
     String messageId = "task_progress_" + player.getUUID();
 
     // Send initial message
-    MatthiesenLibImmersiveMessageBuilder builder = MatthiesenLibImmersiveMessageBuilder.create()
+    compat.sendMessage(player, "Task starting...", 300f, builder -> builder
         .anchor(MatthiesenLibImmersiveMessageBuilder.TextAnchor.MIDDLE_LEFT)
-        .offset(100f, 0f);
-
-    compat.sendMessage(player, "Task starting...", 300f, builder);
+        .offset(100f, 0f));
 
     // Later, update the message with progress
-    compat.sendUpdateMessage(player, messageId, "Task: 50% complete", 300f, builder);
+    compat.sendUpdateMessage(player, messageId, "Task: 50% complete", 300f, builder -> builder
+        .anchor(MatthiesenLibImmersiveMessageBuilder.TextAnchor.MIDDLE_LEFT)
+        .offset(100f, 0f));
 
     // When done
     compat.sendCloseMessage(player, messageId);
 }
+```
+
+### Reusing a Builder Instance (Optional)
+
+If you send many messages with exactly the same style, you can still create and reuse a builder instance:
+
+```java
+MatthiesenLibImmersiveMessageBuilder statusStyle = MatthiesenLibImmersiveMessageBuilder.create()
+    .anchor(MatthiesenLibImmersiveMessageBuilder.TextAnchor.TOP_CENTER)
+    .background(true)
+    .scale(1.1f);
+
+compat.sendMessage(player, "Wave 1 incoming", 120f, statusStyle);
+compat.sendUpdateMessage(player, "wave_status", "Wave 2 incoming", 120f, statusStyle);
 ```
 
 ## Common Patterns

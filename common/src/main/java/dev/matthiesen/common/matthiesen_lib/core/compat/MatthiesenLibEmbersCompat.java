@@ -6,6 +6,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ServiceLoader;
+import java.util.function.Consumer;
 
 /**
  * Class for compatibility with the Embers mod's text parser.
@@ -36,6 +37,25 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
     }
 
     @Override
+    public void sendMessage(ServerPlayer player, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+        MESSAGING_PLATFORM.sendMessage(player, message, duration, builder);
+    }
+
+    /**
+     * Sends a component message with inline builder configuration using a lambda.
+     *
+     * @param player player receiving the message
+     * @param message component message content
+     * @param duration display duration in ticks
+     * @param builderConfigurer callback to configure a fresh builder instance
+     */
+    @Override
+    public void sendMessage(ServerPlayer player, Component message, float duration,
+                            Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
+        MatthiesenLibEmbersTextParserCompat.super.sendMessage(player, message, duration, builderConfigurer);
+    }
+
+    @Override
     public void sendMessage(ServerPlayer player, String message, float duration) {
         MESSAGING_PLATFORM.sendMessage(player, message, duration);
     }
@@ -45,9 +65,44 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
         MESSAGING_PLATFORM.sendMessage(player, message, duration, builder);
     }
 
+    /**
+     * Sends a message with inline builder configuration using a lambda.
+     *
+     * @param player player receiving the message
+     * @param message message markup string
+     * @param duration display duration in ticks
+     * @param builderConfigurer callback to configure a fresh builder instance
+     */
+    @Override
+    public void sendMessage(ServerPlayer player, String message, float duration,
+                            Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
+        MatthiesenLibEmbersTextParserCompat.super.sendMessage(player, message, duration, builderConfigurer);
+    }
+
     @Override
     public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration) {
         MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration);
+    }
+
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration,
+                                  MatthiesenLibImmersiveMessageBuilder builder) {
+        MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration, builder);
+    }
+
+    /**
+     * Updates a component message with inline builder configuration using a lambda.
+     *
+     * @param player player receiving the update
+     * @param messageId id of the message to update
+     * @param message updated component message content
+     * @param duration display duration in ticks
+     * @param builderConfigurer callback to configure a fresh builder instance
+     */
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration,
+                                  Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
+        MatthiesenLibEmbersTextParserCompat.super.sendUpdateMessage(player, messageId, message, duration, builderConfigurer);
     }
 
     @Override
@@ -58,6 +113,21 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
     @Override
     public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
         MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration, builder);
+    }
+
+    /**
+     * Updates a message with inline builder configuration using a lambda.
+     *
+     * @param player player receiving the update
+     * @param messageId id of the message to update
+     * @param message updated message markup string
+     * @param duration display duration in ticks
+     * @param builderConfigurer callback to configure a fresh builder instance
+     */
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration,
+                                  Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
+        MatthiesenLibEmbersTextParserCompat.super.sendUpdateMessage(player, messageId, message, duration, builderConfigurer);
     }
 
     @Override

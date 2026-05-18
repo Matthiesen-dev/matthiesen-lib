@@ -19,6 +19,13 @@ import java.lang.reflect.Method;
  *     // Send a simple message at the top of the screen
  *     compat.sendMessage(player, "Hello World", 100f);
  *
+ *     // Configure style inline using the convenience overload
+ *     compat.sendMessage(player, "Inline Styled Message", 100f, builder -> builder
+ *         .anchor(TextAnchor.TOP_CENTER)
+ *         .align(TextAlign.CENTER)
+ *         .scale(1.25f)
+ *         .shadow(true));
+ *
  *     // Send a message with customization
  *     MatthiesenLibImmersiveMessageBuilder builder = MatthiesenLibImmersiveMessageBuilder.create()
  *         .anchor(TextAnchor.TOP_CENTER)

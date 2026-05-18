@@ -28,6 +28,17 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     }
 
     @Override
+    public void sendMessage(ServerPlayer player, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+        if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
+            ImmersiveMessage msg = new ImmersiveMessage(message, duration);
+            if (builder != null) {
+                builder.applyTo(msg);
+            }
+            NetworkHelper.getInstance().sendMessage(player, msg);
+        }
+    }
+
+    @Override
     public void sendMessage(ServerPlayer player, String message, float duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendMessage(player, ImmersiveMessage.fromMarkup(duration, message));
@@ -49,6 +60,17 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendUpdateMessage(player, messageId, new ImmersiveMessage(message, duration));
+        }
+    }
+
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+        if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
+            ImmersiveMessage msg = new ImmersiveMessage(message, duration);
+            if (builder != null) {
+                builder.applyTo(msg);
+            }
+            NetworkHelper.getInstance().sendUpdateMessage(player, messageId, msg);
         }
     }
 
