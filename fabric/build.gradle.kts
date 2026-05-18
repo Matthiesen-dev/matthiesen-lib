@@ -6,6 +6,14 @@ plugins {
     id("matthiesen.publishing-conventions")
 }
 
+val generatedResources = file("src/generated/resources")
+
+sourceSets.main {
+    resources {
+        srcDir(generatedResources)
+    }
+}
+
 architectury {
     platformSetupLoomIde()
     fabric()
@@ -29,11 +37,22 @@ dependencies {
 
 
 tasks {
+    // The AW file is needed in :fabric project resources when the game is run.
+    val copyAccessWidener by registering(Copy::class) {
+        from(loom.accessWidenerPath)
+        into(generatedResources)
+    }
+
     processResources {
+        dependsOn(copyAccessWidener)
 
         filesMatching("fabric.mod.json") {
             expand(project.properties)
         }
+    }
+
+    sourcesJar {
+        dependsOn(copyAccessWidener)
     }
 
     shadowJar {
