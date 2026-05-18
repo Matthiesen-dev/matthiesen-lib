@@ -2,7 +2,9 @@ package dev.matthiesen.neoforge.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.neoforge.matthiesen_lib.helper.MatthiesenLibNeoForgeRegistryHelper;
+import dev.matthiesen.neoforge.matthiesen_lib.text_parser.MatthiesenLibEmbersTextParserNeoForge;
 import net.minecraft.server.MinecraftServer;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
@@ -25,6 +27,9 @@ public class MatthiesenLibNeoForge {
         MatthiesenLibConstants.createInfoLog("Loading for NeoForge Mod Loader");
         MatthiesenLibNeoForgeRegistryHelper.init(modBus);
         MatthiesenLib.modInitializer();
+        if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
+            MatthiesenLib.registerTextParser(new MatthiesenLibEmbersTextParserNeoForge());
+        }
     }
 
     /**
