@@ -23,6 +23,6 @@ public class MatthiesenLibEmbersTextParserFabric implements MatthiesenLibTextPar
 
     @Override
     public @Nullable MatthiesenLibEmbersTextParserCompat getEmbersCompat() {
-        return new MatthiesenLibEmbersCompat();
+        return MatthiesenLibEmbersCompat.getInstance();
     }
 }

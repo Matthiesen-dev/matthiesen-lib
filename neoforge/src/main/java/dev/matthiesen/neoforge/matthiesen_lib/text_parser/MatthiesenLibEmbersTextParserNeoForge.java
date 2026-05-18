@@ -23,6 +23,6 @@ public class MatthiesenLibEmbersTextParserNeoForge implements MatthiesenLibTextP
 
     @Override
     public @Nullable MatthiesenLibEmbersTextParserCompat getEmbersCompat() {
-        return new MatthiesenLibEmbersCompat();
+        return MatthiesenLibEmbersCompat.getInstance();
     }
 }
