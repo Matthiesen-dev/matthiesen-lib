@@ -9,6 +9,9 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      MODRINTH_DEPENDENCIES: >-
+        [{"project_id":"OVSg4uGN","dependency_type":"optional"}]
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -78,6 +81,7 @@ jobs:
           loaders: fabric
           game-versions: 1.21.1
           files: output/matthiesen-lib-fabric-${{ env.VERSION }}.jar
+          dependencies: ${{ env.MODRINTH_DEPENDENCIES }}
 
       - name: Publish NeoForge mod to Modrinth
         if: ${{ env.IS_SNAPSHOT == 'false' }}
@@ -91,6 +95,7 @@ jobs:
           loaders: neoforge
           game-versions: 1.21.1
           files: output/matthiesen-lib-neoforge-${{ env.VERSION }}.jar
+          dependencies: ${{ env.MODRINTH_DEPENDENCIES }}
 
       - name: Sync Project Description on Modrinth
         if: ${{ env.IS_SNAPSHOT == 'false' }}
