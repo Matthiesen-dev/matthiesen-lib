@@ -12,7 +12,7 @@ import java.lang.reflect.Method;
  * <p><b>Usage Example:</b>
  * <pre>{@code
  * // Get the parser and obtain the Embers compatibility layer
- * MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+ * MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
  * MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
  *
  * if (compat != null) {
@@ -94,6 +94,11 @@ public class MatthiesenLibImmersiveMessageBuilder {
 	private Float typewriterSpeed;
 	private boolean typewriterCenter;
 	private Integer wrapMaxWidth;
+
+	/**
+	 * Default constructor
+	 */
+	public MatthiesenLibImmersiveMessageBuilder() {}
 
 	/**
 	 * Creates a new immersive message builder with default settings.

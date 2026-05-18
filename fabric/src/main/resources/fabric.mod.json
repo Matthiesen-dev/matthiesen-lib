@@ -27,5 +27,8 @@
   },
   "depends": {
     "minecraft": "1.21.1"
+  },
+  "suggests": {
+    "emberstextapi": ">=2.9.4 <3.0.0"
   }
 }

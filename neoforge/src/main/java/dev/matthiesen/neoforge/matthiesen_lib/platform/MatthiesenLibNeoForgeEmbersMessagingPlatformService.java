@@ -9,7 +9,17 @@ import net.minecraft.server.level.ServerPlayer;
 import net.tysontheember.emberstextapi.immersivemessages.api.ImmersiveMessage;
 import net.tysontheember.emberstextapi.platform.NetworkHelper;
 
+/**
+ * Implementation of the MatthiesenLibEmbersMessagingPlatform interface for NeoForge, using the Embers mod's messaging system.
+ * This class provides methods to send messages to players using the Embers mod's immersive message system, and checks
+ * if the Embers mod is loaded before attempting to send messages.
+ */
 public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements MatthiesenLibEmbersMessagingPlatform {
+    /**
+     * Default constructor for the MatthiesenLibNeoForgeEmbersMessagingPlatformService class.
+     */
+    public MatthiesenLibNeoForgeEmbersMessagingPlatformService() {}
+
     @Override
     public void sendMessage(ServerPlayer player, Component message, float duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {

@@ -7,6 +7,11 @@ import dev.matthiesen.common.matthiesen_lib.core.text_parser.MatthiesenLibVanill
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+/**
+ * Manager for text parsers in the MatthiesenLib. This class allows for registering and retrieving text parsers by their type,
+ * as well as checking if a parser is registered for a given type. It also includes a built-in vanilla text parser that is registered
+ * by default and used as a fallback when no parser is found for a requested type.
+ */
 public final class MatthiesenLibTextParserManager {
     private static final MatthiesenLibTextParser VANILLA_PARSER = new MatthiesenLibVanillaTextParser();
     private static final Map<String, MatthiesenLibTextParser> REGISTERED_PARSERS = new ConcurrentHashMap<>();
@@ -47,7 +52,7 @@ public final class MatthiesenLibTextParserManager {
      * @param type The type of the text parser to retrieve. This should match the value returned by the getType() method of the desired parser.
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
      */
-    public static MatthiesenLibTextParser getParser(String type) {
+    public static MatthiesenLibTextParser getTextParser(String type) {
         var parser = REGISTERED_PARSERS.get(type);
         if (parser == null) {
             MatthiesenLibConstants.createErrorLog("Attempted to retrieve text parser of type '" + type + "', but no such parser is registered, Falling back to 'vanilla' parser");
@@ -63,7 +68,7 @@ public final class MatthiesenLibTextParserManager {
      *             match the value returned by the getType() method of the desired parser.
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
      */
-    public static MatthiesenLibTextParser getParser(MatthiesenLibBuiltInTextParsers type) {
+    public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
         String parserName = type.name();
         var parser = REGISTERED_PARSERS.get(parserName);
         if (parser == null) {
@@ -78,7 +83,7 @@ public final class MatthiesenLibTextParserManager {
      * @param type The type of the text parser to check for. This should match the value returned by the getType() method of the desired parser.
      * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
      */
-    public static boolean isParserInitialized(String type) {
+    public static boolean isTextParserInitialized(String type) {
         return REGISTERED_PARSERS.containsKey(type);
     }
 
@@ -88,7 +93,7 @@ public final class MatthiesenLibTextParserManager {
      *             match the value returned by the getType() method of the desired parser.
      * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
      */
-    public static boolean isParserInitialized(MatthiesenLibBuiltInTextParsers type) {
+    public static boolean isTextParserInitialized(MatthiesenLibBuiltInTextParsers type) {
         return REGISTERED_PARSERS.containsKey(type.getName());
     }
 }

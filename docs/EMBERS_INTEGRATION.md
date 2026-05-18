@@ -9,7 +9,7 @@ Matthiesen Lib provides a platform-agnostic compatibility layer for Ember's Text
 Access the compatibility layer through the parser system:
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 ```
 
@@ -21,7 +21,7 @@ Always check that `compat` is not `null` before using it, in case Ember's Text A
 
 ```java
 // Get the Ember's Text API compatibility layer from the parser
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -35,7 +35,7 @@ This sends a simple text message to the player for 100 ticks (5 seconds).
 
 ```java
 // Get the Ember's Text API compatibility layer
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -58,7 +58,7 @@ if (compat != null) {
 The Ember's Text API compatibility layer is accessed through the parser system:
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 ```
 
@@ -134,7 +134,7 @@ Horizontal alignment relative to anchor:
 ### Example 1: Top-Center Status Message
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -147,7 +147,7 @@ Appears at the top-center by default.
 ### Example 2: Large, Centered, Glowing Message
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -167,7 +167,7 @@ Appears at the center with double size, fades in/out gracefully.
 ### Example 3: Typewriter Effect
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -185,7 +185,7 @@ Text reveals character-by-character from bottom-center.
 ### Example 4: Alert with Background
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -204,7 +204,7 @@ Displays with a background panel for emphasis.
 ### Example 5: Updatable Message (Progress Bar or Status)
 
 ```java
-MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
 MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
 
 if (compat != null) {
@@ -231,7 +231,7 @@ if (compat != null) {
 
 ```java
 public static void onPlayerJoin(ServerPlayer player) {
-    MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+    MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
     MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
     if (compat == null) {
         return;  // Ember's Text API not available
@@ -249,7 +249,7 @@ public static void onPlayerJoin(ServerPlayer player) {
 
 ```java
 public static void notifyError(ServerPlayer player, String errorMessage) {
-    MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+    MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
     MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
     if (compat == null) {
         return;  // Ember's Text API not available
@@ -268,7 +268,7 @@ public static void notifyError(ServerPlayer player, String errorMessage) {
 
 ```java
 public static void sendBossHealthUpdate(ServerPlayer player, String bossName, int health, int maxHealth) {
-    MatthiesenLibTextParser parser = MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER);
+    MatthiesenLibTextParser parser = MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER);
     MatthiesenLibEmbersTextParserCompat compat = parser.getEmbersCompat();
     if (compat == null) {
         return;  // Ember's Text API not available
@@ -288,7 +288,7 @@ public static void sendBossHealthUpdate(ServerPlayer player, String bossName, in
 ## FAQ
 
 **Q: How do I get the compatibility layer?**  
-A: Use `MatthiesenLib.getParser(MatthiesenLibBuiltInTextParsers.EMBER).getEmbersCompat()`. This returns `null` if Ember's Text API is not available.
+A: Use `MatthiesenLib.getTextParser(MatthiesenLibBuiltInTextParsers.EMBER).getEmbersCompat()`. This returns `null` if Ember's Text API is not available.
 
 **Q: Does my mod need to depend on Ember's Text API?**  
 A: No. Your mod only needs to depend on Matthiesen Lib. Ember's Text API dependency is optional—if it's not installed, the compat layer will be `null`.

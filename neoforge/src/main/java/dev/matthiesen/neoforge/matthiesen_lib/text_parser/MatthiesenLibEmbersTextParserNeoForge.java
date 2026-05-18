@@ -18,6 +18,11 @@ import java.util.List;
  * An implementation of the MatthiesenLibTextParser interface for the Embers mod on the NeoForge platform.
  */
 public class MatthiesenLibEmbersTextParserNeoForge implements MatthiesenLibTextParser {
+    /**
+     * Default constructor for the MatthiesenLibEmbersTextParserNeoForge class.
+     */
+    public MatthiesenLibEmbersTextParserNeoForge() {}
+
     @Override
     public String getType() {
         return MatthiesenLibBuiltInTextParsers.EMBER.getName();

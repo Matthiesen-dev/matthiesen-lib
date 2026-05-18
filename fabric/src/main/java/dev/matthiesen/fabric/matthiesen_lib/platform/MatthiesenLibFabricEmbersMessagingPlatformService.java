@@ -9,7 +9,15 @@ import net.minecraft.server.level.ServerPlayer;
 import net.tysontheember.emberstextapi.immersivemessages.api.ImmersiveMessage;
 import net.tysontheember.emberstextapi.platform.NetworkHelper;
 
+/**
+ * Implementation of the MatthiesenLibEmbersMessagingPlatform interface for Fabric, using the Embers mod's messaging system.
+ */
 public class MatthiesenLibFabricEmbersMessagingPlatformService implements MatthiesenLibEmbersMessagingPlatform {
+    /**
+     * Default constructor for the MatthiesenLibFabricEmbersMessagingPlatformService class.
+     */
+    public MatthiesenLibFabricEmbersMessagingPlatformService() {}
+
     @Override
     public void sendMessage(ServerPlayer player, Component message, float duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {

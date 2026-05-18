@@ -175,8 +175,8 @@ public class MatthiesenLib {
      * @param type The type of the text parser to retrieve. This should match the value returned by the getType() method of the desired parser.
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
      */
-    public static MatthiesenLibTextParser getParser(String type) {
-        return MatthiesenLibTextParserManager.getParser(type);
+    public static MatthiesenLibTextParser getTextParser(String type) {
+        return MatthiesenLibTextParserManager.getTextParser(type);
     }
 
     /**
@@ -186,8 +186,8 @@ public class MatthiesenLib {
      *             match the value returned by the getType() method of the desired parser.
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
      */
-    public static MatthiesenLibTextParser getParser(MatthiesenLibBuiltInTextParsers type) {
-        return MatthiesenLibTextParserManager.getParser(type);
+    public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
+        return MatthiesenLibTextParserManager.getTextParser(type);
     }
 
     /**
@@ -195,8 +195,8 @@ public class MatthiesenLib {
      * @param type The type of the text parser to check for. This should match the value returned by the getType() method of the desired parser.
      * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
      */
-    public static boolean isParserInitialized(String type) {
-        return MatthiesenLibTextParserManager.isParserInitialized(type);
+    public static boolean isTextParserInitialized(String type) {
+        return MatthiesenLibTextParserManager.isTextParserInitialized(type);
     }
 
     /**
@@ -205,8 +205,8 @@ public class MatthiesenLib {
      *             match the value returned by the getType() method of the desired parser.
      * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
      */
-    public static boolean isParserInitialized(MatthiesenLibBuiltInTextParsers type) {
-        return MatthiesenLibTextParserManager.isParserInitialized(type);
+    public static boolean isTextParserInitialized(MatthiesenLibBuiltInTextParsers type) {
+        return MatthiesenLibTextParserManager.isTextParserInitialized(type);
     }
 
     /**
