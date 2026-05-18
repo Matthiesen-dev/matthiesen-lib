@@ -8,8 +8,7 @@ package dev.matthiesen.common.matthiesen_lib.core.interfaces;
  */
 public enum MatthiesenLibBuiltInTextParsers {
     /**
-     * The vanilla text parser, which uses Minecraft's built-in formatting codes (e.g., '&' for color codes). This parser will convert '&' characters
-     * to '§' characters, allowing for the use of Minecraft's standard formatting in text.
+     * The vanilla text parser, which uses Minecraft's built-in formatting codes.
      */
     VANILLA("vanilla"),
     /**

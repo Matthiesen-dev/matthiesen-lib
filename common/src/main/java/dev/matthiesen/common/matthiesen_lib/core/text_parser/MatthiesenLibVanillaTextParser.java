@@ -8,8 +8,7 @@ import net.minecraft.network.chat.Component;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * An implementation of the MatthiesenLibTextParser interface that uses vanilla Minecraft formatting codes. This parser
- * will convert '&' characters to '§' characters, allowing for the use of Minecraft's built-in formatting codes in text.
+ * An implementation of the MatthiesenLibTextParser interface that uses vanilla Minecraft formatting codes.
  */
 public final class MatthiesenLibVanillaTextParser implements MatthiesenLibTextParser {
     /**
