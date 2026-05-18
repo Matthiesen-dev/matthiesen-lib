@@ -1,5 +1,8 @@
 package dev.matthiesen.fabric.matthiesen_lib.text_parser;
 
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibTextParserManager;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
@@ -30,17 +33,22 @@ public class MatthiesenLibEmbersTextParserFabric implements MatthiesenLibTextPar
 
     @Override
     public Component parse(String text) {
-        List<TextSpan> spans = MarkupParser.parse(text);
-        MutableComponent result = Component.empty();
-        for (TextSpan span : spans) {
-            // applyTextSpanFormatting handles bold/italic/effects but intentionally skips color
-            Style style = StyleUtil.applyTextSpanFormatting(Style.EMPTY, span);
-            if (span.getColor() != null) {
-                style = style.withColor(span.getColor());
+        if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
+            List<TextSpan> spans = MarkupParser.parse(text);
+            MutableComponent result = Component.empty();
+            for (TextSpan span : spans) {
+                // applyTextSpanFormatting handles bold/italic/effects but intentionally skips color
+                Style style = StyleUtil.applyTextSpanFormatting(Style.EMPTY, span);
+                if (span.getColor() != null) {
+                    style = style.withColor(span.getColor());
+                }
+                result.append(Component.literal(span.getContent()).withStyle(style));
             }
-            result.append(Component.literal(span.getContent()).withStyle(style));
+            return result;
+        } else {
+            MatthiesenLibConstants.createErrorLog("Attempted to parse text with the 'ember' parser, but the Embers mod is not loaded, Falling back to 'vanilla' parser");
+            return MatthiesenLibTextParserManager.VANILLA_PARSER.parse(text);
         }
-        return result;
     }
 
     @Override

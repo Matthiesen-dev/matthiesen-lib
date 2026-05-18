@@ -13,7 +13,7 @@ import java.util.concurrent.ConcurrentHashMap;
  * by default and used as a fallback when no parser is found for a requested type.
  */
 public final class MatthiesenLibTextParserManager {
-    private static final MatthiesenLibTextParser VANILLA_PARSER = new MatthiesenLibVanillaTextParser();
+    public static final MatthiesenLibTextParser VANILLA_PARSER = new MatthiesenLibVanillaTextParser();
     private static final Map<String, MatthiesenLibTextParser> REGISTERED_PARSERS = new ConcurrentHashMap<>();
     private static boolean initialized;
 
@@ -42,6 +42,7 @@ public final class MatthiesenLibTextParserManager {
      *               before being added to the registry.
      */
     public static void registerTextParser(MatthiesenLibTextParser parser) {
+        if (isTextParserInitialized(parser.getType())) return;
         parser.initialize();
         REGISTERED_PARSERS.put(parser.getType(), parser);
     }
@@ -69,13 +70,7 @@ public final class MatthiesenLibTextParserManager {
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
      */
     public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
-        String parserName = type.name();
-        var parser = REGISTERED_PARSERS.get(parserName);
-        if (parser == null) {
-            MatthiesenLibConstants.createErrorLog("Attempted to retrieve text parser of type '" + parserName + "', but no such parser is registered, Falling back to 'vanilla' parser");
-            return VANILLA_PARSER;
-        }
-        return parser;
+        return getTextParser(type.getName());
     }
 
     /**
