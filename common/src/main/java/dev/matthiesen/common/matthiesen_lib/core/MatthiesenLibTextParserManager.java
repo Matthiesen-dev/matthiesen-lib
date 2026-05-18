@@ -13,9 +13,13 @@ import java.util.concurrent.ConcurrentHashMap;
  * by default and used as a fallback when no parser is found for a requested type.
  */
 public final class MatthiesenLibTextParserManager {
-    public static final MatthiesenLibTextParser VANILLA_PARSER = new MatthiesenLibVanillaTextParser();
     private static final Map<String, MatthiesenLibTextParser> REGISTERED_PARSERS = new ConcurrentHashMap<>();
     private static boolean initialized;
+
+    /**
+     * The built-in vanilla text parser. This parser is registered by default during initialization and is used as a fallback when no parser is found for a requested type.
+     */
+    public static final MatthiesenLibTextParser VANILLA_PARSER = new MatthiesenLibVanillaTextParser();
 
     /**
      * Initializes the text parser manager. This method should be called during mod initialization to set up the manager and log its initialization.
