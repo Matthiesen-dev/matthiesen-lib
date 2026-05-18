@@ -1,7 +1,8 @@
-package dev.matthiesen.common.matthiesen_lib.core.text_parser;
+package dev.matthiesen.common.matthiesen_lib.core.compat;
 
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibEmbersMessagingPlatform;
+import net.minecraft.network.chat.Component;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.ServiceLoader;
@@ -29,41 +30,41 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
         return INSTANCE;
     }
 
-    /**
-     * Sends a message to the specified player using the Embers messaging platform.
-     * @param player The player to send the message to.
-     * @param message The message to send, represented as an Object for compatibility with the Embers mod's message format.
-     */
     @Override
-    public void sendMessage(ServerPlayer player, /* ImmersiveMessage */ Object message) {
-        MESSAGING_PLATFORM.sendMessage(player, message);
+    public void sendMessage(ServerPlayer player, Component message, float duration) {
+        MESSAGING_PLATFORM.sendMessage(player, message, duration);
     }
 
-    /**
-     * Updates an existing message for the specified player using the Embers messaging platform.
-     * @param player The player to update the message for.
-     * @param messageId The ID of the message to update.
-     * @param message The new message content, represented as an Object for compatibility with the Embers mod's message format.
-     */
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, /* ImmersiveMessage */ Object message) {
-        MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message);
+    public void sendMessage(ServerPlayer player, String message, float duration) {
+        MESSAGING_PLATFORM.sendMessage(player, message, duration);
     }
 
-    /**
-     * Closes a message for the specified player using the Embers messaging platform.
-     * @param player The player to close the message for.
-     * @param messageId The ID of the message to close.
-     */
+    @Override
+    public void sendMessage(ServerPlayer player, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+        MESSAGING_PLATFORM.sendMessage(player, message, duration, builder);
+    }
+
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration) {
+        MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration);
+    }
+
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration) {
+        MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration);
+    }
+
+    @Override
+    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+        MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message, duration, builder);
+    }
+
     @Override
     public void sendCloseMessage(ServerPlayer player, String messageId) {
         MESSAGING_PLATFORM.sendCloseMessage(player, messageId);
     }
 
-    /**
-     * Closes all messages for the specified player using the Embers messaging platform.
-     * @param player The player to close all messages for.
-     */
     @Override
     public void sendCloseAllMessages(ServerPlayer player) {
         MESSAGING_PLATFORM.sendCloseAllMessages(player);

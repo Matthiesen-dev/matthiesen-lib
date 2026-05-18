@@ -3,7 +3,7 @@ package dev.matthiesen.neoforge.matthiesen_lib.text_parser;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
-import dev.matthiesen.common.matthiesen_lib.core.text_parser.MatthiesenLibEmbersCompat;
+import dev.matthiesen.common.matthiesen_lib.core.compat.MatthiesenLibEmbersCompat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.Style;
