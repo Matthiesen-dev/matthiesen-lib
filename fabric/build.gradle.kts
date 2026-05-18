@@ -19,6 +19,8 @@ dependencies {
     modImplementation(libs.fabric)
     modImplementation(libs.fabricApi)
     modCompileOnly(libs.fabricPermissionsApi)
+    modCompileOnly(libs.emberstextapiFabric)
+    modRuntimeOnly(libs.emberstextapiFabric)
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))

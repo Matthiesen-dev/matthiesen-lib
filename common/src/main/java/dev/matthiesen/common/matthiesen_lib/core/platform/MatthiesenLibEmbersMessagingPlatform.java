@@ -12,7 +12,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param player The player to send the message to.
      * @param message The message to send, represented as an Object for compatibility with the Embers mod's message format.
      */
-    void sendMessage(ServerPlayer player, /* ImmersiveMessage */ Object message);
+    void sendMessage(ServerPlayer player, Object message);
 
     /**
      * Updates an existing message for a player.
@@ -20,7 +20,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param messageId The ID of the message to update.
      * @param message The new message content, represented as an Object for compatibility with the Embers mod's message format.
      */
-    void sendUpdateMessage(ServerPlayer player, String messageId, /* ImmersiveMessage */ Object message);
+    void sendUpdateMessage(ServerPlayer player, String messageId, Object message);
 
     /**
      * Closes a message for a player.

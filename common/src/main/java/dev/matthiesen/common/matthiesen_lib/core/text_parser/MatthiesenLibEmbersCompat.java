@@ -35,7 +35,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * @param message The message to send, represented as an Object for compatibility with the Embers mod's message format.
      */
     @Override
-    public void sendMessage(ServerPlayer player, /* ImmersiveMessage */ Object message) {
+    public void sendMessage(ServerPlayer player, Object message) {
         MESSAGING_PLATFORM.sendMessage(player, message);
     }
 
@@ -46,7 +46,7 @@ public final class MatthiesenLibEmbersCompat implements MatthiesenLibEmbersTextP
      * @param message The new message content, represented as an Object for compatibility with the Embers mod's message format.
      */
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, /* ImmersiveMessage */ Object message) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Object message) {
         MESSAGING_PLATFORM.sendUpdateMessage(player, messageId, message);
     }
 
