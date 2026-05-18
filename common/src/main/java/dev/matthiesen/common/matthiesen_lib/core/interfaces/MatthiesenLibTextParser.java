@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An interface for parsing text into Minecraft Components. This allows for different implementations of text parsing,
@@ -32,4 +33,13 @@ public interface MatthiesenLibTextParser {
      */
     @SuppressWarnings("unused")
     Component parse(String text);
+
+    /**
+     * Gets an optional compatibility implementation for the Embers mod. If the text parser has specific compatibility features for Embers,
+     * it can return an instance of MatthiesenLibEmbersTextParserCompat. If not, it should return null.
+     * @return An instance of MatthiesenLibEmbersTextParserCompat if the text parser has Embers compatibility features, or null if it does not.
+     * This allows for optional integration with the Embers mod without requiring all text parsers to implement Embers-specific functionality.
+     */
+    @SuppressWarnings("unused")
+    @Nullable MatthiesenLibEmbersTextParserCompat getEmbersCompat();
 }

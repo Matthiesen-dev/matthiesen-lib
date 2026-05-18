@@ -1,8 +1,11 @@
 package dev.matthiesen.common.matthiesen_lib.core.text_parser;
 
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
 import net.minecraft.network.chat.Component;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * An implementation of the MatthiesenLibTextParser interface that uses vanilla Minecraft formatting codes. This parser
@@ -23,5 +26,11 @@ public final class MatthiesenLibVanillaTextParser implements MatthiesenLibTextPa
     public Component parse(String text) {
         text = text.replace("&", "§");
         return Component.literal(text);
+    }
+
+    @Override
+    public @Nullable MatthiesenLibEmbersTextParserCompat getEmbersCompat() {
+        MatthiesenLibConstants.createInfoLog("VanillaTextParser does not have an Embers compatibility implementation, returning null");
+        return null;
     }
 }
