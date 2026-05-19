@@ -7,7 +7,7 @@ A lightweight Architectury-style library for shared mod code across **Fabric** a
 
 ## Docs
 
-Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/mods/matthiesen-lib/)
+Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/matthiesen-lib/)
 
 ## Optional Dependencies
 - [Ember's Text API](https://modrinth.com/mod/embers-text-api) - Use fancy text effects anywhere, including custom fonts!
