@@ -4,8 +4,36 @@ on:
   release:
     types: [ published ]
 
+env:
+  MOD_NAME: Matthiesen Lib
+  ARTIFACT_BASENAME: matthiesen-lib
+  RELEASE_JARS_ARTIFACT_PREFIX: release-jars
+  MODRINTH_GAME_VERSION: 1.21.1
+  MODRINTH_DEPENDENCIES: >-
+    [{"project_id":"OVSg4uGN","dependency_type":"optional"}]
+
 jobs:
-  publish:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parsed_version.outputs.version }}
+      is_snapshot: ${{ steps.parsed_version.outputs.is_snapshot }}
+    steps:
+      - name: Parse the version number from the event tag
+        id: parsed_version
+        run: |
+          version="${{ github.event.release.tag_name }}"
+          version="${version#v}"
+          is_snapshot=false
+          if [[ "$version" == *"-SNAPSHOT" ]]; then
+            is_snapshot=true
+          fi
+
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "is_snapshot=$is_snapshot" >> "$GITHUB_OUTPUT"
+
+  build:
+    needs: prepare
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -25,29 +53,10 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Parse the version number from the event tag
-        id: parsed_version
-        run: |
-          RAW_TAG="${{ github.event.release.tag_name }}"
-          # Remove leading 'v' if it exists
-          VERSION="${RAW_TAG#v}"
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-          echo "FABRIC_NAME=Matthiesen Lib $VERSION - Fabric" >> $GITHUB_ENV
-          echo "NEOFORGE_NAME=Matthiesen Lib $VERSION - NeoForge" >> $GITHUB_ENV
-          
-          # check if the version is a snapshot
-          if [[ "$VERSION" == *"-SNAPSHOT" ]]; then
-            echo "This is a snapshot version."
-            echo "IS_SNAPSHOT=true" >> $GITHUB_ENV
-          else
-            echo "This is a release version."
-            echo "IS_SNAPSHOT=false" >> $GITHUB_ENV
-          fi
-
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
         env:
-          RELEASE_VERSION: ${{ env.VERSION }}
+          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenUsername: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENUSERNAME }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenPassword: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
@@ -55,45 +64,62 @@ jobs:
           ORG_GRADLE_PROJECT_signingInMemoryKeyPassword: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEYPASSWORD }}
 
       - name: Copy jars for publishing
-        if: ${{ env.IS_SNAPSHOT == 'false' }}
+        if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
         run: ./gradlew copyJars
 
+      - name: Upload jars artifact for downstream release jobs
+        if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+        uses: actions/upload-artifact@v4
+        with:
+          name: ${{ env.RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
+          path: output/*.jar
+
       - name: Upload Jars to GitHub Release
-        if: ${{ env.IS_SNAPSHOT == 'false' }}
+        if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
         uses: softprops/action-gh-release@v1
         with:
           files: output/*.jar
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Publish Fabric mod to Modrinth
-        if: ${{ env.IS_SNAPSHOT == 'false' }}
+  publish_modrinth:
+    needs: [prepare, build]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - loader: fabric
+            name_suffix: Fabric
+          - loader: neoforge
+            name_suffix: NeoForge
+    steps:
+      - name: Download release jars artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
+          path: output
+
+      - name: Publish ${{ matrix.name_suffix }} mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
           project: ${{ secrets.MODRINTH_ID }}
-          name: ${{ env.FABRIC_NAME }}
-          version: ${{ env.VERSION }}
+          name: ${{ format('{0} {1} - {2}', env.MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
+          version: ${{ needs.prepare.outputs.version }}
           changelog: ${{ github.event.release.body }}
-          loaders: fabric
-          game-versions: 1.21.1
-          files: output/matthiesen-lib-fabric-${{ env.VERSION }}.jar
+          loaders: ${{ matrix.loader }}
+          game-versions: ${{ env.MODRINTH_GAME_VERSION }}
+          files: output/${{ env.ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          dependencies: ${{ env.MODRINTH_DEPENDENCIES }}
 
-      - name: Publish NeoForge mod to Modrinth
-        if: ${{ env.IS_SNAPSHOT == 'false' }}
-        uses: cloudnode-pro/modrinth-publish@v2
-        with:
-          token: ${{ secrets.MODRINTH_TOKEN }}
-          project: ${{ secrets.MODRINTH_ID }}
-          name: ${{ env.NEOFORGE_NAME }}
-          version: ${{ env.VERSION }}
-          changelog: ${{ github.event.release.body }}
-          loaders: neoforge
-          game-versions: 1.21.1
-          files: output/matthiesen-lib-neoforge-${{ env.VERSION }}.jar
-
+  sync_modrinth_description:
+    needs: [prepare, publish_modrinth]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
       - name: Sync Project Description on Modrinth
-        if: ${{ env.IS_SNAPSHOT == 'false' }}
         uses: funnyboy-roks/modrinth-auto-desc@v1.7
         with:
           auth-token: ${{ secrets.MODRINTH_TOKEN }}

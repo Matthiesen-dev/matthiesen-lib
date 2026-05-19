@@ -2,6 +2,8 @@ package dev.matthiesen.fabric.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.fabric.matthiesen_lib.text_parser.MatthiesenLibEmbersTextParserFabric;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
@@ -32,6 +34,10 @@ public class MatthiesenLibFabric implements ModInitializer {
     public void onInitialize() {
         MatthiesenLibConstants.createInfoLog("Loading for Fabric Mod Loader");
         MatthiesenLib.modInitializer();
+        if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
+            MatthiesenLib.registerTextParser(new MatthiesenLibEmbersTextParserFabric());
+        }
+
         ServerLifecycleEvents.SERVER_STARTING.register(server -> MC_SERVER = server);
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> MC_SERVER = null);
     }

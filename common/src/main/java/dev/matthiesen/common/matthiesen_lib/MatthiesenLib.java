@@ -5,6 +5,9 @@ import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCommandsManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibPermissionsManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
 import dev.matthiesen.common.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
@@ -55,15 +58,18 @@ public class MatthiesenLib {
         }
 
         initialized = true;
+
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
-
-        // Pre-register the Vanilla MC permissions validator
+        // Initialize Permissions Validators
         setPermissionValidator(new MatthiesenLibVanillaMatthiesenLibPermissionValidator());
-
-        // Register any platform permission validator available through the CommonPlatform service.
         PLATFORM.registerPermissionValidator();
+        // Initialize the command registry
         MatthiesenLibCommandsManager.modInitializer();
+        // Initialize the text parser registry
+        MatthiesenLibTextParserManager.modInitializer();
+
+        // Final step: Log that the core has been initialized.
         MatthiesenLibConstants.createInfoLog("Initialized core");
     }
 
@@ -148,6 +154,54 @@ public class MatthiesenLib {
      */
     public static boolean isDevelopmentEnvironment() {
         return PLATFORM.isDevelopmentEnvironment();
+    }
+
+
+    /**
+     * Registers a text parser. This method is thread-safe and can be called at any time. If a parser with the same type is already registered, it will be overwritten.
+     * @param parser The text parser to register. The parser's type is determined by its getType() method, and it will be initialized before being added to the registry.
+     */
+    public static void registerTextParser(MatthiesenLibTextParser parser) {
+        MatthiesenLibTextParserManager.registerTextParser(parser);
+    }
+
+    /**
+     * Retrieves a registered text parser by its type. If no parser is registered for the given type, a warning is logged and the vanilla parser is returned as a fallback.
+     * @param type The type of the text parser to retrieve. This should match the value returned by the getType() method of the desired parser.
+     * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
+     */
+    public static MatthiesenLibTextParser getTextParser(String type) {
+        return MatthiesenLibTextParserManager.getTextParser(type);
+    }
+
+    /**
+     * Retrieves a registered text parser by its type. If no parser is registered for the given type, a warning is logged and the vanilla
+     * parser is returned as a fallback.
+     * @param type The type of the text parser to retrieve, represented as a MatthiesenLibBuiltInTextParsers enum value. This should
+     *             match the value returned by the getType() method of the desired parser.
+     * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
+     */
+    public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
+        return MatthiesenLibTextParserManager.getTextParser(type);
+    }
+
+    /**
+     * Checks if a text parser is registered for the given type.
+     * @param type The type of the text parser to check for. This should match the value returned by the getType() method of the desired parser.
+     * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
+     */
+    public static boolean isTextParserInitialized(String type) {
+        return MatthiesenLibTextParserManager.isTextParserInitialized(type);
+    }
+
+    /**
+     * Checks if a text parser is registered for the given type.
+     * @param type The type of the text parser to check for, represented as a MatthiesenLibBuiltInTextParsers enum value. This should
+     *             match the value returned by the getType() method of the desired parser.
+     * @return {@code true} if a text parser is registered for the given type, {@code false} otherwise.
+     */
+    public static boolean isTextParserInitialized(MatthiesenLibBuiltInTextParsers type) {
+        return MatthiesenLibTextParserManager.isTextParserInitialized(type);
     }
 
     /**

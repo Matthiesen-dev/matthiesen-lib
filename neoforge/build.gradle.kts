@@ -27,6 +27,8 @@ dependencies {
     minecraft(libs.minecraftNet)
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
+    modCompileOnly(libs.emberstextapiNeoForge)
+    modRuntimeOnly(libs.emberstextapiNeoForge)
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
@@ -38,7 +40,6 @@ dependencies {
 
 tasks {
     processResources {
-
         filesMatching("META-INF/neoforge.mods.toml") {
             expand(project.properties)
         }

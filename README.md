@@ -9,6 +9,9 @@ A lightweight Architectury-style library for shared mod code across **Fabric** a
 
 Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/mods/matthiesen-lib/)
 
+## Optional Dependencies
+- [Ember's Text API](https://modrinth.com/mod/embers-text-api) - Use fancy text effects anywhere, including custom fonts!
+
 ## Version Compatibility
 
 | Minecraft Version | Library Version |
