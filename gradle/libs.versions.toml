@@ -9,7 +9,7 @@ shadow = "9.3.1"
 
 # Minecraft Development
 minecraft = "1.21.1"
-loom = "1.11-SNAPSHOT"
+loom = "1.13-SNAPSHOT"
 architectury-plugin = "3.4-SNAPSHOT"
 neoforge = "21.1.182"
 fabric_loader_version = "0.17.2"
