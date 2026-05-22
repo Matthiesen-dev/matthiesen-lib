@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * An implementation of the MatthiesenLibTextParser interface that uses vanilla Minecraft formatting codes.
  */
 @Deprecated
-public class MatthiesenLibVanillaTextParser extends dev.matthiesen.api.matthiesen_lib_api.core.text_parser.MatthiesenLibVanillaTextParser implements MatthiesenLibExtendedTextParser {
+public class MatthiesenLibVanillaTextParser extends dev.matthiesen.common.matthiesen_lib_api.core.text_parser.MatthiesenLibVanillaTextParser implements MatthiesenLibExtendedTextParser {
     /**
      * Creates a new instance of the VanillaTextParser. This constructor does not perform any initialization, as there are no resources to set up for this parser.
      */

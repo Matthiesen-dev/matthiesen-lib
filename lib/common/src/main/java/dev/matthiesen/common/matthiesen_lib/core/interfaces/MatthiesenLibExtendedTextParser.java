@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
 import org.jetbrains.annotations.Nullable;
 
 /**

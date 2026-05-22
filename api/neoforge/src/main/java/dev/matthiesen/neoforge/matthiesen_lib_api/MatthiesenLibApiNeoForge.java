@@ -1,6 +1,6 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api;
 
-import dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.common.Mod;
 

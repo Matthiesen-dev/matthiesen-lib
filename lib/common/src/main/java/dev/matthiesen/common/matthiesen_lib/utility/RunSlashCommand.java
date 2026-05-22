@@ -9,7 +9,7 @@ import net.minecraft.server.level.ServerPlayer;
  * Utility class for running slash commands on the Minecraft server. Provides methods to execute commands as either the server or a specific player.
  */
 @SuppressWarnings("unused")
-public class RunSlashCommand extends dev.matthiesen.api.matthiesen_lib_api.utility.RunSlashCommand {
+public class RunSlashCommand extends dev.matthiesen.common.matthiesen_lib_api.utility.RunSlashCommand {
     /**
      * Default constructor for RunSlashCommand. This class is not meant to be instantiated, so the constructor is private to prevent instantiation.
      */

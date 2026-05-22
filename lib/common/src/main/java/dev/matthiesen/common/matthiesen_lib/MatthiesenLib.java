@@ -1,16 +1,16 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.api.matthiesen_lib_api.command.AbstractCommand;
-import dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibCommandsManager;
-import dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager;
-import dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
-import dev.matthiesen.api.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
-import dev.matthiesen.api.matthiesen_lib_api.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
-import dev.matthiesen.api.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibCommandsManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibPermissionsManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
+import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.common.matthiesen_lib_api.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibExtendedTextParser;

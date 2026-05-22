@@ -1,8 +1,8 @@
 package dev.matthiesen.fabric.matthiesen_lib.permission;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.api.matthiesen_lib_api.permission.Permission;
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;

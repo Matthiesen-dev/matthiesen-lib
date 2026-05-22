@@ -1,8 +1,8 @@
 package dev.matthiesen.fabric.matthiesen_lib.text_parser;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
-import dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
-import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibExtendedTextParser;
