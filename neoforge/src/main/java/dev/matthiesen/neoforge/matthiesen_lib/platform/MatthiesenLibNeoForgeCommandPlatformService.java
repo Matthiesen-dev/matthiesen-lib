@@ -1,8 +1,8 @@
 package dev.matthiesen.neoforge.matthiesen_lib.platform;
 
-import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
-import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;
+import dev.matthiesen.api.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
+import dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;
 import net.neoforged.neoforge.common.NeoForge;
 import net.neoforged.neoforge.event.RegisterCommandsEvent;
 

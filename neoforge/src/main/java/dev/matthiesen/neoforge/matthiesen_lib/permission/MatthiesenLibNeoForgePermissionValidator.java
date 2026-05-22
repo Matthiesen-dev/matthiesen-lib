@@ -2,8 +2,8 @@ package dev.matthiesen.neoforge.matthiesen_lib.permission;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.common.matthiesen_lib.permission.Permission;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.api.matthiesen_lib.permission.Permission;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;

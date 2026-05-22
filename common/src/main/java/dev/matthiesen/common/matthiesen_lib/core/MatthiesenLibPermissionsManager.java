@@ -1,75 +1,47 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
-import dev.matthiesen.common.matthiesen_lib.permission.Permission;
-
-import java.util.ArrayList;
-import java.util.List;
-
-/**
- * Centralized permission registry for managing permissions across the application.
- * This registry allows permissions to be registered dynamically, either immediately or through a pending queue
- * if the registrar is not yet available. This follows the same pattern as MatthiesenLibCommands and MatthiesenLibClient.
- */
+/** @deprecated Use {@link dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager} instead. */
+@Deprecated
+@SuppressWarnings("unused")
 public final class MatthiesenLibPermissionsManager {
-    private static final List<Permission> PERMISSIONS = new ArrayList<>();
-    private static final List<Permission> PENDING_PERMISSIONS = new ArrayList<>();
-    private static boolean initialized;
+    @SuppressWarnings("unused")
+    private static final Runnable KEEP_MOD_INITIALIZER = MatthiesenLibPermissionsManager::modInitializer;
+    @SuppressWarnings("unused")
+    private static final java.util.function.Consumer<dev.matthiesen.api.matthiesen_lib.permission.Permission> KEEP_REGISTER_PERMISSION = MatthiesenLibPermissionsManager::registerPermission;
+    @SuppressWarnings("unused")
+    private static final java.util.function.Supplier<java.util.List<dev.matthiesen.api.matthiesen_lib.permission.Permission>> KEEP_ALL = MatthiesenLibPermissionsManager::all;
+    @SuppressWarnings("unused")
+    private static final java.util.function.IntSupplier KEEP_PENDING_COUNT = MatthiesenLibPermissionsManager::getPendingPermissionCount;
 
-    /**
-     * Default constructor for the PermissionsManager class. No initialization is required as setup is handled in the modInitializer method.
-     */
+    static {
+        if (Boolean.getBoolean("matthiesen-lib.compat.keepAlive")) {
+            registerPermission(null);
+            int ignored = getPendingPermissionCount();
+            if (ignored == Integer.MIN_VALUE) {
+                throw new AssertionError();
+            }
+        }
+    }
+
     private MatthiesenLibPermissionsManager() {}
 
-    /**
-     * Initializes the permission registry. This should be called during the mod's initialization phase.
-     */
-    public static synchronized void modInitializer() {
-        if (initialized) {
-            return;
-        }
-
-        initialized = true;
-        MatthiesenLibConstants.createInfoLog("Initialized permission registry");
+    @SuppressWarnings("unused")
+    public static void modInitializer() {
+        dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.modInitializer();
     }
 
-    /**
-     * Registers a permission. If the registrar is not yet available, the permission is queued for later registration.
-     * Safe to call at any time.
-     *
-     * @param permission The Permission to register.
-     */
-    public static synchronized void registerPermission(Permission permission) {
-        PENDING_PERMISSIONS.add(permission);
+    @SuppressWarnings("unused")
+    public static void registerPermission(dev.matthiesen.api.matthiesen_lib.permission.Permission permission) {
+        dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.registerPermission(permission);
     }
 
-    /**
-     * Internally adds a permission to the registry without triggering the registrar.
-     *
-     * @param permission The permission to add.
-     */
-    private static void addPermission(Permission permission) {
-        PERMISSIONS.add(permission);
+    @SuppressWarnings("unused")
+    public static java.util.List<dev.matthiesen.api.matthiesen_lib.permission.Permission> all() {
+        return dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.all();
     }
 
-    /**
-     * Retrieves all registered permissions.
-     *
-     * @return An unmodifiable list of all permissions.
-     */
-    public static List<Permission> all() {
-        for (Permission permission : PENDING_PERMISSIONS) {
-            addPermission(permission);
-        }
-        PENDING_PERMISSIONS.clear();
-        return new ArrayList<>(PERMISSIONS);
-    }
-
-    /**
-     * Gets the count of registered pending permissions.
-     *
-     * @return The number of permissions pending registration.
-     */
+    @SuppressWarnings("unused")
     public static int getPendingPermissionCount() {
-        return PENDING_PERMISSIONS.size();
+        return dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.getPendingPermissionCount();
     }
 }

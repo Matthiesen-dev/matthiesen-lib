@@ -1,11 +1,11 @@
 package dev.matthiesen.neoforge.matthiesen_lib.text_parser;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibTextParserManager;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibExtendedTextParser;
 import dev.matthiesen.common.matthiesen_lib.core.compat.MatthiesenLibEmbersCompat;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * An implementation of the MatthiesenLibTextParser interface for the Embers mod on the NeoForge platform.
  */
-public class MatthiesenLibEmbersTextParserNeoForge implements MatthiesenLibTextParser {
+public class MatthiesenLibEmbersTextParserNeoForge implements MatthiesenLibExtendedTextParser {
     /**
      * Default constructor for the MatthiesenLibEmbersTextParserNeoForge class.
      */

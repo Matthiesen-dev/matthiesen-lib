@@ -1,8 +1,8 @@
 package dev.matthiesen.fabric.matthiesen_lib.platform;
 
-import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
-import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;
+import dev.matthiesen.api.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar;
+import dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 
 import java.util.function.Consumer;

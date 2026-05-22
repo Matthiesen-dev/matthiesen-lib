@@ -1,17 +1,19 @@
 package dev.matthiesen.common.matthiesen_lib;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.command.AbstractCommand;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCommandsManager;
+import dev.matthiesen.api.matthiesen_lib.command.AbstractCommand;
+import dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibCommandsManager;
+import dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager;
+import dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
+import dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.api.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
+import dev.matthiesen.api.matthiesen_lib.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibPermissionsManager;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibTextParserManager;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibTextParser;
-import dev.matthiesen.common.matthiesen_lib.core.permission.MatthiesenLibVanillaMatthiesenLibPermissionValidator;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
-import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
-import dev.matthiesen.common.matthiesen_lib.permission.Permission;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibExtendedTextParser;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.ServiceLoader;
@@ -166,6 +169,14 @@ public class MatthiesenLib {
     }
 
     /**
+     * Registers an extended text parser. This method is thread-safe and can be called at any time. If a parser with the same type is already registered, it will be overwritten.
+     * @param parser The extended text parser to register. The parser's type is determined by its getType() method, and it will be initialized before being added to the registry. Extended text parsers provide additional functionality, such as compatibility bridges for specific mods (e.g., Embers), while still conforming to the basic text parser contract.
+     */
+    public static void registerTextParser(MatthiesenLibExtendedTextParser parser) {
+        MatthiesenLibTextParserManager.registerTextParser(parser);
+    }
+
+    /**
      * Retrieves a registered text parser by its type. If no parser is registered for the given type, a warning is logged and the vanilla parser is returned as a fallback.
      * @param type The type of the text parser to retrieve. This should match the value returned by the getType() method of the desired parser.
      * @return The text parser registered for the given type, or the vanilla parser if no such parser is registered.
@@ -183,6 +194,42 @@ public class MatthiesenLib {
      */
     public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
         return MatthiesenLibTextParserManager.getTextParser(type);
+    }
+
+    /**
+     * Retrieves the Embers compatibility bridge from the currently-registered Embers text parser, if available.
+     *
+     * <p>This keeps Embers access discoverable from the main MatthiesenLib facade while the core parser contract
+     * itself remains server-safe in the API module.</p>
+     *
+     * @return An Embers compatibility implementation when an Embers-capable parser is registered, or {@code null} otherwise.
+     */
+    public static @Nullable MatthiesenLibEmbersTextParserCompat getEmbersTextParserCompat() {
+        return getEmbersTextParserCompat(MatthiesenLibBuiltInTextParsers.EMBER.getName());
+    }
+
+    /**
+     * Retrieves the Embers compatibility bridge from the parser registered under the given built-in parser type, if available.
+     *
+     * @param type The built-in parser type to inspect.
+     * @return An Embers compatibility implementation when available, or {@code null} otherwise.
+     */
+    public static @Nullable MatthiesenLibEmbersTextParserCompat getEmbersTextParserCompat(MatthiesenLibBuiltInTextParsers type) {
+        return getEmbersTextParserCompat(type.getName());
+    }
+
+    /**
+     * Retrieves the Embers compatibility bridge from the parser registered under the given type, if available.
+     *
+     * @param type The parser type to inspect.
+     * @return An Embers compatibility implementation when available, or {@code null} otherwise.
+     */
+    public static @Nullable MatthiesenLibEmbersTextParserCompat getEmbersTextParserCompat(String type) {
+        MatthiesenLibTextParser parser = MatthiesenLibTextParserManager.getTextParser(type);
+        if (parser instanceof MatthiesenLibExtendedTextParser commonParser) {
+            return commonParser.getEmbersCompat();
+        }
+        return null;
     }
 
     /**

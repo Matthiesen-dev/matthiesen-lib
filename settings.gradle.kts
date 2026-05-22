@@ -12,6 +12,7 @@ pluginManagement {
 }
 
 listOf(
+    "api",
     "common",
     "neoforge",
     "fabric"

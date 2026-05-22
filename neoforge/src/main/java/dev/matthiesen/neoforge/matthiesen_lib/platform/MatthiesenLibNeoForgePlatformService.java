@@ -2,7 +2,7 @@ package dev.matthiesen.neoforge.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
-import dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibPlatform;
 import dev.matthiesen.neoforge.matthiesen_lib.MatthiesenLibNeoForge;
 import dev.matthiesen.neoforge.matthiesen_lib.helper.MatthiesenLibNeoForgeRegistryHelper;
 import dev.matthiesen.neoforge.matthiesen_lib.permission.MatthiesenLibNeoForgePermissionValidator;

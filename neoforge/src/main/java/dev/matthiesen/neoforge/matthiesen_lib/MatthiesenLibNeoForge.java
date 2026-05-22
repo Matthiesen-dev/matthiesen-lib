@@ -1,8 +1,8 @@
 package dev.matthiesen.neoforge.matthiesen_lib;
 
+import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.neoforge.matthiesen_lib.helper.MatthiesenLibNeoForgeRegistryHelper;
 import dev.matthiesen.neoforge.matthiesen_lib.text_parser.MatthiesenLibEmbersTextParserNeoForge;
 import net.minecraft.server.MinecraftServer;
