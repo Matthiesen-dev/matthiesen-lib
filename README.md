@@ -9,13 +9,6 @@ A lightweight Architectury-style library for shared mod code across **Fabric** a
 
 Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/matthiesen-lib/)
 
-## Artifacts
-
-- `dev.matthiesen:matthiesen-lib-api:<version>` - Standalone API module, suitable for JiJ/shadow in server-side projects.
-- `dev.matthiesen:matthiesen-lib-common:<version>` - Shared code used by the Fabric and NeoForge platform mods, depends on `-api`.
-- `dev.matthiesen:matthiesen-lib-fabric:<version>` - Fabric-specific implementation, depends on `-common`.
-- `dev.matthiesen:matthiesen-lib-neoforge:<version>` - NeoForge-specific implementation, depends on `-common`.
-
 ## Optional Dependencies
 - [Ember's Text API](https://modrinth.com/mod/embers-text-api) - Use fancy text effects anywhere, including custom fonts!
 
