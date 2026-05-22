@@ -11,13 +11,17 @@ Documentation for the library can be found at [mods.matthiesen.dev](https://mods
 
 ## Fresh Clone Setup
 
-If you just cloned this repository and want to sync/run in an IDE, bootstrap local Gradle artifacts first:
+Loom requires API platform JARs to exist before it can configure the Fabric/NeoForge subprojects. On a fresh clone, run this first:
 
 ```bash
 ./gradlew bootstrapWorkspace
 ```
 
-This primes API platform artifacts used by Loom during project setup and dev runtime tasks.
+Then trigger an IDE Gradle sync, or run a full build:
+
+```bash
+./gradlew build
+```
 
 ## Version Compatibility
 

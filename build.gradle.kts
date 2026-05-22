@@ -60,12 +60,12 @@ tasks.register("primeLocalApiArtifacts") {
 }
 
 // One command for fresh clones before IDE sync or runClient.
+// NOTE: intentionally only primes the API artifacts.
+// Depending on platform projects (:fabric, :neoforge) here would cause Loom to try reading the
+// API fabric/neoforge jars during configuration — before any task has had a chance to produce them.
+// Run this first, then `./gradlew build` (or trigger an IDE sync) as a second step.
 tasks.register("bootstrapWorkspace") {
     group = "setup"
-    description = "Bootstraps a fresh clone by priming API artifacts and compiling platform classes"
-    dependsOn(
-        "primeLocalApiArtifacts",
-        ":fabric:classes",
-        ":neoforge:classes"
-    )
+    description = "Primes local API artifacts required by Loom before IDE sync or platform builds"
+    dependsOn("primeLocalApiArtifacts")
 }
