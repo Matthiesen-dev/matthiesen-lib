@@ -12,14 +12,14 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 
 ### Config Manager Extraction
 
-- Core implementation moved to `dev.matthiesen.api.matthiesen_lib.config.ConfigManager`.
+- Core implementation moved to `dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager`.
 - `common` keeps a compatibility wrapper at `dev.matthiesen.common.matthiesen_lib.config.ConfigManager` (deprecated) to avoid breaking existing imports.
 - API `ConfigManager` adds an overload allowing custom config namespace:
   - `ConfigManager(Class<T> configClass, String configName, String modId)`
 
 ### Dynamic Logger Binding
 
-- New logger hub: `dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibConstants`.
+- New logger hub: `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibConstants`.
 - Logger can be rebound at runtime:
   - `setLogger(Logger)`
   - `setLoggerName(String)`
@@ -27,26 +27,26 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 
 ### Permission Module Extraction
 
-- Shared permission types now live in `dev.matthiesen.api.matthiesen_lib.permission`.
-- Shared permission registry/validator logic now lives in `dev.matthiesen.api.matthiesen_lib.core` and `dev.matthiesen.api.matthiesen_lib.core.interfaces`.
+- Shared permission types now live in `dev.matthiesen.common.matthiesen_lib_api.permission`.
+- Shared permission registry/validator logic now lives in `dev.matthiesen.common.matthiesen_lib_api.core` and `dev.matthiesen.common.matthiesen_lib_api.core.interfaces`.
 - `common` keeps compatibility aliases/wrappers for the old permission packages so existing imports continue to work during migration.
 - Platform validators (`fabric` and `neoforge`) now depend on the API permission interfaces directly.
 
 ### Command Registration Extraction
 
 - Shared command registration types now live in:
-  - `dev.matthiesen.api.matthiesen_lib.command.AbstractCommand`
-  - `dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibCommandsManager`
-  - `dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibCommandRegistrar`
-  - `dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibCommandPlatform`
-  - `dev.matthiesen.api.matthiesen_lib.registry.AbstractCommandRegistry`
+  - `dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibCommandsManager`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibCommandRegistrar`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibCommandPlatform`
+  - `dev.matthiesen.common.matthiesen_lib_api.registry.AbstractCommandRegistry`
 - `common` keeps compatibility wrappers/aliases for the old command package paths.
 - Fabric and NeoForge command platform services now implement the API command-platform interface.
 - Added new service loader files for API command platform discovery in Fabric and NeoForge resources.
 
 ### Platform Interface Extraction
 
-- `MatthiesenLibPlatform` now lives in `dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibPlatform`.
+- `MatthiesenLibPlatform` now lives in `dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform`.
 - `common` keeps `dev.matthiesen.common.matthiesen_lib.core.platform.MatthiesenLibPlatform` as a deprecated compatibility alias.
 - `MatthiesenLib` now loads the API platform interface via `ServiceLoader`.
 - Fabric and NeoForge platform service classes now implement the API platform interface directly.
@@ -55,10 +55,10 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 ### TextParser Extraction
 
 - Core TextParser system moved into API:
-  - `dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibTextParserManager`
-  - `dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibTextParser`
-  - `dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibBuiltInTextParsers`
-  - `dev.matthiesen.api.matthiesen_lib.core.text_parser.MatthiesenLibVanillaTextParser`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers`
+  - `dev.matthiesen.common.matthiesen_lib_api.core.text_parser.MatthiesenLibVanillaTextParser`
 - `common` keeps compatibility wrappers for legacy imports.
 - Ember's Text API integration remains in `common` (`MatthiesenLibEmbersTextParserCompat`, `MatthiesenLibEmbersMessagingPlatform`, and related compat classes) so server-only API consumers do not depend on Ember's client-side logic.
 - Common now exposes `MatthiesenLibExtendedTextParser` as the Ember-aware parser contract.
@@ -71,18 +71,18 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 
 ### Item Utility Extraction
 
-- `ItemBuilder` now lives in `dev.matthiesen.api.matthiesen_lib.utility.ItemBuilder`.
-- `ItemDecoder` now lives in `dev.matthiesen.api.matthiesen_lib.utility.ItemDecoder`.
+- `ItemBuilder` now lives in `dev.matthiesen.common.matthiesen_lib_api.utility.ItemBuilder`.
+- `ItemDecoder` now lives in `dev.matthiesen.common.matthiesen_lib_api.utility.ItemDecoder`.
 - `common` keeps deprecated compatibility wrappers for the old utility package paths.
 
 ### Sound Utility Extraction
 
-- `SoundsPlayer` now lives in `dev.matthiesen.api.matthiesen_lib.utility.SoundsPlayer`.
+- `SoundsPlayer` now lives in `dev.matthiesen.common.matthiesen_lib_api.utility.SoundsPlayer`.
 - `common` keeps a deprecated compatibility wrapper for the old utility package path.
 
 ### RunSlashCommand Split
 
-- `RunSlashCommand` now lives in `dev.matthiesen.api.matthiesen_lib.utility.RunSlashCommand` for server-explicit command execution.
+- `RunSlashCommand` now lives in `dev.matthiesen.common.matthiesen_lib_api.utility.RunSlashCommand` for server-explicit command execution.
 - The API version only exposes overloads that require a `MinecraftServer` parameter.
 - `common` keeps `dev.matthiesen.common.matthiesen_lib.utility.RunSlashCommand` as a convenience wrapper that still supports resolving the server through `MatthiesenLib.getMinecraftServer()`.
 
