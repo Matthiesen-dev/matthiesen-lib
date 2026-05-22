@@ -9,7 +9,7 @@ shadow = "9.3.1"
 
 # Minecraft Development
 minecraft = "1.21.1"
-loom = "1.11-SNAPSHOT"
+loom = "1.13-SNAPSHOT"
 architectury-plugin = "3.4-SNAPSHOT"
 neoforge = "21.1.182"
 fabric_loader_version = "0.17.2"
@@ -17,6 +17,11 @@ fabric_api_version = "0.116.6+1.21.1"
 fabric_permissions_api_version = "0.3.1"
 sponge_mixin_version = "0.8.5"
 emberstextapi_version = "2.9.4"
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "loom" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
 
 [libraries]
 # General Buildscript Plugins
