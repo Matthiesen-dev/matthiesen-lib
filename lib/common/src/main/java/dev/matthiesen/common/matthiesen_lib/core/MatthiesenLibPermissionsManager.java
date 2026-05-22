@@ -1,15 +1,17 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
-/** @deprecated Use {@link dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager} instead. */
+import dev.matthiesen.api.matthiesen_lib_api.permission.Permission;
+
+/** @deprecated Use {@link dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager} instead. */
 @Deprecated
 @SuppressWarnings("unused")
 public final class MatthiesenLibPermissionsManager {
     @SuppressWarnings("unused")
     private static final Runnable KEEP_MOD_INITIALIZER = MatthiesenLibPermissionsManager::modInitializer;
     @SuppressWarnings("unused")
-    private static final java.util.function.Consumer<dev.matthiesen.api.matthiesen_lib.permission.Permission> KEEP_REGISTER_PERMISSION = MatthiesenLibPermissionsManager::registerPermission;
+    private static final java.util.function.Consumer<Permission> KEEP_REGISTER_PERMISSION = MatthiesenLibPermissionsManager::registerPermission;
     @SuppressWarnings("unused")
-    private static final java.util.function.Supplier<java.util.List<dev.matthiesen.api.matthiesen_lib.permission.Permission>> KEEP_ALL = MatthiesenLibPermissionsManager::all;
+    private static final java.util.function.Supplier<java.util.List<Permission>> KEEP_ALL = MatthiesenLibPermissionsManager::all;
     @SuppressWarnings("unused")
     private static final java.util.function.IntSupplier KEEP_PENDING_COUNT = MatthiesenLibPermissionsManager::getPendingPermissionCount;
 
@@ -27,21 +29,21 @@ public final class MatthiesenLibPermissionsManager {
 
     @SuppressWarnings("unused")
     public static void modInitializer() {
-        dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.modInitializer();
+        dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager.modInitializer();
     }
 
     @SuppressWarnings("unused")
-    public static void registerPermission(dev.matthiesen.api.matthiesen_lib.permission.Permission permission) {
-        dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.registerPermission(permission);
+    public static void registerPermission(Permission permission) {
+        dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager.registerPermission(permission);
     }
 
     @SuppressWarnings("unused")
-    public static java.util.List<dev.matthiesen.api.matthiesen_lib.permission.Permission> all() {
-        return dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.all();
+    public static java.util.List<Permission> all() {
+        return dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager.all();
     }
 
     @SuppressWarnings("unused")
     public static int getPendingPermissionCount() {
-        return dev.matthiesen.api.matthiesen_lib.core.MatthiesenLibPermissionsManager.getPendingPermissionCount();
+        return dev.matthiesen.api.matthiesen_lib_api.core.MatthiesenLibPermissionsManager.getPendingPermissionCount();
     }
 }

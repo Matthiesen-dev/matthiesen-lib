@@ -1,0 +1,6 @@
+{
+  "pack": {
+    "description": "${api_mod_name} resources",
+    "pack_format": 7
+  }
+}

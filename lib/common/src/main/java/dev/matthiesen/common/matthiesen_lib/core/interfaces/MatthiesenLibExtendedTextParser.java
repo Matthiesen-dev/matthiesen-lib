@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
+import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -8,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
  * <p>This interface remains in the common module so Ember's client-side integration can stay out of
  * the server-safe API package.</p>
  */
-public interface MatthiesenLibExtendedTextParser extends dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibTextParser {
+public interface MatthiesenLibExtendedTextParser extends MatthiesenLibTextParser {
 
     /**
      * Gets an optional compatibility implementation for the Embers mod. If the text parser has specific compatibility features for Embers,

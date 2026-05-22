@@ -26,14 +26,13 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation(libs.fabric)
     modImplementation(libs.fabricApi)
+
     modCompileOnly(libs.fabricPermissionsApi)
     modCompileOnly(libs.emberstextapiFabric)
     modRuntimeOnly(libs.emberstextapiFabric)
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
-    // TODO: Move api to modImplementation once mod version is available
-    shadowCommon(project(":api-common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 }
 

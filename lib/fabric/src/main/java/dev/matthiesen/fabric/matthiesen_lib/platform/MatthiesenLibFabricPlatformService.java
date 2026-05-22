@@ -2,7 +2,7 @@ package dev.matthiesen.fabric.matthiesen_lib.platform;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
-import dev.matthiesen.api.matthiesen_lib.core.platform.MatthiesenLibPlatform;
+import dev.matthiesen.api.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
 import dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabric;
 import dev.matthiesen.fabric.matthiesen_lib.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;

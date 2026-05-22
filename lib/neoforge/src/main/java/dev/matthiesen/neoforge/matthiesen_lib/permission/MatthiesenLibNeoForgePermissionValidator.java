@@ -2,8 +2,8 @@ package dev.matthiesen.neoforge.matthiesen_lib.permission;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.api.matthiesen_lib.permission.Permission;
-import dev.matthiesen.api.matthiesen_lib.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.api.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.api.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -45,14 +45,14 @@ public class MatthiesenLibNeoForgePermissionValidator implements MatthiesenLibPe
      */
     @SubscribeEvent
     public void onPermissionGatherNodes(PermissionGatherEvent.Nodes event) {
-        MatthiesenLibConstants.LOGGER.info("Starting Forge permission node registry");
+        MatthiesenLibConstants.getLogger().info("Starting Forge permission node registry");
         event.addNodes(this.createNodes());
-        MatthiesenLibConstants.LOGGER.debug("Finished Forge permission node registry");
+        MatthiesenLibConstants.getLogger().debug("Finished Forge permission node registry");
     }
 
     @Override
     public void initialize() {
-        MatthiesenLibConstants.LOGGER.info("Booting ForgePermissionApiPermissionValidator, player permissions will be checked using MinecraftForge' PermissionAPI, non player command sources will use Minecraft' permission level system, see https://docs.minecraftforge.net/en/latest/ and https://minecraft.fandom.com/wiki/Permission_level");
+        MatthiesenLibConstants.getLogger().info("Booting ForgePermissionApiPermissionValidator, player permissions will be checked using MinecraftForge' PermissionAPI, non player command sources will use Minecraft' permission level system, see https://docs.minecraftforge.net/en/latest/ and https://minecraft.fandom.com/wiki/Permission_level");
     }
 
     @Override
@@ -122,7 +122,7 @@ public class MatthiesenLibNeoForgePermissionValidator implements MatthiesenLibPe
                     (player, uuid, context) -> player != null && player.hasPermissions(permission.getLevel().getNumericalValue())
             );
             this.nodes.put(permission.getIdentifier(), node);
-            MatthiesenLibConstants.LOGGER.debug("Registered Forge permission node {}", node.getNodeName());
+            MatthiesenLibConstants.getLogger().debug("Registered Forge permission node {}", node.getNodeName());
             return node;
         }).collect(Collectors.toList());
     }

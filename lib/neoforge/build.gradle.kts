@@ -27,6 +27,7 @@ dependencies {
     minecraft(libs.minecraftNet)
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
+
     modCompileOnly(libs.emberstextapiNeoForge)
     modRuntimeOnly(libs.emberstextapiNeoForge)
 
@@ -34,8 +35,6 @@ dependencies {
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
-    // TODO: Move api to modImplementation once mod version is available
-    shadowBundle(project(":api-common", configuration = "namedElements"))
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 }
 

@@ -1,0 +1,27 @@
+modLoader = "javafml"
+loaderVersion = "[1,)"
+issueTrackerURL = "${github_url}/issues"
+license = "${mod_license}"
+
+[[mods]]
+modId = "${api_mod_id}"
+version = "${version}"
+displayName = "${api_mod_name}"
+authors = "${mod_author}"
+description = '''
+${api_mod_description}
+'''
+
+[[dependencies.${api_mod_id}]]
+modId = "minecraft"
+mandatory = true
+versionRange = "[1.21.1]"
+ordering = "NONE"
+side = "BOTH"
+
+[[dependencies.${api_mod_id}]]
+modId = "neoforge"
+mandatory = true
+versionRange = "[21.1.182,)"
+ordering = "NONE"
+side = "BOTH"

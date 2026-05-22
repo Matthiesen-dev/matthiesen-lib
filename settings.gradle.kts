@@ -13,9 +13,8 @@ pluginManagement {
 
 var workspaceProjectMap = mapOf(
     "api-common" to "api/common",
-//    TODO: Setup new fabric and neoforge mods for API mod
-//    "api-fabric" to "api/fabric",
-//    "api-neoforge" to "api/neoforge",
+    "api-fabric" to "api/fabric",
+    "api-neoforge" to "api/neoforge",
     "common" to "lib/common",
     "fabric" to "lib/fabric",
     "neoforge" to "lib/neoforge"

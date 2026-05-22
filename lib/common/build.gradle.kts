@@ -10,8 +10,7 @@ architectury {
 }
 
 dependencies {
-    // TODO: Move api to modImplementation once mod version is available
-    api(project(":api-common"))
+    api(project(":api-common", configuration = "namedElements"))
 
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())

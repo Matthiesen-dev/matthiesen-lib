@@ -26,7 +26,8 @@
     ]
   },
   "depends": {
-    "minecraft": "1.21.1"
+    "minecraft": "1.21.1",
+    "${api_mod_id}": "*"
   },
   "suggests": {
     "emberstextapi": ">=2.9.4 <3.0.0"
