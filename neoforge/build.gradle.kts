@@ -34,6 +34,7 @@ dependencies {
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
+    shadowBundle(project(":api", configuration = "namedElements"))
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 }
 
