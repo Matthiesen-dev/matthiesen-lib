@@ -1,7 +1,7 @@
 plugins {
-    id("com.gradleup.shadow") version "9.3.1" apply false
-    id("dev.architectury.loom") version("1.13-SNAPSHOT") apply false
-    id("architectury-plugin") version("3.4-SNAPSHOT") apply false
+    alias(libs.plugins.shadow) apply false
+    alias(libs.plugins.architectury.loom) apply false
+    alias(libs.plugins.architectury.plugin) apply false
 }
 
 

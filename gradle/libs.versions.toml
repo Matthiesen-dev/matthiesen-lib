@@ -18,6 +18,11 @@ fabric_permissions_api_version = "0.3.1"
 sponge_mixin_version = "0.8.5"
 emberstextapi_version = "2.9.4"
 
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+architectury-loom = { id = "dev.architectury.loom", version.ref = "loom" }
+architectury-plugin = { id = "architectury-plugin", version.ref = "architectury-plugin" }
+
 [libraries]
 # General Buildscript Plugins
 kotlin = { group = "org.jetbrains.kotlin", name = "kotlin-gradle-plugin", version.ref = "kotlin" }
