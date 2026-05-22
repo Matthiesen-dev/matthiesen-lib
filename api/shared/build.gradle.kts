@@ -1,6 +1,6 @@
 plugins {
     id("dev.architectury.loom")
-    id("matthiesen.project-conventions")
+    id("matthiesen.api-module-conventions")
     id("matthiesen.publishing-conventions")
 }
 

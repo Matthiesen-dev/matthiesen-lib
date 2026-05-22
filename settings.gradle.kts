@@ -12,8 +12,10 @@ pluginManagement {
 }
 
 listOf(
-    "api",
+    "api-shared",
     "common",
     "neoforge",
     "fabric"
-).forEach { include(it)}
+).forEach { include(it) }
+
+project(":api-shared").projectDir = file("api/shared")

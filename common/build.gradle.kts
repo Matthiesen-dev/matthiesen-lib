@@ -10,7 +10,7 @@ architectury {
 }
 
 dependencies {
-    api(project(":api"))
+    api(project(":api-shared"))
 
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())

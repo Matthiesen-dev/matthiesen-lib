@@ -32,7 +32,7 @@ dependencies {
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
-    shadowCommon(project(":api", configuration = "namedElements"))
+    shadowCommon(project(":api-shared", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 }
 
