@@ -34,6 +34,15 @@ dependencies {
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
+
+    // Keep API common on compile/runtime classpaths via named elements; avoid adding it to developmentFabric directly.
+    implementation(project(":api-common", configuration = "namedElements"))
+
+    // API mod must be available at runtime for the dev client.
+    // Keep transitive deps off so Loom does not attempt to resolve api-common as a separate dev mod artifact.
+    modRuntimeOnly(project(":api-fabric")) {
+        isTransitive = false
+    }
 }
 
 

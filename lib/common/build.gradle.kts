@@ -10,7 +10,7 @@ architectury {
 }
 
 dependencies {
-    api(project(":api-common", configuration = "namedElements"))
+    implementation(project(":api-common", configuration = "namedElements"))
 
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
