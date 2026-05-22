@@ -1,15 +1,14 @@
 # Matthiesen Lib
 
-A lightweight Architectury-style library for shared mod code across **Fabric** and **NeoForge** (Minecraft **1.21.1**).
+Matthiesen Lib has two main components published as separate mods on Modrinth:
 
-> Note: For regular users, this library does nothing on its own. It's a tool for mod developers to write shared code that works on both Fabric and NeoForge without needing separate implementations.
-> All you need to do is drop the mod JAR in your `mods` folder, and it will work as a dependency for any mods that use it.
+- [`matthiesen-lib-api`](./api) - The Server-side API mod that provides the shared code and functionality for mod developers to use in their mods.
+- [`matthiesen-lib`](./lib) - The full Server/Client mod that runs alongside the API mod and provides extended functionality, including client-side features and optional dependencies.
 
 ## Docs
 
 Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/matthiesen-lib/)
 
-<!-- MODRINTH_EXCLUDE_START -->
 ## Fresh Clone Setup
 
 If you just cloned this repository and want to sync/run in an IDE, bootstrap local Gradle artifacts first:
@@ -19,10 +18,6 @@ If you just cloned this repository and want to sync/run in an IDE, bootstrap loc
 ```
 
 This primes API platform artifacts used by Loom during project setup and dev runtime tasks.
-<!-- MODRINTH_EXCLUDE_END -->
-
-## Optional Dependencies
-- [Ember's Text API](https://modrinth.com/mod/embers-text-api) - Use fancy text effects anywhere, including custom fonts!
 
 ## Version Compatibility
 

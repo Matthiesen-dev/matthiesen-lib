@@ -135,9 +135,16 @@ jobs:
 #    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
 #    runs-on: ubuntu-latest
 #    steps:
+#      - name: Checkout repository
+#        uses: actions/checkout@v4
+#        with:
+#          fetch-depth: 0
+#          fetch-tags: true
+#
 #      - name: Sync API Project Description on Modrinth
 #        uses: funnyboy-roks/modrinth-auto-desc@v1.7
 #        with:
+#          readme: 'api/README.md'
 #          auth-token: ${{ secrets.MODRINTH_TOKEN }}
 #          slug: ${{ secrets.API_MODRINTH_ID }}
 
@@ -178,8 +185,15 @@ jobs:
     if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
     runs-on: ubuntu-latest
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
       - name: Sync Project Description on Modrinth
         uses: funnyboy-roks/modrinth-auto-desc@v1.7
         with:
+          readme: 'lib/README.md'
           auth-token: ${{ secrets.MODRINTH_TOKEN }}
           slug: ${{ secrets.MODRINTH_ID }}
