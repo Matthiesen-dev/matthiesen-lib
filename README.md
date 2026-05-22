@@ -9,6 +9,18 @@ A lightweight Architectury-style library for shared mod code across **Fabric** a
 
 Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/matthiesen-lib/)
 
+<!-- MODRINTH_EXCLUDE_START -->
+## Fresh Clone Setup
+
+If you just cloned this repository and want to sync/run in an IDE, bootstrap local Gradle artifacts first:
+
+```bash
+./gradlew bootstrapWorkspace
+```
+
+This primes API platform artifacts used by Loom during project setup and dev runtime tasks.
+<!-- MODRINTH_EXCLUDE_END -->
+
 ## Optional Dependencies
 - [Ember's Text API](https://modrinth.com/mod/embers-text-api) - Use fancy text effects anywhere, including custom fonts!
 

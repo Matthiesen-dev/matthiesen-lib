@@ -67,8 +67,8 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
-      - name: Prime API platform jars for Loom metadata resolution
-        run: ./gradlew :api-common:build :api-fabric:remapJar :api-neoforge:remapJar --configure-on-demand
+      - name: Bootstrap workspace (prime local Loom artifacts)
+        run: ./gradlew bootstrapWorkspace --configure-on-demand
 
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository

@@ -47,3 +47,25 @@ tasks.register<Copy>("copyJars") {
         file("./output/").mkdirs()
     }
 }
+
+// Prebuild API artifacts that Loom expects to exist when configuring platform projects.
+tasks.register("primeLocalApiArtifacts") {
+    group = "setup"
+    description = "Builds API common + platform remapped jars required for local/CI Loom metadata resolution"
+    dependsOn(
+        ":api-common:build",
+        ":api-fabric:remapJar",
+        ":api-neoforge:remapJar"
+    )
+}
+
+// One command for fresh clones before IDE sync or runClient.
+tasks.register("bootstrapWorkspace") {
+    group = "setup"
+    description = "Bootstraps a fresh clone by priming API artifacts and compiling platform classes"
+    dependsOn(
+        "primeLocalApiArtifacts",
+        ":fabric:classes",
+        ":neoforge:classes"
+    )
+}
