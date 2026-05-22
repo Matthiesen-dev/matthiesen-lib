@@ -32,7 +32,8 @@ dependencies {
 
     implementation(project(":common", configuration = "namedElements"))
     "developmentFabric"(project(":common", configuration = "namedElements"))
-    shadowCommon(project(":api-shared", configuration = "namedElements"))
+    // TODO: Move api to modImplementation once mod version is available
+    shadowCommon(project(":api-common", configuration = "namedElements"))
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 }
 

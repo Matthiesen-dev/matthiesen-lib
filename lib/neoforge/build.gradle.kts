@@ -34,7 +34,8 @@ dependencies {
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
-    shadowBundle(project(":api-shared", configuration = "namedElements"))
+    // TODO: Move api to modImplementation once mod version is available
+    shadowBundle(project(":api-common", configuration = "namedElements"))
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 }
 

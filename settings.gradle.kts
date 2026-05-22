@@ -11,11 +11,19 @@ pluginManagement {
     includeBuild("gradle/build-logic")
 }
 
-listOf(
-    "api-shared",
-    "common",
-    "neoforge",
-    "fabric"
-).forEach { include(it) }
+var workspaceProjectMap = mapOf(
+    "api-common" to "api/common",
+//    TODO: Setup new fabric and neoforge mods for API mod
+//    "api-fabric" to "api/fabric",
+//    "api-neoforge" to "api/neoforge",
+    "common" to "lib/common",
+    "fabric" to "lib/fabric",
+    "neoforge" to "lib/neoforge"
+)
 
-project(":api-shared").projectDir = file("api/shared")
+workspaceProjectMap.forEach { (projectName, projectPath) ->
+    run {
+        include(projectName)
+        project(":$projectName").projectDir = file(projectPath)
+    }
+}

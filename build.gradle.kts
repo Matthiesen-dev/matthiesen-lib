@@ -24,17 +24,17 @@ tasks.register<Copy>("copyJars") {
         exclude("*-dev-shadow.jar")
     }
 
-    from("./common/build/libs/") {
+    from("./lib/common/build/libs/") {
         include("*.jar")
         exclude("*-dev-shadow.jar")
         exclude("*-transformProductionFabric.jar")
         exclude("*-transformProductionNeoForge.jar")
     }
-    from("./fabric/build/libs/") {
+    from("./lib/fabric/build/libs/") {
         include("*.jar")
         exclude("*-dev-shadow.jar")
     }
-    from("./neoforge/build/libs/") {
+    from("./lib/neoforge/build/libs/") {
         include("*.jar")
         exclude("*-dev-shadow.jar")
     }
