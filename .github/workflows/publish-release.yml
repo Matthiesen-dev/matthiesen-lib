@@ -154,7 +154,14 @@ jobs:
           changelog: ${{ github.event.release.body }}
           loaders: ${{ matrix.loader }}
           game-versions: ${{ env.API_MODRINTH_GAME_VERSION }}
-          files: output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          files: |-
+            output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+            output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar
+            output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar
+          primary-file: output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          file-types: |-
+            ${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar=sources-jar
+            ${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar=javadoc-jar
           dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_api_modrinth_description:
@@ -216,7 +223,14 @@ jobs:
           changelog: ${{ github.event.release.body }}
           loaders: ${{ matrix.loader }}
           game-versions: ${{ env.LIB_MODRINTH_GAME_VERSION }}
-          files: output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          files: |-
+            output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+            output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar
+            output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar
+          primary-file: output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          file-types: |-
+            ${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar=sources-jar
+            ${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar=javadoc-jar
           dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_lib_modrinth_description:
