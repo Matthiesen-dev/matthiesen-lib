@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib.core.interfaces;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers} instead. */
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("unused")
 public enum MatthiesenLibBuiltInTextParsers {
     VANILLA(dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers.VANILLA),

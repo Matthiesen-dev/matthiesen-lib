@@ -2,7 +2,7 @@ package dev.matthiesen.common.matthiesen_lib.permission;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel} instead. */
 @SuppressWarnings("unused")
-@Deprecated
+@Deprecated(forRemoval = true)
 public enum PermissionLevel {
     NONE(dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel.NONE),
     SPAWN_PROTECTION_BYPASS(dev.matthiesen.common.matthiesen_lib_api.permission.PermissionLevel.SPAWN_PROTECTION_BYPASS),

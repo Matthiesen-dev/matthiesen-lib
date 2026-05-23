@@ -3,7 +3,7 @@ package dev.matthiesen.common.matthiesen_lib.core;
 import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibPermissionsManager} instead. */
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("unused")
 public final class MatthiesenLibPermissionsManager {
     @SuppressWarnings("unused")

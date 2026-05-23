@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib.permission;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.permission.AbstractPermission} instead. */
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("unused")
 public abstract class AbstractPermission extends dev.matthiesen.common.matthiesen_lib_api.permission.AbstractPermission implements Permission {
     protected AbstractPermission(String node, PermissionLevel level) {

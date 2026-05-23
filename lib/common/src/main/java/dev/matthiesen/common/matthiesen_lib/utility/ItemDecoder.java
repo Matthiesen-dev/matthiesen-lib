@@ -4,7 +4,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.utility.ItemDecoder} instead. */
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("unused")
 public class ItemDecoder {
 

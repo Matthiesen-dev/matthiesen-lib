@@ -7,7 +7,7 @@ import dev.matthiesen.common.matthiesen_lib.core.text_parser.MatthiesenLibVanill
 import net.minecraft.network.chat.Component;
 
 /** @deprecated Use {@link dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager} instead. */
-@Deprecated
+@Deprecated(forRemoval = true)
 @SuppressWarnings("unused")
 public final class MatthiesenLibTextParserManager {
     /**
