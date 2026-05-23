@@ -13,6 +13,8 @@ env:
   # API Dependencies:
   # - lzVo0Dll: Fabric Permissions API (optional)
   API_MODRINTH_DEPENDENCIES: |-
+    []
+  API_MODRINTH_DEPENDENCIES_FABRIC: |-
     [
       {"project_id":"lzVo0Dll","dependency_type":"optional"}
     ]
@@ -29,8 +31,11 @@ env:
   LIB_MODRINTH_DEPENDENCIES: |-
     [
       {"project_id":"j2JrSWnx","dependency_type":"required"},
-      {"project_id":"lzVo0Dll","dependency_type":"optional"},
       {"project_id":"OVSg4uGN","dependency_type":"optional"}
+    ]
+  LIB_MODRINTH_DEPENDENCIES_FABRIC: |-
+    [
+      {"project_id":"lzVo0Dll","dependency_type":"optional"}
     ]
 
 jobs:
@@ -127,6 +132,18 @@ jobs:
         with:
           name: ${{ env.API_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
 
+      - name: Get Dependency list for Modrinth
+        id: get_dependencies
+        # Get the env.API_MODRINTH_DEPENDENCIES JSON array, and if we are in fabric, append the Fabric Permissions API as an optional dependency, and if we are in neoforge, do nothing.
+        run: |
+          dependencies='${{ env.API_MODRINTH_DEPENDENCIES }}'
+          fabric_dependencies='${{ env.API_MODRINTH_DEPENDENCIES_FABRIC }}'
+          if [[ "${{ matrix.loader }}" == "fabric" ]]; then
+              dependencies=$(echo "$dependencies" | jq '. += $fabric_dependencies')
+          fi
+          
+          echo "dependencies=$dependencies" >> "$GITHUB_OUTPUT"
+
       - name: Publish ${{ matrix.name_suffix }} API mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
         with:
@@ -138,7 +155,7 @@ jobs:
           loaders: ${{ matrix.loader }}
           game-versions: ${{ env.API_MODRINTH_GAME_VERSION }}
           files: output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
-          dependencies: ${{ env.API_MODRINTH_DEPENDENCIES }}
+          dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_api_modrinth_description:
     needs: [prepare, publish_api_modrinth]
@@ -177,6 +194,18 @@ jobs:
           name: ${{ env.LIB_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
           path: output
 
+      - name: Get Dependency list for Modrinth
+        id: get_dependencies
+        # Get the env.LIB_MODRINTH_DEPENDENCIES JSON array, and if we are in fabric, append the Fabric Permissions API as an optional dependency, and if we are in neoforge, do nothing.
+        run: |
+            dependencies='${{ env.LIB_MODRINTH_DEPENDENCIES }}'
+            fabric_dependencies='${{ env.LIB_MODRINTH_DEPENDENCIES_FABRIC }}'
+            if [[ "${{ matrix.loader }}" == "fabric" ]]; then
+                dependencies=$(echo "$dependencies" | jq '. += $fabric_dependencies')
+            fi
+    
+            echo "dependencies=$dependencies" >> "$GITHUB_OUTPUT"
+
       - name: Publish ${{ matrix.name_suffix }} mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
         with:
@@ -188,7 +217,7 @@ jobs:
           loaders: ${{ matrix.loader }}
           game-versions: ${{ env.LIB_MODRINTH_GAME_VERSION }}
           files: output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
-          dependencies: ${{ env.LIB_MODRINTH_DEPENDENCIES }}
+          dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_lib_modrinth_description:
     needs: [prepare, publish_lib_modrinth]
