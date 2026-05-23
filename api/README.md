@@ -1,3 +1,8 @@
+---
+modrinth:
+    server_side: 'required'
+    client_side: 'optional'
+---
 # Matthiesen Lib API
 
 The Server-side API for Matthiesen Lib, providing the shared code and functionality for mod developers to use in their mods.
