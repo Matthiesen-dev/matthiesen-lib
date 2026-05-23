@@ -1,8 +1,3 @@
----
-modrinth:
-    server_side: 'required'
-    client_side: 'required'
----
 # Matthiesen Lib
 
 A lightweight Architectury-style library for shared mod code across **Fabric** and **NeoForge** (Minecraft **1.21.1**).
