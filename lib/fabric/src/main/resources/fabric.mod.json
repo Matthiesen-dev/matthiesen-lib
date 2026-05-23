@@ -30,6 +30,7 @@
     "${api_mod_id}": "*"
   },
   "suggests": {
-    "emberstextapi": ">=2.9.4 <3.0.0"
+    "emberstextapi": ">=2.9.4 <3.0.0",
+    "fabric-permissions-api-v0": "*"
   }
 }

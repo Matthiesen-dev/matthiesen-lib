@@ -23,5 +23,8 @@
   },
   "depends": {
     "minecraft": "1.21.1"
+  },
+  "suggests": {
+    "fabric-permissions-api-v0": "*"
   }
 }
