@@ -66,6 +66,9 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Ensure Executable Permissions
+        run: chmod +x ./gradlew ./bootstrap.sh
+
       - name: Prime API platform jars for Loom metadata resolution
         run: ./bootstrap.sh
 
