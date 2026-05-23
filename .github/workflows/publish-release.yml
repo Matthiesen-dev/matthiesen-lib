@@ -5,26 +5,25 @@ on:
     types: [ published ]
 
 env:
-  MOD_NAME: Matthiesen Lib
-  ARTIFACT_BASENAME: matthiesen-lib
-  RELEASE_JARS_ARTIFACT_PREFIX: release-jars
-  MODRINTH_GAME_VERSION: 1.21.1
-  MODRINTH_DEPENDENCIES: |-
-    [
-      {"project_id":"OVSg4uGN","dependency_type":"optional"}
-    ]
+  API_MOD_NAME: Matthiesen Lib API
+  API_ARTIFACT_BASENAME: matthiesen-lib-api
+  API_RELEASE_JARS_ARTIFACT_PREFIX: api-release-jars
+  API_MODRINTH_ID: j2JrSWnx
+  API_MODRINTH_GAME_VERSION: 1.21.1
 
-  # TODO: Move this into the MODRINTH_DEPENDENCIES once the API mod is ready and has a stable version.
-  # {"project_id":"j2JrSWnx","dependency_type":"required"},
-
-  ## Lib Dependencies:
+  LIB_MOD_NAME: Matthiesen Lib
+  LIB_ARTIFACT_BASENAME: matthiesen-lib
+  LIB_RELEASE_JARS_ARTIFACT_PREFIX: release-jars
+  LIB_MODRINTH_ID: cPmFkPpB
+  LIB_MODRINTH_GAME_VERSION: 1.21.1
+  # Lib Dependencies:
   # - j2JrSWnx: Matthiesen Lib API (required)
   # - OVSg4uGN: Ember's Text API (optional)
-
-  API_MOD_NAME: Matthiesen Lib API
-  ARTIFACT_API_BASENAME: matthiesen-lib-api
-  API_RELEASE_JARS_ARTIFACT_PREFIX: api-release-jars
-  API_MODRINTH_GAME_VERSION: 1.21.1
+  LIB_MODRINTH_DEPENDENCIES: |-
+    [
+      {"project_id":"j2JrSWnx","dependency_type":"required"},
+      {"project_id":"OVSg4uGN","dependency_type":"optional"}
+    ]
 
 jobs:
   prepare:
@@ -88,7 +87,7 @@ jobs:
         if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
         uses: actions/upload-artifact@v4
         with:
-          name: ${{ env.RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
+          name: ${{ env.LIB_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
           path: output/*.jar
 
       - name: Upload Jars to GitHub Release
@@ -99,54 +98,53 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-# TODO: Setup API mod publishing once the API mod is ready and has a stable version.
-#  publish_api_modrinth:
-#    needs: [prepare, build]
-#    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
-#    runs-on: ubuntu-latest
-#    strategy:
-#      fail-fast: false
-#      matrix:
-#        include:
-#          - loader: fabric
-#            name_suffix: Fabric
-#          - loader: neoforge
-#            name_suffix: NeoForge
-#    steps:
-#      - name: Download release jars artifact
-#        uses: actions/download-artifact@v4
-#        with:
-#          name: ${{ env.API_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
-#
-#      - name: Publish ${{ matrix.name_suffix }} API mod to Modrinth
-#        uses: cloudnode-pro/modrinth-publish@v2
-#        with:
-#          token: ${{ secrets.MODRINTH_TOKEN }}
-#          project: ${{ secrets.API_MODRINTH_ID }}
-#          name: ${{ format('{0} {1} - {2}', env.API_MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
-#          version: ${{ needs.prepare.outputs.version }}
-#          changelog: ${{ github.event.release.body }}
-#          loaders: ${{ matrix.loader }}
-#          game-versions: ${{ env.API_MODRINTH_GAME_VERSION }}
-#          files: output/${{ env.ARTIFACT_API_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
-#
-#  sync_api_modrinth_description:
-#    needs: [prepare, publish_api_modrinth]
-#    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
-#    runs-on: ubuntu-latest
-#    steps:
-#      - name: Checkout repository
-#        uses: actions/checkout@v4
-#        with:
-#          fetch-depth: 0
-#          fetch-tags: true
-#
-#      - name: Sync API Project Description on Modrinth
-#        uses: funnyboy-roks/modrinth-auto-desc@v1.7
-#        with:
-#          readme: 'api/README.md'
-#          auth-token: ${{ secrets.MODRINTH_TOKEN }}
-#          slug: ${{ secrets.API_MODRINTH_ID }}
+  publish_api_modrinth:
+    needs: [prepare, build]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - loader: fabric
+            name_suffix: Fabric
+          - loader: neoforge
+            name_suffix: NeoForge
+    steps:
+      - name: Download release jars artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: ${{ env.API_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
+
+      - name: Publish ${{ matrix.name_suffix }} API mod to Modrinth
+        uses: cloudnode-pro/modrinth-publish@v2
+        with:
+          token: ${{ secrets.MODRINTH_TOKEN }}
+          project: ${{ env.API_MODRINTH_ID }}
+          name: ${{ format('{0} {1} - {2}', env.API_MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
+          version: ${{ needs.prepare.outputs.version }}
+          changelog: ${{ github.event.release.body }}
+          loaders: ${{ matrix.loader }}
+          game-versions: ${{ env.API_MODRINTH_GAME_VERSION }}
+          files: output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+
+  sync_api_modrinth_description:
+    needs: [prepare, publish_api_modrinth]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Sync API Project Description on Modrinth
+        uses: funnyboy-roks/modrinth-auto-desc@v1.7
+        with:
+          readme: 'api/README.md'
+          auth-token: ${{ secrets.MODRINTH_TOKEN }}
+          slug: ${{ env.API_MODRINTH_ID }}
 
   publish_lib_modrinth:
     needs: [prepare, build]
@@ -164,21 +162,21 @@ jobs:
       - name: Download release jars artifact
         uses: actions/download-artifact@v4
         with:
-          name: ${{ env.RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
+          name: ${{ env.LIB_RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
           path: output
 
       - name: Publish ${{ matrix.name_suffix }} mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
-          project: ${{ secrets.MODRINTH_ID }}
-          name: ${{ format('{0} {1} - {2}', env.MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
+          project: ${{ env.LIB_MODRINTH_ID }}
+          name: ${{ format('{0} {1} - {2}', env.LIB_MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
           version: ${{ needs.prepare.outputs.version }}
           changelog: ${{ github.event.release.body }}
           loaders: ${{ matrix.loader }}
-          game-versions: ${{ env.MODRINTH_GAME_VERSION }}
-          files: output/${{ env.ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
-          dependencies: ${{ env.MODRINTH_DEPENDENCIES }}
+          game-versions: ${{ env.LIB_MODRINTH_GAME_VERSION }}
+          files: output/${{ env.LIB_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          dependencies: ${{ env.LIB_MODRINTH_DEPENDENCIES }}
 
   sync_lib_modrinth_description:
     needs: [prepare, publish_lib_modrinth]
@@ -196,4 +194,4 @@ jobs:
         with:
           readme: 'lib/README.md'
           auth-token: ${{ secrets.MODRINTH_TOKEN }}
-          slug: ${{ secrets.MODRINTH_ID }}
+          slug: ${{ env.LIB_MODRINTH_ID }}
