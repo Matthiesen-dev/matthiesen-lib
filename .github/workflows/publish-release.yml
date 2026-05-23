@@ -10,6 +10,12 @@ env:
   API_RELEASE_JARS_ARTIFACT_PREFIX: api-release-jars
   API_MODRINTH_ID: j2JrSWnx
   API_MODRINTH_GAME_VERSION: 1.21.1
+  # API Dependencies:
+  # - lzVo0Dll: Fabric Permissions API (optional)
+  API_MODRINTH_DEPENDENCIES: |-
+    [
+      {"project_id":"lzVo0Dll","dependency_type":"optional"}
+    ]
 
   LIB_MOD_NAME: Matthiesen Lib
   LIB_ARTIFACT_BASENAME: matthiesen-lib
@@ -18,10 +24,12 @@ env:
   LIB_MODRINTH_GAME_VERSION: 1.21.1
   # Lib Dependencies:
   # - j2JrSWnx: Matthiesen Lib API (required)
+  # - lzVo0Dll: Fabric Permissions API (optional)
   # - OVSg4uGN: Ember's Text API (optional)
   LIB_MODRINTH_DEPENDENCIES: |-
     [
       {"project_id":"j2JrSWnx","dependency_type":"required"},
+      {"project_id":"lzVo0Dll","dependency_type":"optional"},
       {"project_id":"OVSg4uGN","dependency_type":"optional"}
     ]
 
@@ -130,6 +138,7 @@ jobs:
           loaders: ${{ matrix.loader }}
           game-versions: ${{ env.API_MODRINTH_GAME_VERSION }}
           files: output/${{ env.API_ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          dependencies: ${{ env.API_MODRINTH_DEPENDENCIES }}
 
   sync_api_modrinth_description:
     needs: [prepare, publish_api_modrinth]
