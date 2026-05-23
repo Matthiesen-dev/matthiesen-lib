@@ -14,7 +14,7 @@ Documentation for the library can be found at [mods.matthiesen.dev](https://mods
 Loom requires API platform JARs to exist before it can configure the Fabric/NeoForge subprojects. On a fresh clone, run this first:
 
 ```bash
-./gradlew :api-common:build :api-fabric:remapJar :api-neoforge:remapJar --configure-on-demand
+./bootstrap.sh
 ```
 
 Then trigger an IDE Gradle sync, or run a full build:

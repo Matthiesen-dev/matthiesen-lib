@@ -24,24 +24,24 @@ val shadowBundle: Configuration by configurations.creating {
 }
 
 dependencies {
+    // Minecraft/ NeoForge Deps
     minecraft(libs.minecraftNet)
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
 
+    // Ember's Text API (Optional Dep)
     modCompileOnly(libs.emberstextapiNeoForge)
     modRuntimeOnly(libs.emberstextapiNeoForge)
 
+    // Bundle lib-common project
     implementation(project(":common", configuration = "namedElements"))
     "developmentNeoForge"(project(":common", configuration = "namedElements")) {
         isTransitive = false
     }
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
-    // Keep API common on compile/runtime classpaths via named elements; avoid adding it to developmentNeoForge directly.
+    // Depend on matthiesen-lib-api mod
     implementation(project(":api-common", configuration = "namedElements"))
-
-    // API mod must be available at runtime for the dev client.
-    // Keep transitive deps off so Loom does not attempt to resolve api-common as a separate dev mod artifact.
     modRuntimeOnly(project(":api-neoforge")) {
         isTransitive = false
     }

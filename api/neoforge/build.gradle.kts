@@ -24,10 +24,12 @@ val shadowBundle: Configuration by configurations.creating {
 }
 
 dependencies {
+    // Minecraft & NeoForge
     minecraft(libs.minecraftNet)
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
 
+    // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentNeoForge"(project(":api-common", configuration = "namedElements")) {
         isTransitive = false

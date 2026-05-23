@@ -1,0 +1,1 @@
+./gradlew :api-common:build :api-fabric:remapJar :api-neoforge:remapJar --configure-on-demand

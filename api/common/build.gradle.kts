@@ -10,6 +10,7 @@ architectury {
 }
 
 dependencies {
+    // Minecraft & Mixins
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
     compileOnly(libs.spongeMixin)

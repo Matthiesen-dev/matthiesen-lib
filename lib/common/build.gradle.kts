@@ -10,11 +10,13 @@ architectury {
 }
 
 dependencies {
-    implementation(project(":api-common", configuration = "namedElements"))
-
+    // Minecraft & Mixins
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
     compileOnly(libs.spongeMixin)
+
+    // Depend on matthiesen-lib-api mod
+    implementation(project(":api-common", configuration = "namedElements"))
 }
 
 
