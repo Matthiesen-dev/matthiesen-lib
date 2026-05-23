@@ -28,7 +28,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Prime API platform jars for Loom metadata resolution
-        run: ./gradlew :api-common:build :api-fabric:remapJar :api-neoforge:remapJar --configure-on-demand
+        run: ./bootstrap.sh
 
       - name: Build with Gradle
         run: ./gradlew build
