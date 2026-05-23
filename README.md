@@ -9,6 +9,12 @@ Matthiesen Lib has two main components published as separate mods on Modrinth:
 
 Documentation for the library can be found at [mods.matthiesen.dev](https://mods.matthiesen.dev/matthiesen-lib/)
 
+## Version Compatibility
+
+| Minecraft Version | Library Version |
+|-------------------|-----------------|
+| 1.21.1            | 1.x.x           |
+
 ## Fresh Clone Setup
 
 Loom requires API platform JARs to exist before it can configure the Fabric/NeoForge subprojects. On a fresh clone, run this first:
@@ -22,12 +28,6 @@ Then trigger an IDE Gradle sync, or run a full build:
 ```bash
 ./gradlew build
 ```
-
-## Version Compatibility
-
-| Minecraft Version | Library Version |
-|-------------------|-----------------|
-| 1.21.1            | 1.x.x           |
 
 ## License
 
