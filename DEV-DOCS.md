@@ -6,9 +6,11 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 
 ### API Module Setup
 
-- Added a dedicated `api` module and included it in `settings.gradle.kts`.
-- `common` now depends on `api` via `api(project(":api"))`.
-- `api` applies Loom and uses Mojang mappings so API classes can reference Minecraft code.
+- The project is split into two mod families:
+  - API mod: `api-common`, `api-fabric`, `api-neoforge`
+  - Lib mod: `common` (lib common), `fabric`, `neoforge`
+- `settings.gradle.kts` maps these to the `api/*` and `lib/*` directories.
+- `lib/common` depends on `:api-common` using project-local Loom artifacts (`namedElements`) so migration wrappers can forward to API types.
 
 ### Config Manager Extraction
 
@@ -19,11 +21,12 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 
 ### Dynamic Logger Binding
 
-- New logger hub: `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibConstants`.
-- Logger can be rebound at runtime:
+- API logger hub: `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants`.
+- Lib logger hub: `dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants`.
+- Because API and lib are now separate mods, each keeps its own constants/logger identity (`MOD_ID`, `MOD_NAME`, logger instance).
+- Both still support runtime logger rebinding:
   - `setLogger(Logger)`
   - `setLoggerName(String)`
-- `common` constants delegate to API constants to preserve existing behavior and callsites.
 
 ### Permission Module Extraction
 
@@ -86,3 +89,12 @@ Developer-focused notes and migration details for `matthiesen-lib`.
 - The API version only exposes overloads that require a `MinecraftServer` parameter.
 - `common` keeps `dev.matthiesen.common.matthiesen_lib.utility.RunSlashCommand` as a convenience wrapper that still supports resolving the server through `MatthiesenLib.getMinecraftServer()`.
 
+### Loader Dependency Wiring (API as required mod)
+
+- Lib platform metadata now declares API as a required runtime dependency:
+  - `lib/fabric/src/main/resources/fabric.mod.json` depends on `${api_mod_id}`
+  - `lib/neoforge/src/main/resources/META-INF/neoforge.mods.toml` has a mandatory dependency on `${api_mod_id}`
+- Runtime classpath wiring in lib platform Gradle modules uses API platform mods as runtime dependencies:
+  - `modRuntimeOnly(project(":api-fabric"))`
+  - `modRuntimeOnly(project(":api-neoforge"))`
+- These runtime API platform dependencies are configured as non-transitive in lib platform modules so Loom does not attempt to resolve `api-common-dev.jar` as a standalone runtime artifact during dev launch.
