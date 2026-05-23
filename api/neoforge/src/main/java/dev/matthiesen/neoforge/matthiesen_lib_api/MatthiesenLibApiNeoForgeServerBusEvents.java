@@ -1,6 +1,6 @@
-package dev.matthiesen.neoforge.matthiesen_lib;
+package dev.matthiesen.neoforge.matthiesen_lib_api;
 
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -11,12 +11,12 @@ import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 /**
  * MatthiesenLibNeoForgeServerBusEvents is a server-side event subscriber class for the NeoForge mod loader.
  */
-@EventBusSubscriber(modid = MatthiesenLibConstants.MOD_ID, value = Dist.DEDICATED_SERVER)
-public class MatthiesenLibNeoForgeServerBusEvents {
+@EventBusSubscriber(modid = MatthiesenLibApiConstants.MOD_ID, value = Dist.DEDICATED_SERVER)
+public class MatthiesenLibApiNeoForgeServerBusEvents {
     /**
      * Default constructor for MatthiesenLibNeoForgeServerBusEvents.
      */
-    public MatthiesenLibNeoForgeServerBusEvents() {}
+    public MatthiesenLibApiNeoForgeServerBusEvents() {}
 
     /**
      * Event handler for server starting events. This method listens for the ServerStartingEvent and sets the MC_SERVER field to the current
@@ -27,7 +27,7 @@ public class MatthiesenLibNeoForgeServerBusEvents {
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStarting(ServerStartingEvent event) {
-        MatthiesenLibNeoForge.setMinecraftServer(event.getServer());
+        MatthiesenLibApiNeoForge.setMinecraftServer(event.getServer());
     }
 
     /**
@@ -38,6 +38,6 @@ public class MatthiesenLibNeoForgeServerBusEvents {
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStopping(ServerStoppingEvent event) {
-        MatthiesenLibNeoForge.setMinecraftServer(null);
+        MatthiesenLibApiNeoForge.setMinecraftServer(null);
     }
 }

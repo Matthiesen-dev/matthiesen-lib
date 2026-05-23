@@ -1,11 +1,11 @@
-package dev.matthiesen.neoforge.matthiesen_lib.platform;
+package dev.matthiesen.neoforge.matthiesen_lib_api.platform;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
-import dev.matthiesen.neoforge.matthiesen_lib.MatthiesenLibNeoForge;
-import dev.matthiesen.neoforge.matthiesen_lib.helper.MatthiesenLibNeoForgeRegistryHelper;
-import dev.matthiesen.neoforge.matthiesen_lib.permission.MatthiesenLibNeoForgePermissionValidator;
+import dev.matthiesen.neoforge.matthiesen_lib_api.MatthiesenLibApiNeoForge;
+import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibNeoForgeRegistryHelper;
+import dev.matthiesen.neoforge.matthiesen_lib_api.permission.MatthiesenLibNeoForgePermissionValidator;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
@@ -87,7 +87,7 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
 
     @Override
     public void registerPermissionValidator() {
-        MatthiesenLib.setPermissionValidator(new MatthiesenLibNeoForgePermissionValidator());
+        MatthiesenLibApi.setPermissionValidator(new MatthiesenLibNeoForgePermissionValidator());
     }
 
     @Override
@@ -107,6 +107,6 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
 
     @Override
     public MinecraftServer getMinecraftServer() {
-        return MatthiesenLibNeoForge.getMinecraftServer();
+        return MatthiesenLibApiNeoForge.getMinecraftServer();
     }
 }

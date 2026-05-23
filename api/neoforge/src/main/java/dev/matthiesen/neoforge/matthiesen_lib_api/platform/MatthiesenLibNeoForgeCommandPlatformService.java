@@ -1,4 +1,4 @@
-package dev.matthiesen.neoforge.matthiesen_lib.platform;
+package dev.matthiesen.neoforge.matthiesen_lib_api.platform;
 
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibCommandRegistrar;

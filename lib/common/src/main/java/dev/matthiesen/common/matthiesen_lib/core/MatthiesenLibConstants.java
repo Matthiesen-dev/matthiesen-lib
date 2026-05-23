@@ -4,7 +4,7 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 /**
- * This class contains constants and logging utilities for the Matthiesen Lib API.
+ * This class contains constants and logging utilities for the Matthiesen Lib.
  * It defines the mod ID, mod name, and provides methods for creating info and error logs.
  * The logger can be overridden at runtime for consumers that want custom logging behavior.
  */
@@ -23,9 +23,9 @@ public final class MatthiesenLibConstants {
     public static final String MOD_NAME = "Matthiesen Lib";
 
     /**
-     * The logger instance for the Matthiesen Lib API. This logger is used to create log messages for the API, including
+     * The logger instance for the Matthiesen Lib. This logger is used to create log messages for the lib, including
      * info and error logs. The logger is initialized using LogManager.getLogger with the mod name as the logger name, allowing
-     * for organized logging specific to this API.
+     * for organized logging specific to this mod.
      */
     private static volatile Logger logger = LogManager.getLogger(MOD_NAME);
 
@@ -37,7 +37,7 @@ public final class MatthiesenLibConstants {
     }
 
     /**
-     * Gets the current logger instance used by the API.
+     * Gets the current logger instance used by the lib.
      * @return the current logger instance.
      */
     public static Logger getLogger() {

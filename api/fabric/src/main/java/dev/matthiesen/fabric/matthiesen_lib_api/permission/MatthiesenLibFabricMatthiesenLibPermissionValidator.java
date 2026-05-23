@@ -1,8 +1,8 @@
-package dev.matthiesen.fabric.matthiesen_lib.permission;
+package dev.matthiesen.fabric.matthiesen_lib_api.permission;
 
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
-import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
+import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import me.lucko.fabric.api.permissions.v0.Permissions;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.server.level.ServerPlayer;
@@ -22,7 +22,7 @@ public class MatthiesenLibFabricMatthiesenLibPermissionValidator implements Matt
 
     @Override
     public void initialize() {
-        MatthiesenLibConstants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
+        MatthiesenLibApiConstants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
     }
 
     @Override

@@ -1,10 +1,10 @@
-package dev.matthiesen.fabric.matthiesen_lib.platform;
+package dev.matthiesen.fabric.matthiesen_lib_api.platform;
 
 import com.mojang.serialization.MapCodec;
-import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
-import dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabric;
-import dev.matthiesen.fabric.matthiesen_lib.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
+import dev.matthiesen.fabric.matthiesen_lib_api.MatthiesenLibApiFabric;
+import dev.matthiesen.fabric.matthiesen_lib_api.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.advancements.CriterionTrigger;
@@ -90,7 +90,7 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
     @Override
     public void registerPermissionValidator() {
         if (FabricLoader.getInstance().isModLoaded("fabric-permissions-api-v0")) {
-            MatthiesenLib.setPermissionValidator(new MatthiesenLibFabricMatthiesenLibPermissionValidator());
+            MatthiesenLibApi.setPermissionValidator(new MatthiesenLibFabricMatthiesenLibPermissionValidator());
         }
     }
 
@@ -111,7 +111,7 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
 
     @Override
     public MinecraftServer getMinecraftServer() {
-        return MatthiesenLibFabric.getMinecraftServer();
+        return MatthiesenLibApiFabric.getMinecraftServer();
     }
 
     @SuppressWarnings("unchecked")

@@ -18,6 +18,7 @@ dependencies {
     mappings(loom.officialMojangMappings())
     modImplementation(libs.fabric)
     modImplementation(libs.fabricApi)
+    modCompileOnly(libs.fabricPermissionsApi)
 
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentFabric"(project(":api-common", configuration = "namedElements"))
