@@ -1,8 +1,6 @@
 import net.fabricmc.loom.api.LoomGradleExtensionAPI
 import net.fabricmc.loom.task.RemapJarTask
 import net.fabricmc.loom.task.RemapSourcesJarTask
-import org.gradle.api.tasks.javadoc.Javadoc
-import org.gradle.external.javadoc.StandardJavadocDocletOptions
 import org.gradle.jvm.tasks.Jar
 import org.gradle.kotlin.dsl.configure
 import org.gradle.kotlin.dsl.named

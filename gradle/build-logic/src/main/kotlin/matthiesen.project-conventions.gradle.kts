@@ -33,7 +33,6 @@ dependencies.add("testRuntimeOnly", "org.junit.jupiter:junit-jupiter-engine:${pr
 
 configure<JavaPluginExtension> {
     withSourcesJar()
-//    withJavadocJar()
     sourceCompatibility = JavaVersion.VERSION_21
     targetCompatibility = JavaVersion.VERSION_21
 }
