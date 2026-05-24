@@ -216,3 +216,75 @@ jobs:
           readme: ${{ matrix.readme }}
           auth-token: ${{ secrets.MODRINTH_TOKEN }}
           slug: ${{ matrix.slug }}
+
+  send_discord_notification:
+    needs: [prepare, publish_modrinth]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project_label: Matthiesen Lib API
+            modrinth_id: j2JrSWnx
+            webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL_API }}
+          - project_label: Matthiesen Lib
+            modrinth_id: cPmFkPpB
+            webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL_LIB }}
+    steps:
+      - name: Build Discord Embed Payload
+        id: build_payload
+        run: |
+          payload=$(jq -n \
+            --arg title "New Release: ${{ matrix.project_label }} ${{ needs.prepare.outputs.version }}" \
+            --arg description "${{ github.event.release.body }}" \
+            --arg modrinth_url "https://modrinth.com/mod/${{ matrix.modrinth_id }}/" \
+            --arg github_url "${{ github.event.release.html_url }}" \
+            '{
+              "username": "Matthiesen Release Bot",
+              "avatar_url": "https://raw.githubusercontent.com/Matthiesen-dev/.github/refs/heads/main/logo-transparent.png",
+              "embeds": [
+                {
+                  "title": $title,
+                  "description": $description,
+                  "color": 5763719,
+                  "fields": [
+                    {
+                        "name": "Available Platforms",
+                        "value": "- Fabric `0.17.2+`\n- NeoForge `21.1.182+`",
+                        "inline": true
+                    },
+                    {
+                        "name": "MC Version",
+                        "value": "`1.21.1`",
+                        "inline": true
+                    }
+                  ]
+                }
+              ]
+              "components": [
+                {
+                  "type": 1,
+                  "components": [
+                    {
+                      "type": 2,
+                      "label": "View on Modrinth",
+                      "style": 5,
+                      "url": $modrinth_url
+                    },
+                    {
+                      "type": 2,
+                      "label": "View on GitHub",
+                      "style": 5,
+                      "url": $github_url
+                    }
+                  ]
+                }
+              ]
+            }'
+          )
+          echo "payload=$payload" >> "$GITHUB_OUTPUT"
+          
+      - name: Send Discord Notification
+        run: |
+            curl -X POST -H "Content-Type: application/json" -d "${{ steps.build_payload.outputs.payload }}" ${{ matrix.webhook_url }}
