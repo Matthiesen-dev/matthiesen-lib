@@ -46,11 +46,6 @@ jobs:
       - name: Prime API platform jars for Loom metadata resolution
         run: ./bootstrap.sh
 
-        # Format `PR-1234-SNAPSHOT` where `1234` is the PR number
-      - name: Generate version for PR snapshot
-        id: prepare
-        run: echo "version=PR-${{ github.event.number }}-SNAPSHOT" >> $GITHUB_OUTPUT
-
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
         env:

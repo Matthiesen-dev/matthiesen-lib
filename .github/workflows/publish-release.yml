@@ -183,11 +183,9 @@ jobs:
           files: |-
             output/${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
             output/${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar
-            output/${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar
           primary-file: output/${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
           file-types: |-
             ${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-sources.jar=sources-jar
-            ${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}-javadoc.jar=javadoc-jar
           dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_modrinth_description:
