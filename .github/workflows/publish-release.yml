@@ -227,11 +227,19 @@ jobs:
         include:
           - project_label: Matthiesen Lib API
             modrinth_id: j2JrSWnx
-            webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL_API }}
           - project_label: Matthiesen Lib
             modrinth_id: cPmFkPpB
-            webhook_url: ${{ secrets.DISCORD_WEBHOOK_URL_LIB }}
     steps:
+      - name: Get Webhook Url from Secrets
+        id: get_webhook
+        run: |
+          if [[ "${{ matrix.project_label }}" == "Matthiesen Lib API" ]]; then
+            webhook_url="${{ secrets.DISCORD_WEBHOOK_URL_API }}"
+          else
+            webhook_url="${{ secrets.DISCORD_WEBHOOK_URL_LIB }}"
+          fi
+
+          echo "webhook_url=$webhook_url" >> "$GITHUB_OUTPUT"
       - name: Build Discord Embed Payload
         id: build_payload
         run: |
@@ -287,4 +295,4 @@ jobs:
           
       - name: Send Discord Notification
         run: |
-            curl -X POST -H "Content-Type: application/json" -d "${{ steps.build_payload.outputs.payload }}" ${{ matrix.webhook_url }}
+            curl -X POST -H "Content-Type: application/json" -d "${{ steps.build_payload.outputs.payload }}" ${{ steps.get_webhook.outputs.webhook_url }}
