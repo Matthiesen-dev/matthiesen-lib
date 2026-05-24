@@ -6,10 +6,24 @@ on:
       - main
 
 jobs:
+  prepare:
+    runs-on: ubuntu-latest
+    outputs:
+      version: ${{ steps.parsed_version.outputs.version }}
+    steps:
+      # Format `PR-1234-SNAPSHOT` where `1234` is the PR number
+      - name: Generate version for PR snapshot
+        id: parsed_version
+        run: |
+          echo "version=PR-${{ github.event.number }}-SNAPSHOT" >> $GITHUB_OUTPUT
+
   build:
+    needs: [prepare]
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -40,7 +54,6 @@ jobs:
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
         env:
-          RELEASE_VERSION: ${{ steps.prepare.outputs.version }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenUsername: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENUSERNAME }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenPassword: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
