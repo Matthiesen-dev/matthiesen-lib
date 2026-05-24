@@ -43,7 +43,7 @@ public class MatthiesenLib {
         initialized = true;
 
         // Final step: Log that the core has been initialized.
-        MatthiesenLibConstants.createInfoLog("Initialized core");
+        MatthiesenLibConstants.createInfoLog("Initialized Lib");
     }
 
     /**
