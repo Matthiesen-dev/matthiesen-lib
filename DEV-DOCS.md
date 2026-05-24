@@ -1,6 +1,6 @@
 # Dev Docs
 
-Developer-focused notes and migration details for `matthiesen-lib`.
+Developer-focused notes and migration details for `matthiesen-lib` and `matthiesen-lib-api`.
 
 ## 2026-05-22
 
