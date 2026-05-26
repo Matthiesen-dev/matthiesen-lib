@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "id": "${api_mod_id}",
+  "version": "${version}",
+  "name": "${api_mod_name}",
+  "description": "${api_mod_description}",
+  "authors": [
+    "${mod_author}"
+  ],
+  "license": "${mod_license}",
+  "custom": {
+    "modmenu": {
+      "links": {
+        "modmenu.github_releases": "${github_url}"
+      }
+    }
+  },
+  "environment": "*",
+  "entrypoints": {
+    "main": [
+      "dev.matthiesen.fabric.matthiesen_lib_api.MatthiesenLibApiFabric"
+    ]
+  },
+  "depends": {
+    "minecraft": "1.21.1"
+  },
+  "suggests": {
+    "fabric-permissions-api-v0": "*"
+  }
+}

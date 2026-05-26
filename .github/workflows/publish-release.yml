@@ -5,12 +5,33 @@ on:
     types: [ published ]
 
 env:
-  MOD_NAME: Matthiesen Lib
-  ARTIFACT_BASENAME: matthiesen-lib
   RELEASE_JARS_ARTIFACT_PREFIX: release-jars
-  MODRINTH_GAME_VERSION: 1.21.1
-  MODRINTH_DEPENDENCIES: >-
-    [{"project_id":"OVSg4uGN","dependency_type":"optional"}]
+  MINECRAFT_VERSION: 1.21.1
+  FABRIC_LOADER_VERSION: '0.17.2+'
+  NEOFORGE_LOADER_VERSION: '21.1.182+'
+
+  # API Dependencies:
+  # - lzVo0Dll: Fabric Permissions API (optional)
+  API_MODRINTH_DEPENDENCIES: |-
+    []
+  API_MODRINTH_DEPENDENCIES_FABRIC: |-
+    [
+      {"project_id":"lzVo0Dll","dependency_type":"optional"}
+    ]
+
+  # Lib Dependencies:
+  # - j2JrSWnx: Matthiesen Lib API (required)
+  # - lzVo0Dll: Fabric Permissions API (optional)
+  # - OVSg4uGN: Ember's Text API (optional)
+  LIB_MODRINTH_DEPENDENCIES: |-
+    [
+      {"project_id":"j2JrSWnx","dependency_type":"required"},
+      {"project_id":"OVSg4uGN","dependency_type":"optional"}
+    ]
+  LIB_MODRINTH_DEPENDENCIES_FABRIC: |-
+    [
+      {"project_id":"lzVo0Dll","dependency_type":"optional"}
+    ]
 
 jobs:
   prepare:
@@ -37,6 +58,8 @@ jobs:
     runs-on: ubuntu-latest
     permissions:
       contents: write
+    env:
+      RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -53,10 +76,15 @@ jobs:
       - name: Setup Gradle
         uses: gradle/actions/setup-gradle@v4
 
+      - name: Ensure Executable Permissions
+        run: chmod +x ./gradlew ./bootstrap.sh
+
+      - name: Prime API platform jars for Loom metadata resolution
+        run: ./bootstrap.sh
+
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
         env:
-          RELEASE_VERSION: ${{ needs.prepare.outputs.version }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenUsername: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENUSERNAME }}
           ORG_GRADLE_PROJECT_devMatthiesenMavenPassword: ${{ secrets.ORG_GRADLE_PROJECT_DEVMATTHIESENMAVENPASSWORD }}
           ORG_GRADLE_PROJECT_signingInMemoryKey: ${{ secrets.ORG_GRADLE_PROJECT_SIGNINGINMEMORYKEY }}
@@ -90,9 +118,31 @@ jobs:
       fail-fast: false
       matrix:
         include:
-          - loader: fabric
+          # Lib-API Project:
+          - project_type: api
+            mod_name: Matthiesen Lib API
+            artifact_basename: matthiesen-lib-api
+            modrinth_id: j2JrSWnx
+            loader: fabric
             name_suffix: Fabric
-          - loader: neoforge
+          - project_type: api
+            mod_name: Matthiesen Lib API
+            artifact_basename: matthiesen-lib-api
+            modrinth_id: j2JrSWnx
+            loader: neoforge
+            name_suffix: NeoForge
+          # Lib Project:
+          - project_type: lib
+            mod_name: Matthiesen Lib
+            artifact_basename: matthiesen-lib
+            modrinth_id: cPmFkPpB
+            loader: fabric
+            name_suffix: Fabric
+          - project_type: lib
+            mod_name: Matthiesen Lib
+            artifact_basename: matthiesen-lib
+            modrinth_id: cPmFkPpB
+            loader: neoforge
             name_suffix: NeoForge
     steps:
       - name: Download release jars artifact
@@ -101,26 +151,144 @@ jobs:
           name: ${{ env.RELEASE_JARS_ARTIFACT_PREFIX }}-${{ needs.prepare.outputs.version }}
           path: output
 
-      - name: Publish ${{ matrix.name_suffix }} mod to Modrinth
+      - name: Get Dependency list for Modrinth
+        id: get_dependencies
+        # Select API or lib dependency sets, then append Fabric-only entries when needed.
+        run: |
+            if [[ "${{ matrix.project_type }}" == "api" ]]; then
+                dependencies='${{ env.API_MODRINTH_DEPENDENCIES }}'
+                fabric_dependencies='${{ env.API_MODRINTH_DEPENDENCIES_FABRIC }}'
+            else
+                dependencies='${{ env.LIB_MODRINTH_DEPENDENCIES }}'
+                fabric_dependencies='${{ env.LIB_MODRINTH_DEPENDENCIES_FABRIC }}'
+            fi
+
+            if [[ "${{ matrix.loader }}" == "fabric" ]]; then
+                dependencies=$(jq -c --argjson extras "$fabric_dependencies" '. + $extras' <<< "$dependencies")
+            fi
+    
+            echo "dependencies=$dependencies" >> "$GITHUB_OUTPUT"
+
+      - name: Publish ${{ matrix.name_suffix }} ${{ matrix.project_type }} mod to Modrinth
         uses: cloudnode-pro/modrinth-publish@v2
         with:
           token: ${{ secrets.MODRINTH_TOKEN }}
-          project: ${{ secrets.MODRINTH_ID }}
-          name: ${{ format('{0} {1} - {2}', env.MOD_NAME, needs.prepare.outputs.version, matrix.name_suffix) }}
+          project: ${{ matrix.modrinth_id }}
+          name: ${{ format('{0} {1} - {2}', matrix.mod_name, needs.prepare.outputs.version, matrix.name_suffix) }}
           version: ${{ needs.prepare.outputs.version }}
           changelog: ${{ github.event.release.body }}
           loaders: ${{ matrix.loader }}
-          game-versions: ${{ env.MODRINTH_GAME_VERSION }}
-          files: output/${{ env.ARTIFACT_BASENAME }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
-          dependencies: ${{ env.MODRINTH_DEPENDENCIES }}
+          game-versions: ${{ env.MINECRAFT_VERSION }}
+          files: output/${{ matrix.artifact_basename }}-${{ matrix.loader }}-${{ needs.prepare.outputs.version }}.jar
+          dependencies: ${{ steps.get_dependencies.outputs.dependencies }}
 
   sync_modrinth_description:
     needs: [prepare, publish_modrinth]
     if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project_label: API
+            readme: api/README.md
+            slug: j2JrSWnx
+          - project_label: Lib
+            readme: lib/README.md
+            slug: cPmFkPpB
     steps:
-      - name: Sync Project Description on Modrinth
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          fetch-tags: true
+
+      - name: Sync ${{ matrix.project_label }} Project Description on Modrinth
         uses: funnyboy-roks/modrinth-auto-desc@v1.7
         with:
+          readme: ${{ matrix.readme }}
           auth-token: ${{ secrets.MODRINTH_TOKEN }}
-          slug: ${{ secrets.MODRINTH_ID }}
+          slug: ${{ matrix.slug }}
+
+  send_discord_notification:
+    needs: [prepare, publish_modrinth]
+    if: ${{ needs.prepare.outputs.is_snapshot == 'false' }}
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - project_label: Matthiesen Lib API
+            modrinth_id: j2JrSWnx
+          - project_label: Matthiesen Lib
+            modrinth_id: cPmFkPpB
+    steps:
+      - name: Get Webhook Url from Secrets
+        id: get_webhook
+        run: |
+          if [[ "${{ matrix.project_label }}" == "Matthiesen Lib API" ]]; then
+            webhook_url="${{ secrets.DISCORD_WEBHOOK_URL_API }}"
+          else
+            webhook_url="${{ secrets.DISCORD_WEBHOOK_URL_LIB }}"
+          fi
+
+          echo "webhook_url=$webhook_url" >> "$GITHUB_OUTPUT"
+      - name: Build Discord Embed Payload
+        id: build_payload
+        run: |
+          payload=$(jq -n \
+            --arg title "New Release: ${{ matrix.project_label }} ${{ needs.prepare.outputs.version }}" \
+            --arg description "${{ github.event.release.body }}" \
+            --arg modrinth_url "https://modrinth.com/mod/${{ matrix.modrinth_id }}/" \
+            --arg github_url "${{ github.event.release.html_url }}" \
+            --arg mc_version "${{ env.MINECRAFT_VERSION }}" \
+            --arg fabric_version "${{ env.FABRIC_LOADER_VERSION }}" \
+            --arg neoforge_version "${{ env.NEOFORGE_LOADER_VERSION }}" \
+            '{
+              "username": "Matthiesen Release Bot",
+              "avatar_url": "https://raw.githubusercontent.com/Matthiesen-dev/.github/refs/heads/main/logo-transparent.png",
+              "embeds": [
+                {
+                  "title": $title,
+                  "description": $description,
+                  "color": 5763719,
+                  "fields": [
+                    {
+                        "name": "Available Platforms",
+                        "value": "- Fabric `$fabric_version`\n- NeoForge `$neoforge_version`",
+                        "inline": true
+                    },
+                    {
+                        "name": "MC Version",
+                        "value": "`$mc_version`",
+                        "inline": true
+                    }
+                  ]
+                }
+              ]
+              "components": [
+                {
+                  "type": 1,
+                  "components": [
+                    {
+                      "type": 2,
+                      "label": "View on Modrinth",
+                      "style": 5,
+                      "url": $modrinth_url
+                    },
+                    {
+                      "type": 2,
+                      "label": "View on GitHub",
+                      "style": 5,
+                      "url": $github_url
+                    }
+                  ]
+                }
+              ]
+            }'
+          )
+          echo "payload=$payload" >> "$GITHUB_OUTPUT"
+          
+      - name: Send Discord Notification
+        run: |
+            curl -X POST -H "Content-Type: application/json" -d "${{ steps.build_payload.outputs.payload }}" ${{ steps.get_webhook.outputs.webhook_url }}

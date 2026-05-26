@@ -11,8 +11,18 @@ pluginManagement {
     includeBuild("gradle/build-logic")
 }
 
-listOf(
-    "common",
-    "neoforge",
-    "fabric"
-).forEach { include(it)}
+var workspaceProjectMap = mapOf(
+    "api-common" to "api/common",
+    "api-fabric" to "api/fabric",
+    "api-neoforge" to "api/neoforge",
+    "common" to "lib/common",
+    "fabric" to "lib/fabric",
+    "neoforge" to "lib/neoforge"
+)
+
+workspaceProjectMap.forEach { (projectName, projectPath) ->
+    run {
+        include(projectName)
+        project(":$projectName").projectDir = file(projectPath)
+    }
+}
