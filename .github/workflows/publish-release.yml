@@ -281,5 +281,8 @@ jobs:
           echo "payload=$payload" >> "$GITHUB_OUTPUT"
           
       - name: Send Discord Notification
+        env:
+          PAYLOAD: ${{ steps.build_payload.outputs.payload }}
+          WEBHOOK_URL: ${{ steps.get_webhook.outputs.webhook_url }}
         run: |
-            curl -X POST -H "Content-Type: application/json" -d "${{ steps.build_payload.outputs.payload }}" ${{ steps.get_webhook.outputs.webhook_url }}
+            curl -X POST -H "Content-Type: application/json" --data-raw "$PAYLOAD" "$WEBHOOK_URL"
