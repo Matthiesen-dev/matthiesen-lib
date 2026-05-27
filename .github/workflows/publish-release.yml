@@ -155,6 +155,8 @@ jobs:
             if [[ "${{ matrix.loader }}" == "fabric" ]]; then
                 dependencies=$(jq -c --argjson extras "$fabric_dependencies" '. + $extras' <<< "$dependencies")
             fi
+
+            dependencies=$(jq -c '.' <<< "$dependencies")
     
             echo "dependencies=$dependencies" >> "$GITHUB_OUTPUT"
 
@@ -225,7 +227,7 @@ jobs:
       - name: Build Discord Embed Payload
         id: build_payload
         run: |
-          payload=$(jq -n \
+          payload=$(jq -cn \
             --arg title "New Release: ${{ matrix.project_label }} ${{ needs.prepare.outputs.version }}" \
             --arg description "${{ github.event.release.body }}" \
             --arg modrinth_url "https://modrinth.com/mod/${{ matrix.modrinth_id }}/" \
@@ -254,7 +256,7 @@ jobs:
                     }
                   ]
                 }
-              ]
+              ],
               "components": [
                 {
                   "type": 1,
