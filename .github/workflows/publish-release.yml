@@ -257,7 +257,7 @@ jobs:
                     {
                         "name":  "Download on GitHub",
                         "value": "[GitHub Release](${{ github.event.release.html_url }})",
-                        "inline": false
+                        "inline": true
                     }
                   ]
                 }
