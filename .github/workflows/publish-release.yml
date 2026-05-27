@@ -248,25 +248,16 @@ jobs:
                         "name": "MC Version",
                         "value": "`${{ env.MINECRAFT_VERSION }}`",
                         "inline": true
-                    }
-                  ]
-                }
-              ],
-              "components": [
-                {
-                  "type": 1,
-                  "components": [
-                    {
-                      "type": 2,
-                      "label": "View on Modrinth",
-                      "style": 5,
-                      "url": "https://modrinth.com/mod/${{ matrix.modrinth_id }}/"
                     },
                     {
-                      "type": 2,
-                      "label": "View on GitHub",
-                      "style": 5,
-                      "url": "${{ github.event.release.html_url }}"
+                        "name":  "Download on Modrinth",
+                        "value": "[${{ matrix.modrinth_id }}](https://modrinth.com/mod/${{ matrix.modrinth_id }}/)",
+                        "inline": false
+                    },
+                    {
+                        "name":  "Download on GitHub",
+                        "value": "[GitHub Release](${{ github.event.release.html_url }})",
+                        "inline": false
                     }
                   ]
                 }
