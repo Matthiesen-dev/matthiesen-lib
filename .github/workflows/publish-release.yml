@@ -251,7 +251,7 @@ jobs:
                     },
                     {
                         "name":  "Download on Modrinth",
-                        "value": "[${{ matrix.modrinth_id }}](https://modrinth.com/mod/${{ matrix.modrinth_id }}/)",
+                        "value": "[Modrinth](https://modrinth.com/mod/${{ matrix.modrinth_id }}/)",
                         "inline": false
                     },
                     {
