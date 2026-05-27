@@ -12,26 +12,15 @@ env:
 
   # API Dependencies:
   # - lzVo0Dll: Fabric Permissions API (optional)
-  API_MODRINTH_DEPENDENCIES: |-
-    []
-  API_MODRINTH_DEPENDENCIES_FABRIC: |-
-    [
-      {"project_id":"lzVo0Dll","dependency_type":"optional"}
-    ]
+  API_MODRINTH_DEPENDENCIES: '[]'
+  API_MODRINTH_DEPENDENCIES_FABRIC: '[{"project_id":"lzVo0Dll","dependency_type":"optional"}]'
 
   # Lib Dependencies:
   # - j2JrSWnx: Matthiesen Lib API (required)
   # - lzVo0Dll: Fabric Permissions API (optional)
   # - OVSg4uGN: Ember's Text API (optional)
-  LIB_MODRINTH_DEPENDENCIES: |-
-    [
-      {"project_id":"j2JrSWnx","dependency_type":"required"},
-      {"project_id":"OVSg4uGN","dependency_type":"optional"}
-    ]
-  LIB_MODRINTH_DEPENDENCIES_FABRIC: |-
-    [
-      {"project_id":"lzVo0Dll","dependency_type":"optional"}
-    ]
+  LIB_MODRINTH_DEPENDENCIES: '[{"project_id":"j2JrSWnx","dependency_type":"required"},{"project_id":"OVSg4uGN","dependency_type":"optional"}]'
+  LIB_MODRINTH_DEPENDENCIES_FABRIC: '[{"project_id":"lzVo0Dll","dependency_type":"optional"}]'
 
 jobs:
   prepare:
