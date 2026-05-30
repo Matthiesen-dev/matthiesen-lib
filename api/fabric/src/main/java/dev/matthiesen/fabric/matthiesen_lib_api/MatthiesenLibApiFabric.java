@@ -27,9 +27,11 @@ public class MatthiesenLibApiFabric implements ModInitializer {
         MatthiesenLibApiConstants.createInfoLog("Loading API for Fabric Mod Loader");
         MatthiesenLibApi.modInitializer();
 
+        // Register Server events
         ServerLifecycleEvents.SERVER_STARTING.register(server -> MC_SERVER = server);
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> MC_SERVER = null);
 
+        // Register Server Reload Event
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
             if (success) {
                 Map<String, Runnable> runnables = MatthiesenLibApi.getReloadRunnables();
