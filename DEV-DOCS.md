@@ -2,6 +2,34 @@
 
 Developer-focused notes and migration details for `matthiesen-lib` and `matthiesen-lib-api`.
 
+## 2026-05-30
+
+### Reload Runnable API (new)
+
+- Added `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibReloadManager` to track per-mod reload callbacks.
+- `MatthiesenLibApi` now initializes the reload manager in `modInitializer()`.
+- New API methods on `MatthiesenLibApi`:
+  - `registerReloadRunnable(String modId, Runnable runnable)`
+  - `getReloadRunnables()`
+- The lib facade (`dev.matthiesen.common.matthiesen_lib.MatthiesenLib`) now forwards these same methods for compatibility/convenience.
+
+### Fabric Reload Hook
+
+- `api/fabric/.../MatthiesenLibApiFabric` now listens to `ServerLifecycleEvents.END_DATA_PACK_RELOAD`.
+- On successful reload, Fabric iterates `MatthiesenLibApi.getReloadRunnables()` and executes each callback.
+- Each callback execution is wrapped in `try/catch` and logged via `MatthiesenLibApiConstants` (success path info logs + per-mod error logs).
+
+### NeoForge Reload Hook
+
+- `api/neoforge/.../MatthiesenLibApiNeoForgeServerBusEvents` now subscribes to `AddReloadListenerEvent`.
+- Added helper listener `api/neoforge/.../helper/MatthiesenLibReloadListener` extending `SimplePreparableReloadListener<Void>`.
+- During listener `apply(...)`, NeoForge iterates and executes the registered mod reload callbacks with the same per-mod logging/error handling approach.
+
+### Behavior Notes
+
+- Reload callbacks are keyed by `modId` and duplicate registrations are rejected with an error log.
+- Current storage is an in-memory `Map<String, Runnable>` in API common, shared across platform integrations.
+
 ## 2026-05-22
 
 ### API Module Setup
