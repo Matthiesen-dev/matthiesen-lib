@@ -14,6 +14,7 @@ import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * Main class for the MatthiesenLib mod. This class is responsible for initializing the mod and setting up any necessary
@@ -218,6 +219,25 @@ public class MatthiesenLib {
      */
     public static boolean isTextParserInitialized(MatthiesenLibBuiltInTextParsers type) {
         return MatthiesenLibTextParserManager.isTextParserInitialized(type);
+    }
+
+    /**
+     * Registers a reload runnable for a mod. This runnable will be executed when the reload command is triggered.
+     * @param modId The ID of the mod registering the reload runnable. This should be a unique identifier for the mod,
+     *              typically the mod ID used in the mod's metadata.
+     * @param runnable The runnable to execute during a reload. This should contain the logic that the mod wants to
+     *                 perform when a reload is triggered, such as reloading configurations or refreshing data.
+     */
+    public static void registerReloadRunnable(String modId, Runnable runnable) {
+        MatthiesenLibApi.registerReloadRunnable(modId, runnable);
+    }
+
+    /**
+     * Retrieves the map of registered reload runnables. This can be used by the reload command to execute all registered runnables during a reload.
+     * @return A map where the key is the mod ID and the value is the runnable to execute during a reload.
+     */
+    public static Map<String, Runnable> getReloadRunnables() {
+        return MatthiesenLibApi.getReloadRunnables();
     }
 
     /**

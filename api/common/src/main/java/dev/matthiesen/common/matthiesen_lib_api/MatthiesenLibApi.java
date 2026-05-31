@@ -2,10 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
-import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
-import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibCommandsManager;
-import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibPermissionsManager;
-import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.*;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
@@ -26,6 +23,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
 import java.util.List;
+import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.function.Supplier;
 
@@ -34,6 +32,7 @@ import java.util.function.Supplier;
  * initialized once. It provides a static method modInitializer() that can be called by mod loaders to initialize the API,
  * and it uses a private static boolean field to track whether the API has already been initialized to prevent multiple initializations.
  */
+@SuppressWarnings("unused")
 public class MatthiesenLibApi {
     private static final MatthiesenLibPlatform PLATFORM =
             ServiceLoader.load(MatthiesenLibPlatform.class).findFirst().orElseThrow();
@@ -65,6 +64,8 @@ public class MatthiesenLibApi {
         MatthiesenLibCommandsManager.modInitializer();
         // Initialize the text parser registry
         MatthiesenLibTextParserManager.modInitializer();
+        // Initialize the reload manager
+        MatthiesenLibReloadManager.modInitializer();
 
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized API");
@@ -180,6 +181,25 @@ public class MatthiesenLibApi {
      */
     public static MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
         return MatthiesenLibTextParserManager.getTextParser(type);
+    }
+
+    /**
+     * Registers a reload runnable for a mod. This runnable will be executed when the reload command is triggered.
+     * @param modId The ID of the mod registering the reload runnable. This should be a unique identifier for the mod,
+     *              typically the mod ID used in the mod's metadata.
+     * @param runnable The runnable to execute during a reload. This should contain the logic that the mod wants to
+     *                 perform when a reload is triggered, such as reloading configurations or refreshing data.
+     */
+    public static void registerReloadRunnable(String modId, Runnable runnable) {
+        MatthiesenLibReloadManager.registerReloadRunnable(modId, runnable);
+    }
+
+    /**
+     * Retrieves the map of registered reload runnables. This can be used by the reload command to execute all registered runnables during a reload.
+     * @return A map where the key is the mod ID and the value is the runnable to execute during a reload.
+     */
+    public static Map<String, Runnable> getReloadRunnables() {
+        return MatthiesenLibReloadManager.getReloadRunnables();
     }
 
     /**

@@ -1,10 +1,13 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api;
 
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
@@ -39,5 +42,14 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStopping(ServerStoppingEvent event) {
         MatthiesenLibApiNeoForge.setMinecraftServer(null);
+    }
+
+    /**
+     * Event handler for adding reload listeners. This method listens for the AddReloadListenerEvent and is intended to be used for adding resource reload listeners to the server's resource manager.
+     * @param event The event object containing the context for the add reload listener event, including the resource manager to which reload listeners can be added.
+     */
+    @SubscribeEvent
+    public static void onAddReloadListener(AddReloadListenerEvent event) {
+        event.addListener(new MatthiesenLibReloadListener(MatthiesenLibApi::getReloadRunnables));
     }
 }

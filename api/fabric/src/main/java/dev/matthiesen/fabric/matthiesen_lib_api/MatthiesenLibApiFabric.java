@@ -6,6 +6,8 @@ import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.server.MinecraftServer;
 
+import java.util.Map;
+
 /**
  * Main class for the MatthiesenLib API on the Fabric platform. This class is responsible for initializing the API and
  * managing the Minecraft server instance.
@@ -25,8 +27,25 @@ public class MatthiesenLibApiFabric implements ModInitializer {
         MatthiesenLibApiConstants.createInfoLog("Loading API for Fabric Mod Loader");
         MatthiesenLibApi.modInitializer();
 
+        // Register Server events
         ServerLifecycleEvents.SERVER_STARTING.register(server -> MC_SERVER = server);
         ServerLifecycleEvents.SERVER_STOPPING.register(server -> MC_SERVER = null);
+
+        // Register Server Reload Event
+        ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
+            if (success) {
+                Map<String, Runnable> runnables = MatthiesenLibApi.getReloadRunnables();
+                if (runnables.isEmpty()) return;
+                for (Map.Entry<String, Runnable> entry : runnables.entrySet()) {
+                    try {
+                        MatthiesenLibApiConstants.createInfoLog("Executing reload runnable for mod: " + entry.getKey());
+                        entry.getValue().run();
+                    } catch (Exception e) {
+                        MatthiesenLibApiConstants.createErrorLog("Error executing reload runnable for mod: " + entry.getKey(), e);
+                    }
+                }
+            }
+        });
     }
 
     /**
