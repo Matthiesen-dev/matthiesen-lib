@@ -2,8 +2,10 @@ package dev.matthiesen.fabric.matthiesen_lib_api;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 
 import java.util.Map;
@@ -46,6 +48,12 @@ public class MatthiesenLibApiFabric implements ModInitializer {
                 }
             }
         });
+
+        // Player Events
+        ServerPlayConnectionEvents.JOIN.register(((handler, sender, server) ->
+                MatthiesenLibApiPlayerEventsManager.onPlayerJoin(handler.getPlayer())));
+        ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) ->
+                MatthiesenLibApiPlayerEventsManager.onPlayerLeave(handler.getPlayer())));
     }
 
     /**

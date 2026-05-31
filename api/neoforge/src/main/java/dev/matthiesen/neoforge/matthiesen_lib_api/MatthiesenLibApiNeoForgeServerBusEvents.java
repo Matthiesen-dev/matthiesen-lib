@@ -2,12 +2,15 @@ package dev.matthiesen.neoforge.matthiesen_lib_api;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
+import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 
@@ -51,5 +54,29 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
     @SubscribeEvent
     public static void onAddReloadListener(AddReloadListenerEvent event) {
         event.addListener(new MatthiesenLibReloadListener(MatthiesenLibApi::getReloadRunnables));
+    }
+
+    @SubscribeEvent
+    public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
+        try {
+            if (event.getEntity().level().isClientSide) return;
+            ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+            if (player == null) return;
+            MatthiesenLibApiPlayerEventsManager.onPlayerJoin(player);
+        } catch (RuntimeException e) {
+            MatthiesenLibApiConstants.getLogger().error("Error handling player join event for player {}", event.getEntity().getName().getString(), e);
+        }
+    }
+
+    @SubscribeEvent
+    public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
+        try {
+            if (event.getEntity().level().isClientSide) return;
+            ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+            if (player == null) return;
+            MatthiesenLibApiPlayerEventsManager.onPlayerLeave(player);
+        } catch (RuntimeException e) {
+            MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {}", event.getEntity().getName().getString(), e);
+        }
     }
 }

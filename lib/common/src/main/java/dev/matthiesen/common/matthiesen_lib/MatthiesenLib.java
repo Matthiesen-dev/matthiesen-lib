@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
@@ -238,6 +239,15 @@ public class MatthiesenLib {
      */
     public static Map<String, Runnable> getReloadRunnables() {
         return MatthiesenLibApi.getReloadRunnables();
+    }
+
+    /**
+     * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
+     * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
+     * @param handler the implementation of the IPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
+     */
+    public static void registerPlayerEventHandler(String modId, MatthiesenLibApiPlayerEventsManager.IPlayerEventHandler handler) {
+        MatthiesenLibApi.registerPlayerEventHandler(modId, handler);
     }
 
     /**
