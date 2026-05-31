@@ -56,6 +56,10 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         event.addListener(new MatthiesenLibReloadListener(MatthiesenLibApi::getReloadRunnables));
     }
 
+    /**
+     * Event handler for player join events. This method listens for the PlayerLoggedInEvent and calls the onPlayerJoin method of the MatthiesenLibApiPlayerEventsManager when a player joins the server.
+     * @param event The event object containing the context for the player join event, including the player entity that joined the server. This method checks if the event is occurring on the server side and if the player entity is an instance of ServerPlayer before calling the onPlayerJoin method, ensuring that only valid player join events are processed.
+     */
     @SubscribeEvent
     public void onPlayerJoin(PlayerEvent.PlayerLoggedInEvent event) {
         try {
@@ -68,6 +72,10 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         }
     }
 
+    /**
+     * Event handler for player leave events. This method listens for the PlayerLoggedOutEvent and calls the onPlayerLeave method of the MatthiesenLibApiPlayerEventsManager when a player leaves the server.
+     * @param event The event object containing the context for the player leave event, including the player entity that left the server. This method checks if the event is occurring on the server side and if the player entity is an instance of ServerPlayer before calling the onPlayerLeave method, ensuring that only valid player leave events are processed.
+     */
     @SubscribeEvent
     public void onPlayerLeave(PlayerEvent.PlayerLoggedOutEvent event) {
         try {

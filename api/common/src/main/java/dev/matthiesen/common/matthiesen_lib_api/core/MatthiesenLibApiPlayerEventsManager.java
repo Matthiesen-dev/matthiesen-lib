@@ -14,6 +14,14 @@ public final class MatthiesenLibApiPlayerEventsManager {
     private static final Map<String, IPlayerEventHandler> playerEventHandlers = new HashMap<>();
     private static boolean initialized;
 
+    /**
+     * Default constructor for the MatthiesenLibApiPlayerEventsManager class. This constructor is private to prevent instantiation of the class,
+     */
+    private MatthiesenLibApiPlayerEventsManager() {}
+
+    /**
+     * Default constructor for the MatthiesenLibApiPlayerEventsManager class. No initialization is required as setup is handled in the modInitializer method.
+     */
     public static void modInitializer() {
         if (initialized) return;
         initialized = true;

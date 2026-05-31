@@ -21,6 +21,11 @@ public class MatthiesenLibApiFabric implements ModInitializer {
     private static volatile MinecraftServer MC_SERVER;
 
     /**
+     * Default constructor for the MatthiesenLibApiFabric class. This constructor is required by the Fabric mod loader to instantiate the mod class when loading the mod.
+     */
+    public MatthiesenLibApiFabric() {}
+
+    /**
      * Default constructor for the MatthiesenLibApiFabric class. Initializes the API and registers necessary resources.
      * This method is called when the mod is loaded by the Fabric mod loader.
      */
