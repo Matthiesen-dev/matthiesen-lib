@@ -67,6 +67,8 @@ public class MatthiesenLibApi {
         // Initialize the reload manager
         MatthiesenLibReloadManager.modInitializer();
 
+        MatthiesenLibApiPlayerEventsManager.modInitializer();
+
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized API");
     }
@@ -200,6 +202,15 @@ public class MatthiesenLibApi {
      */
     public static Map<String, Runnable> getReloadRunnables() {
         return MatthiesenLibReloadManager.getReloadRunnables();
+    }
+
+    /**
+     * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
+     * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
+     * @param handler the implementation of the IPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
+     */
+    public static void registerPlayerEventHandler(String modId, MatthiesenLibApiPlayerEventsManager.IPlayerEventHandler handler) {
+        MatthiesenLibApiPlayerEventsManager.registerPlayerEventHandler(modId, handler);
     }
 
     /**
