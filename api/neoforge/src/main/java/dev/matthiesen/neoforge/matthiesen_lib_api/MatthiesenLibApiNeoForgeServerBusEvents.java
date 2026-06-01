@@ -3,7 +3,9 @@ package dev.matthiesen.neoforge.matthiesen_lib_api;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
@@ -13,6 +15,7 @@ import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
+import net.neoforged.neoforge.event.tick.ServerTickEvent;
 
 /**
  * MatthiesenLibNeoForgeServerBusEvents is a server-side event subscriber class for the NeoForge mod loader.
@@ -33,7 +36,9 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStarting(ServerStartingEvent event) {
-        MatthiesenLibApiNeoForge.setMinecraftServer(event.getServer());
+        MinecraftServer server = event.getServer();
+        MatthiesenLibApiNeoForge.setMinecraftServer(server);
+        MatthiesenLibApiServerEventsManager.onServerStart(server);
     }
 
     /**
@@ -44,7 +49,21 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
      */
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void onServerStopping(ServerStoppingEvent event) {
+        MatthiesenLibApiServerEventsManager.onServerStop(event.getServer());
         MatthiesenLibApiNeoForge.setMinecraftServer(null);
+    }
+
+    /**
+     * Event handler for server tick events. This method listens for the ServerTickEvent and calls the onServerTick method of
+     * the MatthiesenLibApiServerEventsManager on each server tick.
+     * @param event The event object containing the context for the server tick event, including the server instance that is
+     *              ticking. This method is called with the highest priority to ensure that the onServerTick method is called as
+     *              early as possible during each server tick, allowing mods to perform any necessary logic or updates in response
+     *              to the tick event.
+     */
+    @SubscribeEvent(priority = EventPriority.HIGHEST)
+    public void onServerTick(ServerTickEvent.Post event) {
+        MatthiesenLibApiServerEventsManager.onServerTick(event.getServer());
     }
 
     /**

@@ -3,8 +3,10 @@ package dev.matthiesen.fabric.matthiesen_lib_api;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
 
@@ -35,8 +37,15 @@ public class MatthiesenLibApiFabric implements ModInitializer {
         MatthiesenLibApi.modInitializer();
 
         // Register Server events
-        ServerLifecycleEvents.SERVER_STARTING.register(server -> MC_SERVER = server);
-        ServerLifecycleEvents.SERVER_STOPPING.register(server -> MC_SERVER = null);
+        ServerLifecycleEvents.SERVER_STARTING.register(server -> {
+            MC_SERVER = server;
+            MatthiesenLibApiServerEventsManager.onServerStart(server);
+        });
+        ServerLifecycleEvents.SERVER_STOPPING.register(server -> {
+            MatthiesenLibApiServerEventsManager.onServerStop(server);
+            MC_SERVER = null;
+        });
+        ServerTickEvents.END_SERVER_TICK.register(MatthiesenLibApiServerEventsManager::onServerTick);
 
         // Register Server Reload Event
         ServerLifecycleEvents.END_DATA_PACK_RELOAD.register((server, resourceManager, success) -> {
