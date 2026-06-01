@@ -4,9 +4,7 @@ import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibTextParserManager;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPermissionValidator;
-import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibTextParser;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.*;
 import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
@@ -245,9 +243,31 @@ public class MatthiesenLib {
      * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
      * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
      * @param handler the implementation of the IPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
+     * @deprecated This method is deprecated in favor of the overload that accepts a MatthiesenLibPlayerEventHandler, which provides a more specific contract for handling player events. The original method accepted a more generic IPlayerEventHandler, which may have led to confusion or misuse. The new method ensures that only valid player event handlers can be registered, improving type safety and clarity in the API.
      */
+    @Deprecated(forRemoval = true)
+    @SuppressWarnings({"unused", "removal"})
     public static void registerPlayerEventHandler(String modId, MatthiesenLibApiPlayerEventsManager.IPlayerEventHandler handler) {
         MatthiesenLibApi.registerPlayerEventHandler(modId, handler);
+    }
+
+    /**
+     * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
+     * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
+     * @param handler the implementation of the MatthiesenLibPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
+     */
+    public static void registerPlayerEventHandler(String modId, MatthiesenLibPlayerEventHandler handler) {
+        MatthiesenLibApi.registerPlayerEventHandler(modId, handler);
+    }
+
+    /**
+     * Registers a server event handler for a specific mod. This method allows mods to register their own implementations of the IServerEventHandler interface,
+     * enabling them to receive callbacks for server events such as starting, ticking, and stopping. By registering a server event handler, mods can define custom logic to be executed in response to these events, allowing for enhanced functionality and integration with the server lifecycle.
+     * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
+     * @param handler the implementation of the MatthiesenLibServerEventHandler interface that will handle server events for the specified mod. This parameter allows mods to define their own logic for handling server start, tick, and stop events, enabling custom behavior in response to these events.
+     */
+    public static void registerServerEventHandler(String modId, MatthiesenLibServerEventHandler handler) {
+        MatthiesenLibApi.registerServerEventHandler(modId, handler);
     }
 
     /**

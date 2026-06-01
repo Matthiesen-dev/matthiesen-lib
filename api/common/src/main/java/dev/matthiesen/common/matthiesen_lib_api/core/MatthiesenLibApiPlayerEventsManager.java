@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPlayerEventHandler;
 import net.minecraft.server.level.ServerPlayer;
 
 import java.util.HashMap;
@@ -11,7 +12,7 @@ import java.util.Map;
  * allowing for organized management and invocation of these handlers in response to player events.
  */
 public final class MatthiesenLibApiPlayerEventsManager {
-    private static final Map<String, IPlayerEventHandler> playerEventHandlers = new HashMap<>();
+    private static final Map<String, MatthiesenLibPlayerEventHandler> playerEventHandlers = new HashMap<>();
     private static boolean initialized;
 
     /**
@@ -31,9 +32,9 @@ public final class MatthiesenLibApiPlayerEventsManager {
     /**
      * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
      * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
-     * @param handler the implementation of the IPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
+     * @param handler the implementation of the MatthiesenLibPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
      */
-    public static void registerPlayerEventHandler(String modId, IPlayerEventHandler handler) {
+    public static void registerPlayerEventHandler(String modId, MatthiesenLibPlayerEventHandler handler) {
         playerEventHandlers.put(modId, handler);
     }
 
@@ -43,7 +44,7 @@ public final class MatthiesenLibApiPlayerEventsManager {
      * @param player the ServerPlayer instance representing the player who joined. This parameter provides access to the player's information and allows for interaction with the player entity.
      */
     public static void onPlayerJoin(ServerPlayer player) {
-        for (IPlayerEventHandler handler : playerEventHandlers.values()) {
+        for (MatthiesenLibPlayerEventHandler handler : playerEventHandlers.values()) {
             try {
                 handler.onPlayerJoin(player);
             } catch (RuntimeException e) {
@@ -59,7 +60,7 @@ public final class MatthiesenLibApiPlayerEventsManager {
      *               for interaction with the player entity, if necessary, before it is fully removed from the server context.
      */
     public static void onPlayerLeave(ServerPlayer player) {
-        for (IPlayerEventHandler handler : playerEventHandlers.values()) {
+        for (MatthiesenLibPlayerEventHandler handler : playerEventHandlers.values()) {
             try {
                 handler.onPlayerLeave(player);
             } catch (RuntimeException e) {
@@ -72,21 +73,10 @@ public final class MatthiesenLibApiPlayerEventsManager {
      * This interface defines the contract for handling player events such as joining and leaving the server. Mods can implement this interface
      * to receive callbacks when players join or leave, allowing them to perform custom logic in response to these events. The methods
      * in this interface are called by the MatthiesenLibApiPlayerEventsManager when the corresponding player events occur.
+     *
+     * @deprecated This interface is deprecated and will be removed in a future version. Mods should implement the MatthiesenLibPlayerEventHandler interface directly instead of using this deprecated interface.
      */
     @SuppressWarnings("unused")
-    public interface IPlayerEventHandler {
-        /**
-         * Called when a player joins the server. Implementations of this method can perform any necessary setup or initialization for the player,
-         * @param player the ServerPlayer instance representing the player who joined. This parameter provides access to the player's information and
-         *               allows for interaction with the player entity.
-         */
-        default void onPlayerJoin(ServerPlayer player) {}
-
-        /**
-         * Called when a player leaves the server. Implementations of this method can perform any necessary cleanup or finalization for the player,
-         * @param player the ServerPlayer instance representing the player who left. This parameter provides access to the player's information and
-         *               allows for interaction with the player entity, if necessary, before it is fully removed from the server context.
-         */
-        default void onPlayerLeave(ServerPlayer player) {}
-    }
+    @Deprecated(forRemoval = true)
+    public interface IPlayerEventHandler extends MatthiesenLibPlayerEventHandler {}
 }
