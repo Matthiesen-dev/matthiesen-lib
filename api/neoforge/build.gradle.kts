@@ -29,17 +29,16 @@ dependencies {
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
 
+    // Metrics
+    implementation(libs.bundles.faststats)
+    shadowBundle(libs.bundles.faststats)
+
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentNeoForge"(project(":api-common", configuration = "namedElements")) {
         isTransitive = false
     }
     shadowBundle(project(":api-common", configuration = "transformProductionNeoForge"))
-
-    implementation(libs.faststatsCore)
-    implementation(libs.faststatsConfig)
-    shadowBundle(libs.faststatsCore)
-    shadowBundle(libs.faststatsConfig)
 }
 
 

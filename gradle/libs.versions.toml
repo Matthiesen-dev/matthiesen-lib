@@ -46,3 +46,8 @@ faststatsCore = { group = "dev.faststats.metrics", name = "core", version.ref = 
 
 emberstextapiFabric = { group = "net.tysontheember.emberstextapi", name = "emberstextapi-fabric-1.21.1", version.ref = "emberstextapi_version" }
 emberstextapiNeoForge = { group = "net.tysontheember.emberstextapi", name = "emberstextapi-neoforge-1.21.1", version.ref = "emberstextapi_version" }
+
+[bundles]
+fabricModImplementation = ["fabric", "fabricApi"]
+fabricModCompileOnly = ["fabricPermissionsApi"]
+faststats = ["faststatsConfig", "faststatsCore"]

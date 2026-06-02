@@ -17,21 +17,17 @@ dependencies {
     // Minecraft & Fabric
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-    modImplementation(libs.fabric)
-    modImplementation(libs.fabricApi)
+    modImplementation(libs.bundles.fabricModImplementation)
+    modCompileOnly(libs.bundles.fabricModCompileOnly)
 
-    // Fabric Permissions API
-    modCompileOnly(libs.fabricPermissionsApi)
+    // Metrics
+    implementation(libs.bundles.faststats)
+    shadowBundle(libs.bundles.faststats)
 
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentFabric"(project(":api-common", configuration = "namedElements"))
     shadowBundle(project(":api-common", configuration = "transformProductionFabric"))
-
-    implementation(libs.faststatsCore)
-    implementation(libs.faststatsConfig)
-    shadowBundle(libs.faststatsCore)
-    shadowBundle(libs.faststatsConfig)
 }
 
 

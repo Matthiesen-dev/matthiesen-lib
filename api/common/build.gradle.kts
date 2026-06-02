@@ -1,13 +1,16 @@
 plugins {
+    id("com.gradleup.shadow")
     id("dev.architectury.loom")
     id("architectury-plugin")
-    id("matthiesen.api-module-conventions")
+    id("matthiesen.api-shadow-platform-conventions")
     id("matthiesen.publishing-conventions")
 }
 
 architectury {
     common("neoforge", "fabric")
 }
+
+val shadowBundle: Configuration by configurations.creating
 
 dependencies {
     // Minecraft & Mixins
@@ -16,8 +19,8 @@ dependencies {
     compileOnly(libs.spongeMixin)
 
     // Metrics
-    implementation(libs.faststatsCore)
-    implementation(libs.faststatsConfig)
+    implementation(libs.bundles.faststats)
+    shadowBundle(libs.bundles.faststats)
 }
 
 tasks {
@@ -27,5 +30,10 @@ tasks {
         filesMatching("pack.mcmeta") {
             expand(project.properties)
         }
+    }
+
+    shadowJar {
+        configurations.set(listOf(shadowBundle))
+        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }
