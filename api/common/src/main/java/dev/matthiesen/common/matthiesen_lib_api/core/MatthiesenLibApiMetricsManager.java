@@ -103,14 +103,22 @@ public final class MatthiesenLibApiMetricsManager {
      * identifiable information or sensitive data, while still allowing for effective tracking and analysis of errors that may occur during
      * the metrics collection process.
      */
-    public static final ErrorTracker ERROR_TRACKER = ErrorTracker.contextUnaware()
-            .ignoreError(InvocationTargetException.class, "Expected .* but got .*")
-            .ignoreError(AccessDeniedException.class)
-            .anonymize("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", "[email hidden]")
-            .anonymize("Bearer [A-Za-z0-9._~+/=-]+", "Bearer [token hidden]")
-            .anonymize("AKIA[0-9A-Z]{16}", "[aws-key hidden]")
-            .anonymize("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "[uuid hidden]")
-            .anonymize("([?&](?:api_?key|token|secret)=)[^&\\s]+", "$1[redacted]");
+    public static final ErrorTracker ERROR_TRACKER = getErrorTracker();
+
+    /**
+     * Configures and returns an ErrorTracker instance for capturing and anonymizing errors that occur during metrics collection and submission.
+     * @return an ErrorTracker instance configured to ignore certain expected exceptions and anonymize sensitive information such as email addresses, bearer tokens, AWS keys, UUIDs, and API keys or tokens in query parameters.
+     */
+    public static ErrorTracker getErrorTracker() {
+        return ErrorTracker.contextUnaware()
+                .ignoreError(InvocationTargetException.class, "Expected .* but got .*")
+                .ignoreError(AccessDeniedException.class)
+                .anonymize("^[\\w-.]+@([\\w-]+\\.)+[\\w-]{2,4}$", "[email hidden]")
+                .anonymize("Bearer [A-Za-z0-9._~+/=-]+", "Bearer [token hidden]")
+                .anonymize("AKIA[0-9A-Z]{16}", "[aws-key hidden]")
+                .anonymize("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "[uuid hidden]")
+                .anonymize("([?&](?:api_?key|token|secret)=)[^&\\s]+", "$1[redacted]");
+    }
 
     /**
      * Gets the UniversalMetricContext instance used for metrics collection and submission. This context is initialized with the mod ID,
