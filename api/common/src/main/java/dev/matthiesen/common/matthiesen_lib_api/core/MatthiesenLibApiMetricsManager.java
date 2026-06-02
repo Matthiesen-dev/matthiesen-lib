@@ -23,6 +23,14 @@ public final class MatthiesenLibApiMetricsManager {
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
 
     /**
+     * Private constructor to prevent instantiation of the MatthiesenLibApiMetricsManager class. This class is designed to be a utility class
+     * with static methods and fields, so there is no need for instances of this class to be created. By making the constructor private, we ensure
+     * that the class cannot be instantiated from outside, enforcing its intended use as a static utility class for managing metrics registration
+     * and providing the UniversalMetricContext.
+     */
+    private MatthiesenLibApiMetricsManager() {}
+
+    /**
      * Registers a mod with the metrics system by its mod ID. This method retrieves the mod container for the given mod ID using
      * the MatthiesenLibApi, and if found, extracts the mod name and version to store in the REGISTERED_MODS map. The map uses the
      * mod ID as the key and a string containing the mod name and version as the value. If no mod container is found for the given

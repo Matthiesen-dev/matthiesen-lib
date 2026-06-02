@@ -40,6 +40,13 @@ public class MatthiesenLibApi {
     private static boolean initialized;
     private static MatthiesenLibPermissionValidator permissionValidator;
 
+    /**
+     * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
+     * This tracker is defined in the MatthiesenLibApiMetricsManager class and is used to ensure that any errors encountered during
+     * metrics operations are properly handled and anonymized before being reported. By providing a centralized ErrorTracker, the
+     * API can maintain consistency in error handling across all metrics-related functionality, allowing for better debugging and
+     * analysis of issues that may arise during metrics collection and submission.
+     */
     public static final ErrorTracker ERROR_TRACKER = MatthiesenLibApiMetricsManager.ERROR_TRACKER;
 
     /**
@@ -257,7 +264,7 @@ public class MatthiesenLibApi {
 
     /**
      * Get the configuration file path for the mod. This method can be used to access the configuration file for the mod, allowing you to read and write configuration
-     * @param dir The directory where the configuration file is located. This should be a string that specifies the path to the directory, which must be relative to the game's /config/`<dir>` directory. The method will combine this directory path with the file name provided in the 'file' parameter to construct the full path to the configuration file for the mod. This allows you to organize your mod's configuration files in a specific subdirectory within the main config directory, helping to keep things organized and preventing conflicts with other mods' configuration files.
+     * @param dir The directory where the configuration file is located. This should be a string that specifies the path to the directory, which must be relative to the game's /config/`dir` directory. The method will combine this directory path with the file name provided in the 'file' parameter to construct the full path to the configuration file for the mod. This allows you to organize your mod's configuration files in a specific subdirectory within the main config directory, helping to keep things organized and preventing conflicts with other mods' configuration files.
      * @param file The name of the configuration file. This should be a string that specifies the name of the file, including the file extension (e.g., "config.json"). The method will combine this file name with the directory path provided in the 'dir' parameter to construct the full path to the configuration file, which can then be accessed for reading or writing configuration data for the mod.
      * @return The Path object representing the full path to the configuration file for the mod. This allows you to access the configuration file in a way that is compatible with the underlying file system and the specific mod loader's conventions for storing configuration files. You can use this Path object to read from or write to the configuration file as needed for your mod's functionality.
      */
