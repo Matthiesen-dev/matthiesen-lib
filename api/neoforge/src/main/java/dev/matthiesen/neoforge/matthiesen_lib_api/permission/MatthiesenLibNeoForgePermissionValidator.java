@@ -114,7 +114,7 @@ public class MatthiesenLibNeoForgePermissionValidator implements MatthiesenLibPe
      * PermissionGatherEvent.Nodes event for registration with NeoForge's PermissionAPI.
      */
     private List<PermissionNode<?>> createNodes() {
-        MatthiesenLibApiConstants.createInfoLog("Trying to Register " + MatthiesenLibApi.getPendingPermissionCount() + " NeoForge permission nodes");
+        MatthiesenLibApiConstants.createExtendedLog("Trying to Register " + MatthiesenLibApi.getPendingPermissionCount() + " NeoForge permission nodes");
         return MatthiesenLibApi.getAllRegisteredPermissions().stream().map(permission -> {
             PermissionNode<Boolean> node = new PermissionNode<>(
                     permission.getIdentifier(),

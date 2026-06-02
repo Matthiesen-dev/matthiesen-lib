@@ -21,7 +21,7 @@ public class MatthiesenLibVanillaMatthiesenLibPermissionValidator implements Mat
      */
     @Override
     public void initialize() {
-        MatthiesenLibApiConstants.createInfoLog("Booting VanillaPermissionValidator, permissions will be checked using Minecraft's permission level system, see https://minecraft.wiki/w/Permission_level");
+        MatthiesenLibApiConstants.createExtendedLog("Booting VanillaPermissionValidator, permissions will be checked using Minecraft's permission level system, see https://minecraft.wiki/w/Permission_level");
     }
 
     /**

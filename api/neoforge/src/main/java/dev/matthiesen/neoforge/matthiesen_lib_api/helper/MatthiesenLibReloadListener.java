@@ -70,7 +70,7 @@ public final class MatthiesenLibReloadListener extends SimplePreparableReloadLis
         if (runnables.isEmpty()) return;
         for (Map.Entry<String, Runnable> entry : runnables.entrySet()) {
             try {
-                MatthiesenLibApiConstants.createInfoLog("Executing reload runnable for mod: " + entry.getKey());
+                MatthiesenLibApiConstants.createExtendedLog("Executing reload runnable for mod: " + entry.getKey());
                 entry.getValue().run();
             } catch (Exception e) {
                 MatthiesenLibApi.ERROR_TRACKER.trackError(e);

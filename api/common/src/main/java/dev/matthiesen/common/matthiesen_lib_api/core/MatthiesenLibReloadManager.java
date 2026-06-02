@@ -27,7 +27,7 @@ public final class MatthiesenLibReloadManager {
         if (initialized) return;
 
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initializing Reload Manager");
+        MatthiesenLibApiConstants.createExtendedLog("Initializing Reload Manager");
     }
 
     /**
@@ -43,7 +43,7 @@ public final class MatthiesenLibReloadManager {
             return;
         }
         reloadRunnables.put(modId, runnable);
-        MatthiesenLibApiConstants.createInfoLog("Registered reload runnable for mod: " + modId);
+        MatthiesenLibApiConstants.createExtendedLog("Registered reload runnable for mod: " + modId);
     }
 
     /**

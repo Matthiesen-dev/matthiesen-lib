@@ -31,7 +31,7 @@ public final class MatthiesenLibApiServerEventsManager {
     public static void modInitializer() {
         if (initialized) return;
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initialized server events manager");
+        MatthiesenLibApiConstants.createExtendedLog("Initialized server events manager");
     }
 
     /**

@@ -64,6 +64,9 @@ public class MatthiesenLibApi {
             return;
         }
 
+        // Initialize the Config
+        MatthiesenLibApiConfigManager.modInitializer();
+
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
         // Initialize Permissions Validators
@@ -75,6 +78,7 @@ public class MatthiesenLibApi {
         MatthiesenLibTextParserManager.modInitializer();
         // Initialize the reload manager
         MatthiesenLibReloadManager.modInitializer();
+        MatthiesenLibReloadManager.registerReloadRunnable(MatthiesenLibApiConstants.MOD_ID + "_config", MatthiesenLibApiConfigManager::reload);
 
         // Event Managers
         MatthiesenLibApiPlayerEventsManager.modInitializer();
@@ -316,7 +320,7 @@ public class MatthiesenLibApi {
          */
         public RegistryBuilder(String modId) {
             this.modId = modId;
-            MatthiesenLibApiConstants.createInfoLog("Created registry builder for mod ID: " + modId);
+            MatthiesenLibApiConstants.createExtendedLog("Created registry builder for mod ID: " + modId);
         }
 
         /**

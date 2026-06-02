@@ -27,7 +27,7 @@ public final class MatthiesenLibApiPlayerEventsManager {
     public static void modInitializer() {
         if (initialized) return;
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initialized permission registry");
+        MatthiesenLibApiConstants.createExtendedLog("Initialized permission registry");
     }
 
     /**
