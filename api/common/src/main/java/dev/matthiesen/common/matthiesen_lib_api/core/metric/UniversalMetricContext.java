@@ -25,10 +25,14 @@ public class UniversalMetricContext extends SimpleContext {
      * @param token the token used for authentication or identification purposes in the metrics submission process. This is passed to the superclass constructor to initialize the context and may be used in the metrics submission process to authenticate or identify the source of the metrics data.
      */
     private UniversalMetricContext(final Factory factory, final String modId, @Token final String token) {
-        super(factory, SimpleConfig.read(MatthiesenLibApi.getModConfig("faststats", "config.properties")), "matthiesen_lib_universal", token);
+        super(factory, getPlatformConfig(), "matthiesen_lib_universal", token);
         this.mod = MatthiesenLibApi.getModContainer(modId);
         if (mod == null) throw new IllegalArgumentException("Mod with id '" + modId + "' not found");
         initializeServices(factory);
+    }
+
+    public static SimpleConfig getPlatformConfig() {
+        return SimpleConfig.read(MatthiesenLibApi.getModConfig("faststats", "config.properties"));
     }
 
     /**
