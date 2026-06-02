@@ -1,5 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.utility;
 
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -25,7 +27,12 @@ public class RunSlashCommand {
      * @param command The command string to execute, without the leading slash. For example, "say Hello world!".
      */
     public static void asServer(MinecraftServer server, String command) {
-        server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
+        try {
+            server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
+        } catch (RuntimeException e) {
+            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiConstants.createErrorLog("An error occurred while executing the command: " + command, e);
+        }
     }
 
     /**
@@ -38,7 +45,12 @@ public class RunSlashCommand {
      * @param command The command string to execute, without the leading slash. For example, "say Hello world!".
      */
     public static void asPlayer(MinecraftServer server, ServerPlayer player, String command) {
-        server.getCommands().performPrefixedCommand(player.createCommandSourceStack(), command);
+        try {
+            server.getCommands().performPrefixedCommand(player.createCommandSourceStack(), command);
+        } catch (RuntimeException e) {
+            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiConstants.createErrorLog("An error occurred while executing the command: " + command, e);
+        }
     }
 }
 

@@ -1,5 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.utility;
 
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
@@ -70,8 +72,13 @@ public class SoundsPlayer {
      * @param player The ServerPlayer instance to whom the sound should be played.
      */
     public void play(ServerPlayer player) {
-        player.server.executeIfPossible(() ->
-                player.playNotifySound(this.soundEvent, this.soundSource, this.volume, this.pitch));
+        try {
+            player.server.executeIfPossible(() ->
+                    player.playNotifySound(this.soundEvent, this.soundSource, this.volume, this.pitch));
+        } catch (RuntimeException e) {
+            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiConstants.createErrorLog("An error occurred while trying to play sound: " + this.soundEvent.getLocation(), e);
+        }
     }
 }
 

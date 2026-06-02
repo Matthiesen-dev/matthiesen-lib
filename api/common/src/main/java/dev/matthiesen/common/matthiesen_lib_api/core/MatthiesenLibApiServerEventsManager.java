@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import net.minecraft.server.MinecraftServer;
 
@@ -53,6 +54,7 @@ public final class MatthiesenLibApiServerEventsManager {
             try {
                 handler.onServerStart(server);
             } catch (RuntimeException e) {
+                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling server started event in mod {}", handler.getClass().getName(), e);
             }
         }
@@ -68,6 +70,7 @@ public final class MatthiesenLibApiServerEventsManager {
             try {
                 handler.onServerTick(server);
             } catch (RuntimeException e) {
+                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling server tick event in mod {}", handler.getClass().getName(), e);
             }
         }
@@ -83,6 +86,7 @@ public final class MatthiesenLibApiServerEventsManager {
             try {
                 handler.onServerStop(server);
             } catch (RuntimeException e) {
+                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling server stopping event in mod {}", handler.getClass().getName(), e);
             }
         }

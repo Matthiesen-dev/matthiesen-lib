@@ -1,7 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
 import dev.faststats.ErrorTracker;
-import dev.faststats.Metrics;
 import dev.faststats.data.Metric;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.UniversalMetricContext;

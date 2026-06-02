@@ -56,6 +56,7 @@ public class MatthiesenLibApiFabric implements ModInitializer {
                         MatthiesenLibApiConstants.createInfoLog("Executing reload runnable for mod: " + entry.getKey());
                         entry.getValue().run();
                     } catch (Exception e) {
+                        MatthiesenLibApi.ERROR_TRACKER.trackError(e);
                         MatthiesenLibApiConstants.createErrorLog("Error executing reload runnable for mod: " + entry.getKey(), e);
                     }
                 }
