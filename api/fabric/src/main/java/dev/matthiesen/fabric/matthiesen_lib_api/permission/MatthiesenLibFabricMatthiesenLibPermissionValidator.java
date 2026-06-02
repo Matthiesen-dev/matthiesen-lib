@@ -22,7 +22,7 @@ public class MatthiesenLibFabricMatthiesenLibPermissionValidator implements Matt
 
     @Override
     public void initialize() {
-        MatthiesenLibApiConstants.createInfoLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
+        MatthiesenLibApiConstants.createExtendedLog("Booting FabricPermissionValidator, permissions will be checked using fabric-permissions-api, see https://github.com/lucko/fabric-permissions-api");
     }
 
     @Override

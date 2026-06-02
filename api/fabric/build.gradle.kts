@@ -11,22 +11,23 @@ architectury {
     fabric()
 }
 
-val shadowCommon: Configuration by configurations.creating
+val shadowBundle: Configuration by configurations.creating
 
 dependencies {
     // Minecraft & Fabric
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
-    modImplementation(libs.fabric)
-    modImplementation(libs.fabricApi)
+    modImplementation(libs.bundles.fabricModImplementation)
+    modCompileOnly(libs.bundles.fabricModCompileOnly)
 
-    // Fabric Permissions API
-    modCompileOnly(libs.fabricPermissionsApi)
+    // Metrics
+    implementation(libs.bundles.faststats)
+    shadowBundle(libs.bundles.faststats)
 
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentFabric"(project(":api-common", configuration = "namedElements"))
-    shadowCommon(project(":api-common", configuration = "transformProductionFabric"))
+    shadowBundle(project(":api-common", configuration = "transformProductionFabric"))
 }
 
 
@@ -38,6 +39,7 @@ tasks {
     }
 
     shadowJar {
-        configurations.set(listOf(shadowCommon))
+        configurations.set(listOf(shadowBundle))
+        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }

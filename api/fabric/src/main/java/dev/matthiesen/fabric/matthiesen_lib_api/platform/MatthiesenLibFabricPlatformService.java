@@ -2,6 +2,7 @@ package dev.matthiesen.fabric.matthiesen_lib_api.platform;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
 import dev.matthiesen.fabric.matthiesen_lib_api.MatthiesenLibApiFabric;
 import dev.matthiesen.fabric.matthiesen_lib_api.permission.MatthiesenLibFabricMatthiesenLibPermissionValidator;
@@ -22,6 +23,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 /**
@@ -100,8 +102,39 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
     }
 
     @Override
+    public MatthiesenLibModContainer getModContainer(String modId) {
+        var fabricModContainer = FabricLoader.getInstance().getModContainer(modId);
+        return fabricModContainer.map(modContainer -> new MatthiesenLibModContainer() {
+            @Override
+            public String getModName() {
+                return modContainer.getMetadata().getName();
+            }
+
+            @Override
+            public String getModVersion() {
+                return modContainer.getMetadata().getVersion().getFriendlyString();
+            }
+
+            @Override
+            public String getPlatform() {
+                return Platform.FABRIC.getLabel();
+            }
+        }).orElse(null);
+    }
+
+    @Override
+    public Path getModConfig(String dir, String file) {
+        return FabricLoader.getInstance().getConfigDir().resolve(dir).resolve(file);
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    @Override
+    public ENVIRONMENT getEnvironmentType() {
+        return FabricLoader.getInstance().getEnvironmentType() == net.fabricmc.api.EnvType.CLIENT ? ENVIRONMENT.CLIENT : ENVIRONMENT.SERVER;
     }
 
     @Override

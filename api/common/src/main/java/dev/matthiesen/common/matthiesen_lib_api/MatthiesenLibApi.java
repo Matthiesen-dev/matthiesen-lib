@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api;
 
 import com.mojang.serialization.MapCodec;
+import dev.faststats.ErrorTracker;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.core.*;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.*;
@@ -20,6 +21,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.nio.file.Path;
 import java.util.List;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -39,6 +41,15 @@ public class MatthiesenLibApi {
     private static MatthiesenLibPermissionValidator permissionValidator;
 
     /**
+     * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
+     * This tracker is defined in the MatthiesenLibApiMetricsManager class and is used to ensure that any errors encountered during
+     * metrics operations are properly handled and anonymized before being reported. By providing a centralized ErrorTracker, the
+     * API can maintain consistency in error handling across all metrics-related functionality, allowing for better debugging and
+     * analysis of issues that may arise during metrics collection and submission.
+     */
+    public static final ErrorTracker ERROR_TRACKER = MatthiesenLibApiMetricsManager.ERROR_TRACKER;
+
+    /**
      * Private constructor to prevent instantiation. This class is not meant to be instantiated, as it only contains static
      * methods and fields for managing the API initialization state.
      */
@@ -53,6 +64,9 @@ public class MatthiesenLibApi {
             return;
         }
 
+        // Initialize the Config
+        MatthiesenLibApiConfigManager.modInitializer();
+
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
         // Initialize Permissions Validators
@@ -64,10 +78,14 @@ public class MatthiesenLibApi {
         MatthiesenLibTextParserManager.modInitializer();
         // Initialize the reload manager
         MatthiesenLibReloadManager.modInitializer();
+        MatthiesenLibReloadManager.registerReloadRunnable(MatthiesenLibApiConstants.MOD_ID + "_config", MatthiesenLibApiConfigManager::reload);
 
         // Event Managers
         MatthiesenLibApiPlayerEventsManager.modInitializer();
         MatthiesenLibApiServerEventsManager.modInitializer();
+
+        // Metrics
+        MatthiesenLibApiMetricsManager.getMetricContext().ready();
 
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized API");
@@ -236,6 +254,53 @@ public class MatthiesenLibApi {
     }
 
     /**
+     * Get the mod container for a mod with the given mod ID. This method can be used to access information about a loaded mod, such as its metadata, resources,
+     * or other properties. The implementation of this method may vary depending on the mod loader, but it generally retrieves the mod container from the list
+     * of loaded mods based on the specified mod ID.
+     * @param modId The mod ID to get the mod container for. This should be the unique identifier of the mod, which is typically defined in the mod's metadata
+     *              and used for registration and integration purposes.
+     * @return The mod container for the mod with the given mod ID, or null if no such mod is loaded. The mod container provides access to various properties
+     * and information about the mod, allowing you to interact with it in a more detailed way if needed.
+     */
+    public static MatthiesenLibModContainer getModContainer(String modId) {
+        return PLATFORM.getModContainer(modId);
+    }
+
+    /**
+     * Get the configuration file path for the mod. This method can be used to access the configuration file for the mod, allowing you to read and write configuration
+     * @param dir The directory where the configuration file is located. This should be a string that specifies the path to the directory, which must be relative to the game's /config/`dir` directory. The method will combine this directory path with the file name provided in the 'file' parameter to construct the full path to the configuration file for the mod. This allows you to organize your mod's configuration files in a specific subdirectory within the main config directory, helping to keep things organized and preventing conflicts with other mods' configuration files.
+     * @param file The name of the configuration file. This should be a string that specifies the name of the file, including the file extension (e.g., "config.json"). The method will combine this file name with the directory path provided in the 'dir' parameter to construct the full path to the configuration file, which can then be accessed for reading or writing configuration data for the mod.
+     * @return The Path object representing the full path to the configuration file for the mod. This allows you to access the configuration file in a way that is compatible with the underlying file system and the specific mod loader's conventions for storing configuration files. You can use this Path object to read from or write to the configuration file as needed for your mod's functionality.
+     */
+    public static Path getModConfig(String dir, String file) {
+        return PLATFORM.getModConfig(dir, file);
+    }
+
+    /**
+     * Get the current environment type (e.g., client, server, or dedicated server) using the platform-specific implementation provided by the CommonPlatform service. This method allows you to determine the current environment in which the mod is running, which can be useful for conditionally executing code that should only run on certain sides (e.g., client-only code or server-only code).
+     * @return The current environment type, represented as a value from the MatthiesenLibPlatform.ENVIRONMENT enum. This value indicates whether the mod is running in a client environment, a server environment, or a dedicated server environment, allowing you to make informed decisions about which code to execute based on the current environment context.
+     */
+    public static MatthiesenLibPlatform.ENVIRONMENT getEnvironmentType() {
+        return PLATFORM.getEnvironmentType();
+    }
+
+    /**
+     * Registers a mod with the metrics system by its mod ID. This method retrieves the mod container for the given mod ID using
+     * the MatthiesenLibApi, and if found, extracts the mod name and version to store in the REGISTERED_MODS map. The map uses the
+     * mod ID as the key and a string containing the mod name and version as the value. If no mod container is found for the given
+     * mod ID, or if the mod is already registered, a warning is logged using the API's logger. This method allows mods to be tracked
+     * in the metrics system, providing insight into which mods are present in the environment when metrics are collected.
+     * @param modId the mod ID of the mod to register with the metrics system. This should be the unique identifier for the mod, as
+     *              defined in its metadata. The method will attempt to retrieve the mod container for this ID and, if successful,
+     *              will store the mod's name and version in the REGISTERED_MODS map for tracking in the metrics system. If the mod
+     *              ID is invalid or if the mod is already registered, a warning will be logged to inform developers of potential
+     *              issues with registration.
+     */
+    public static void registerModToMetrics(String modId) {
+        MatthiesenLibApiMetricsManager.registerMod(modId);
+    }
+
+    /**
      * A builder class for registering various types of content (e.g., items, blocks, block entities, etc.) with automatic prefixing of the mod ID to the ResourceLocation IDs.
      */
     public static class RegistryBuilder {
@@ -255,7 +320,7 @@ public class MatthiesenLibApi {
          */
         public RegistryBuilder(String modId) {
             this.modId = modId;
-            MatthiesenLibApiConstants.createInfoLog("Created registry builder for mod ID: " + modId);
+            MatthiesenLibApiConstants.createExtendedLog("Created registry builder for mod ID: " + modId);
         }
 
         /**

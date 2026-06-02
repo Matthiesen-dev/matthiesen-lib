@@ -29,6 +29,10 @@ dependencies {
     mappings(loom.officialMojangMappings())
     neoForge(libs.neoforge)
 
+    // Metrics
+    implementation(libs.bundles.faststats)
+    shadowBundle(libs.bundles.faststats)
+
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentNeoForge"(project(":api-common", configuration = "namedElements")) {
@@ -54,5 +58,6 @@ tasks {
     shadowJar {
         exclude("fabric.mod.json")
         configurations.set(listOf(shadowBundle))
+        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }

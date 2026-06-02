@@ -26,7 +26,7 @@ public final class MatthiesenLibPermissionsManager {
     public static synchronized void modInitializer() {
         if (initialized) return;
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initialized permission registry");
+        MatthiesenLibApiConstants.createExtendedLog("Initialized permission registry");
     }
 
     /**

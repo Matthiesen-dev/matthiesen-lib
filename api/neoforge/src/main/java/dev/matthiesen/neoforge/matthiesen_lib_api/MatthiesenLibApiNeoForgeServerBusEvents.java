@@ -87,6 +87,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
             if (player == null) return;
             MatthiesenLibApiPlayerEventsManager.onPlayerJoin(player);
         } catch (RuntimeException e) {
+            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player join event for player {}", event.getEntity().getName().getString(), e);
         }
     }
@@ -103,6 +104,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
             if (player == null) return;
             MatthiesenLibApiPlayerEventsManager.onPlayerLeave(player);
         } catch (RuntimeException e) {
+            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {}", event.getEntity().getName().getString(), e);
         }
     }

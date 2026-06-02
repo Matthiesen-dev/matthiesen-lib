@@ -16,7 +16,7 @@ public interface MatthiesenLibTextParser {
      * Initializes the text parser. This method can be used to set up any necessary resources or configurations for the text parser.
      */
     default void initialize() {
-        MatthiesenLibApiConstants.createInfoLog("Initializing text parser: " + getType());
+        MatthiesenLibApiConstants.createExtendedLog("Initializing text parser: " + getType());
     }
 
     /**

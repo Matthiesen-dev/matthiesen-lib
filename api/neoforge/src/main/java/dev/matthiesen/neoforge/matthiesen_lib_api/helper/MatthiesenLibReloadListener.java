@@ -1,5 +1,6 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api.helper;
 
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
@@ -69,9 +70,10 @@ public final class MatthiesenLibReloadListener extends SimplePreparableReloadLis
         if (runnables.isEmpty()) return;
         for (Map.Entry<String, Runnable> entry : runnables.entrySet()) {
             try {
-                MatthiesenLibApiConstants.createInfoLog("Executing reload runnable for mod: " + entry.getKey());
+                MatthiesenLibApiConstants.createExtendedLog("Executing reload runnable for mod: " + entry.getKey());
                 entry.getValue().run();
             } catch (Exception e) {
+                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.createErrorLog("Error executing reload runnable for mod: " + entry.getKey(), e);
             }
         }

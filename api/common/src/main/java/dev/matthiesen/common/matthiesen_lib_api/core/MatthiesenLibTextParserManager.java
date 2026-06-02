@@ -35,7 +35,7 @@ public final class MatthiesenLibTextParserManager {
         }
 
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initialized text parser manager");
+        MatthiesenLibApiConstants.createExtendedLog("Initialized text parser manager");
         registerTextParser(VANILLA_PARSER);
     }
 

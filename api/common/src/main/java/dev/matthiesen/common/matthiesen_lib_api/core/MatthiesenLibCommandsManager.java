@@ -32,7 +32,7 @@ public final class MatthiesenLibCommandsManager {
 
         initialized = true;
         COMMON_COMMAND_PLATFORM.registerCommands(MatthiesenLibCommandsManager::bindRegistrar);
-        MatthiesenLibApiConstants.createInfoLog("Initialized command registry");
+        MatthiesenLibApiConstants.createExtendedLog("Initialized command registry");
     }
 
     /**

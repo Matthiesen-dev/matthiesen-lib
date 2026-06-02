@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
+import dev.faststats.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -8,7 +9,6 @@ import org.apache.logging.log4j.Logger;
  * It defines the mod ID, mod name, and provides methods for creating info and error logs.
  * The logger can be overridden at runtime for consumers that want custom logging behavior.
  */
-@SuppressWarnings("unused")
 public final class MatthiesenLibApiConstants {
     /**
      * The unique identifier for the Matthiesen Lib mod. This constant is used for registration and identification purposes
@@ -23,18 +23,23 @@ public final class MatthiesenLibApiConstants {
     public static final String MOD_NAME = "Matthiesen Lib API";
 
     /**
+     * A token used for metrics collection. The token is used to authenticate and identify the source of the metrics data when it
+     * is submitted to the metrics collection service.
+     */
+    public static @Token final String METRICS_TOKEN = "40d72b3b79407e5d372d5790b7dee654";
+
+    /**
      * The logger instance for the Matthiesen Lib API. This logger is used to create log messages for the API, including
      * info and error logs. The logger is initialized using LogManager.getLogger with the mod name as the logger name, allowing
      * for organized logging specific to this API.
      */
-    private static volatile Logger logger = LogManager.getLogger(MOD_NAME);
+    private static final Logger logger = LogManager.getLogger(MOD_NAME);
 
     /**
      * Default constructor for the Constants class. This constructor is private to prevent instantiation of this utility class,
      * as all members are static and there is no need to create an instance of this class.
      */
-    private MatthiesenLibApiConstants() {
-    }
+    private MatthiesenLibApiConstants() {}
 
     /**
      * Gets the current logger instance used by the API.
@@ -45,30 +50,22 @@ public final class MatthiesenLibApiConstants {
     }
 
     /**
-     * Replaces the current logger instance with a custom logger.
-     * @param newLogger the new logger to use; ignored if null.
-     */
-    public static void setLogger(Logger newLogger) {
-        if (newLogger != null) {
-            logger = newLogger;
-        }
-    }
-
-    /**
-     * Rebinds the current logger using a new logger name.
-     * @param loggerName the logger name to use; ignored if null or blank.
-     */
-    public static void setLoggerName(String loggerName) {
-        if (loggerName != null && !loggerName.isBlank()) {
-            logger = LogManager.getLogger(loggerName);
-        }
-    }
-
-    /**
      * Creates an info log with the specified message.
      * @param message The message to log as info.
      */
     public static void createInfoLog(String message) {
+        logger.info(message);
+    }
+
+    /**
+     * Creates an extended info log with the specified message. This method checks the API configuration to determine if logging is suppressed,
+     * @param message The message to log as info. This will be logged at the info level if logging is not suppressed in the API configuration.
+     *                If logging is suppressed, this method will return without logging the message, allowing for dynamic control over logging
+     *                behavior based on the API configuration settings.
+     */
+    public static void createExtendedLog(String message) {
+        boolean cannotContinue = MatthiesenLibApiConfigManager.getApiConfig().suppressedLogging;
+        if (cannotContinue) return;
         logger.info(message);
     }
 
