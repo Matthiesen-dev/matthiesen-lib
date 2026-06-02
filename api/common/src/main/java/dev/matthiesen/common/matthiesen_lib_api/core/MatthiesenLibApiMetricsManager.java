@@ -19,7 +19,7 @@ import java.util.Map;
  * in the Matthiesen Lib API, allowing mods to easily register themselves for metrics tracking and ensuring that any errors are
  * properly handled and anonymized.
  */
-public class MatthiesenLibApiMetricsManager {
+public final class MatthiesenLibApiMetricsManager {
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
 
     /**
