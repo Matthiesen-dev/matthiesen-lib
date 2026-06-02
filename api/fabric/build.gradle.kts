@@ -11,7 +11,7 @@ architectury {
     fabric()
 }
 
-val shadowCommon: Configuration by configurations.creating
+val shadowBundle: Configuration by configurations.creating
 
 dependencies {
     // Minecraft & Fabric
@@ -26,11 +26,12 @@ dependencies {
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentFabric"(project(":api-common", configuration = "namedElements"))
-    shadowCommon(project(":api-common", configuration = "transformProductionFabric"))
+    shadowBundle(project(":api-common", configuration = "transformProductionFabric"))
 
-    // Metrics
-    api(libs.faststatsCore)
+    implementation(libs.faststatsCore)
     implementation(libs.faststatsConfig)
+    shadowBundle(libs.faststatsCore)
+    shadowBundle(libs.faststatsConfig)
 }
 
 
@@ -42,6 +43,7 @@ tasks {
     }
 
     shadowJar {
-        configurations.set(listOf(shadowCommon))
+        configurations.set(listOf(shadowBundle))
+        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }

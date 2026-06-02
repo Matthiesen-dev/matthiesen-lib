@@ -36,9 +36,10 @@ dependencies {
     }
     shadowBundle(project(":api-common", configuration = "transformProductionNeoForge"))
 
-    // Metrics
-    api(libs.faststatsCore)
+    implementation(libs.faststatsCore)
     implementation(libs.faststatsConfig)
+    shadowBundle(libs.faststatsCore)
+    shadowBundle(libs.faststatsConfig)
 }
 
 
@@ -58,5 +59,6 @@ tasks {
     shadowJar {
         exclude("fabric.mod.json")
         configurations.set(listOf(shadowBundle))
+        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }

@@ -16,7 +16,7 @@ dependencies {
     compileOnly(libs.spongeMixin)
 
     // Metrics
-    api(libs.faststatsCore)
+    implementation(libs.faststatsCore)
     implementation(libs.faststatsConfig)
 }
 
