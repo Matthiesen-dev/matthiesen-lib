@@ -279,6 +279,7 @@ public class MatthiesenLibApi {
     public static MatthiesenLibPlatform.ENVIRONMENT getEnvironmentType() {
         return PLATFORM.getEnvironmentType();
     }
+
     /**
      * Registers a mod with the metrics system by its mod ID. This method retrieves the mod container for the given mod ID using
      * the MatthiesenLibApi, and if found, extracts the mod name and version to store in the REGISTERED_MODS map. The map uses the

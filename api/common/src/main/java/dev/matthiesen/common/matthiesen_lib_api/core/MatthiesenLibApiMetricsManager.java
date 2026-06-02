@@ -20,6 +20,17 @@ import java.util.Map;
  */
 public final class MatthiesenLibApiMetricsManager {
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
+    private static final UniversalMetricContext metricContext = new UniversalMetricContext.Factory(
+            MatthiesenLibApiConstants.MOD_ID,
+            MatthiesenLibApiConstants.METRICS_TOKEN
+    )
+            .metrics(factory -> factory
+                    .addMetric(Metric.stringMap("registered_mods", MatthiesenLibApiMetricsManager::getRegisteredMods))
+                    .onFlush(MatthiesenLibApiMetricsManager::clearRegisteredMods)
+                    .create()
+            )
+            .errorTrackerService(MatthiesenLibApi.ERROR_TRACKER)
+            .create();
 
     /**
      * Private constructor to prevent instantiation of the MatthiesenLibApiMetricsManager class. This class is designed to be a utility class
@@ -67,20 +78,21 @@ public final class MatthiesenLibApiMetricsManager {
      * mods are registered with the metrics system, but they cannot modify the underlying data directly, ensuring thread safety
      * and data integrity.
      */
-    public static Map<String, String> getRegisteredMods() {
+    private static Map<String, String> getRegisteredMods() {
         return Map.copyOf(REGISTERED_MODS);
     }
 
-    private static final UniversalMetricContext metricContext = new UniversalMetricContext.Factory(
-            MatthiesenLibApiConstants.MOD_ID,
-            MatthiesenLibApiConstants.METRICS_TOKEN
-    )
-            .metrics(factory -> factory
-                    .addMetric(Metric.stringMap("registered_mods", MatthiesenLibApiMetricsManager::getRegisteredMods))
-                    .create()
-            )
-            .errorTrackerService(MatthiesenLibApi.ERROR_TRACKER)
-            .create();
+    /**
+     * Clears the map of registered mods for metrics purposes. This method is called after the metrics data is flushed to ensure that the
+     * registered mods are only included in the metrics submission for the relevant time period. By clearing the map after flushing, we
+     * prevent stale data from being included in future metrics submissions and ensure that the registered mods metric accurately reflects
+     * the current state of registered mods at the time of each submission. Consumers should not call this method directly, as it is intended
+     * to be used internally by the metrics system to manage the lifecycle of the registered mods data in the context of metrics collection
+     * and submission.
+     */
+    private static void clearRegisteredMods() {
+        REGISTERED_MODS.clear();
+    }
 
     /**
      * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
