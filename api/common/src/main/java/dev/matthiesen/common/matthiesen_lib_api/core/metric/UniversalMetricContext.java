@@ -6,6 +6,7 @@ import dev.faststats.SimpleMetrics;
 import dev.faststats.Token;
 import dev.faststats.config.SimpleConfig;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
@@ -32,7 +33,7 @@ public class UniversalMetricContext extends SimpleContext {
     }
 
     public static SimpleConfig getPlatformConfig() {
-        return SimpleConfig.read(MatthiesenLibApi.getModConfig("faststats", "config.properties"));
+        return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
     }
 
     /**
