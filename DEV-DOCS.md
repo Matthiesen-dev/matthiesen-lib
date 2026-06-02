@@ -2,6 +2,108 @@
 
 Developer-focused notes and migration details for `matthiesen-lib` and `matthiesen-lib-api`.
 
+## 2026-06-01
+
+### Metrics System (new)
+
+The API now ships a full metrics integration built on the [FastStats](https://github.com/faststats-dev/faststats-java) library (shadowed and relocated to `dev.matthiesen.libs.faststats`).
+
+#### Core manager — `MatthiesenLibApiMetricsManager`
+
+- New class at `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager`.
+- Non-instantiable static utility (private constructor).
+- Owns the shared `UniversalMetricContext` instance, initialized at class-load time with the API mod ID and `METRICS_TOKEN`.
+- Tracks a `REGISTERED_MODS` map (`modId → "name version"`) submitted as a `string_map` metric named `registered_mods` on each flush; the map is cleared after every flush.
+- Public API:
+  - `registerMod(String modId)` — looks up the mod container via `MatthiesenLibApi`, stores `"modName modVersion"` in the map. Logs a warning and no-ops on unknown mod IDs or duplicate registrations.
+  - `getMetricContext()` — returns the shared `UniversalMetricContext`.
+  - `ERROR_TRACKER` — public `static final ErrorTracker` instance (see below).
+
+#### Error tracker — `MatthiesenLibApi.ERROR_TRACKER`
+
+- `MatthiesenLibApi.ERROR_TRACKER` is a public constant forwarded from `MatthiesenLibApiMetricsManager.ERROR_TRACKER`.
+- Configured via `ErrorTracker.contextUnaware()` with the following rules:
+  - **Ignored exceptions**: `InvocationTargetException` matching `"Expected .* but got .*"`, `AccessDeniedException`.
+  - **Anonymized patterns**: email addresses `→ [email hidden]`, `Bearer <token>` → `Bearer [token hidden]`, AWS access key IDs `→ [aws-key hidden]`, UUIDs `→ [uuid hidden]`, `api_key`/`token`/`secret` query-param values `→ [redacted]`.
+- `ERROR_TRACKER.trackError(e)` is now called in every major catch block across the codebase:
+  - `ConfigManager` — `createDefaultInstance()`, `save()`
+  - `MatthiesenLibApiPlayerEventsManager` — player join / leave handlers
+  - `MatthiesenLibApiServerEventsManager` — server start / tick / stop handlers
+  - `RunSlashCommand.asServer()` / `asPlayer()`
+  - `SoundsPlayer.play()`
+  - Fabric and NeoForge reload runnable executors
+  - NeoForge player join / leave bus event handlers
+
+#### Metrics token
+
+- `MatthiesenLibApiConstants.METRICS_TOKEN` — new `@Token`-annotated `static final String` holding the FastStats project token. Annotated with FastStats' `@Token` type annotation for compile-time token validation.
+
+#### `MatthiesenLibModContainer` interface (new)
+
+- New interface at `dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer`.
+- Required methods: `getModName()`, `getModVersion()`, `getPlatform()`.
+- Default method: `getModMetricId()` returns `"platform:normalized_mod_name"` (lowercase, spaces → underscores).
+- Nested `Platform` enum with constants `FABRIC("fabric")` and `NEOFORGE("neoforge")`.
+
+#### `MatthiesenLibPlatform` additions
+
+Three new methods added to the `MatthiesenLibPlatform` interface:
+
+| Method | Description |
+|---|---|
+| `MatthiesenLibModContainer getModContainer(String modId)` | Returns the mod container for the given mod ID, or `null` if not loaded. |
+| `Path getModConfig(String dir, String file)` | Resolves `config/<dir>/<file>` relative to the game config directory. |
+| `ENVIRONMENT getEnvironmentType()` | Returns `ENVIRONMENT.CLIENT` or `ENVIRONMENT.SERVER`. |
+
+- New `ENVIRONMENT` enum on `MatthiesenLibPlatform`: `CLIENT`, `SERVER`.
+- Fabric implementation delegates to `FabricLoader` (`getModContainer`, `getConfigDir`, `getEnvironmentType`).
+- NeoForge implementation delegates to `ModList`, `FMLPaths.CONFIGDIR`, and `FMLEnvironment.dist`.
+
+#### `MatthiesenLibApi` public surface additions
+
+| Method / Field | Description |
+|---|---|
+| `public static final ErrorTracker ERROR_TRACKER` | Shared error tracker; forwarded from `MatthiesenLibApiMetricsManager`. |
+| `getModContainer(String modId)` | Delegates to `PLATFORM.getModContainer(modId)`. |
+| `getModConfig(String dir, String file)` | Delegates to `PLATFORM.getModConfig(dir, file)`. |
+| `getEnvironmentType()` | Delegates to `PLATFORM.getEnvironmentType()`. |
+| `registerModToMetrics(String modId)` | Delegates to `MatthiesenLibApiMetricsManager.registerMod(modId)`. |
+
+- `modInitializer()` now calls `MatthiesenLibApiMetricsManager.getMetricContext().ready()` after all other managers are initialized.
+
+#### `UniversalMetricContext` / `UniversalMetricsImpl` hierarchy (new)
+
+All located under `dev.matthiesen.common.matthiesen_lib_api.core.metric`.
+
+- **`UniversalMetricContext`** — extends FastStats `SimpleContext`. Created via a fluent `Factory(modId, token)` builder:
+  ```java
+  new UniversalMetricContext.Factory(modId, token)
+      .metrics(factory -> factory.addMetric(...).onFlush(...).create())
+      .errorTrackerService(errorTracker)
+      .create();
+  ```
+  - Reads config from `config/faststats/config.properties` (via `MatthiesenLibApi.getModConfig`).
+  - `getProjectName()` returns `mod.getModMetricId()`.
+  - `metricsFactory()` branches on `MatthiesenLibApi.getEnvironmentType()`: returns `UniversalMetricsClientImpl` for `CLIENT`, `UniversalMetricsServerImpl` for `SERVER`.
+
+- **`UniversalMetricsImpl`** (abstract) — extends FastStats `SimpleMetrics`. Base class holding the `MatthiesenLibModContainer modContainer` field and a shared `appendUniversalData(JsonObject)` helper. `preSubmissionStart()` delegates to `SimpleConfig`.
+
+- **`UniversalMetricsClientImpl`** — client environment. `appendDefaultData` calls `appendUniversalData` only (client-side no-op submission).
+
+- **`UniversalMetricsServerImpl`** — server environment. Registers a server event handler under key `"<MOD_ID>_metrics"` at construction time. Calls `startSubmitting()` on server start and `shutdown()` on server stop. `appendDefaultData` adds `minecraft_version`, `online_mode` (boolean), and `player_count` fields plus universal data.
+
+#### Lib auto-registration
+
+- `MatthiesenLib.modInitializer()` now calls `MatthiesenLibApi.registerModToMetrics(MatthiesenLibConstants.MOD_ID)`, so the lib module itself is automatically registered in the metrics `registered_mods` map.
+- Downstream mods should call `MatthiesenLibApi.registerModToMetrics(myModId)` during their own `modInitializer` if they want to appear in collected metrics.
+
+#### Gradle / build changes
+
+- `libs.versions.toml` now declares FastStats dependencies as a `bundles.faststats` bundle.
+- `api/common` and all platform modules depend on `libs.bundles.faststats` and include the bundle in `shadowBundle` for relocation.
+- Shadow relocation: `dev.faststats` → `dev.matthiesen.libs.faststats` (all modules).
+- The `matthiesen.api-shadow-platform-conventions` plugin now wraps the `remapJar` configuration in `afterEvaluate` to ensure Loom's default `inputFile` is overridden by the shadow jar. The `remapSourcesJar` override was removed — sources jars now use their own default source inputs.
+
 ## 2026-05-30
 
 ### Reload Runnable API (new)
