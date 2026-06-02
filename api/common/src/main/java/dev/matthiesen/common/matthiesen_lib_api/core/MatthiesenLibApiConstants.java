@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
+import dev.faststats.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -21,6 +22,12 @@ public final class MatthiesenLibApiConstants {
      * initializing the LOGGER instance, allowing for organized logging specific to this mod.
      */
     public static final String MOD_NAME = "Matthiesen Lib API";
+
+    /**
+     * A token used for metrics collection. The token is used to authenticate and identify the source of the metrics data when it
+     * is submitted to the metrics collection service.
+     */
+    public static @Token final String METRICS_TOKEN = "40d72b3b79407e5d372d5790b7dee654";
 
     /**
      * The logger instance for the Matthiesen Lib API. This logger is used to create log messages for the API, including

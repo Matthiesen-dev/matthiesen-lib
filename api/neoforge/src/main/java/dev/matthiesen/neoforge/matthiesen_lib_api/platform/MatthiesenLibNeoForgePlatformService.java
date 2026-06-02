@@ -2,6 +2,7 @@ package dev.matthiesen.neoforge.matthiesen_lib_api.platform;
 
 import com.mojang.serialization.MapCodec;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatform;
 import dev.matthiesen.neoforge.matthiesen_lib_api.MatthiesenLibApiNeoForge;
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibNeoForgeRegistryHelper;
@@ -21,6 +22,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 /**
@@ -96,8 +98,45 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
     }
 
     @Override
+    public MatthiesenLibModContainer getModContainer(String modId) {
+        var neoForgeModContainer = ModList.get().getModContainerById(modId);
+        if (neoForgeModContainer.isPresent()) {
+            var modInfo = neoForgeModContainer.get().getModInfo();
+            return new MatthiesenLibModContainer() {
+                @Override
+                public String getModName() {
+                    return modInfo.getDisplayName();
+                }
+
+                @Override
+                public String getModVersion() {
+                    return modInfo.getVersion().toString();
+                }
+
+                @Override
+                public String getPlatform() {
+                    return Platform.NEOFORGE.getLabel();
+                }
+            };
+        } else {
+            return null;
+        }
+    }
+
+    @Override
+    public Path getModConfig(String dir, String file) {
+        var configDir = net.neoforged.fml.loading.FMLPaths.CONFIGDIR.get();
+        return configDir.resolve(dir).resolve(file);
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
         return !FMLEnvironment.production;
+    }
+
+    @Override
+    public ENVIRONMENT getEnvironmentType() {
+        return FMLEnvironment.dist.isClient() ? ENVIRONMENT.CLIENT : ENVIRONMENT.SERVER;
     }
 
     @Override

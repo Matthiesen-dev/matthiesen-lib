@@ -26,6 +26,7 @@ project.repositories {
     maven("https://repo.spongepowered.org/repository/maven-public")
     maven("https://api.modrinth.com/maven")
     maven("https://maven.tysontheember.dev/")
+    maven("https://repo.faststats.dev/releases")
 }
 
 dependencies.add("testImplementation", "org.junit.jupiter:junit-jupiter-api:${property("junit_version")}")

@@ -14,6 +14,10 @@ dependencies {
     minecraft(libs.minecraft)
     mappings(loom.officialMojangMappings())
     compileOnly(libs.spongeMixin)
+
+    // Metrics
+    api(libs.faststatsCore)
+    implementation(libs.faststatsConfig)
 }
 
 tasks {

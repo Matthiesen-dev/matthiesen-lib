@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.platform;
 
 import com.mojang.serialization.MapCodec;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import net.minecraft.advancements.CriterionTrigger;
 import net.minecraft.core.component.DataComponentType;
 import net.minecraft.resources.ResourceLocation;
@@ -14,6 +15,7 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 
+import java.nio.file.Path;
 import java.util.function.Supplier;
 
 /**
@@ -224,6 +226,25 @@ public interface MatthiesenLibPlatform {
     boolean isModLoaded(String modId);
 
     /**
+     * Get the mod container for a mod with the given mod ID. This method can be used to access information about a loaded mod, such as its metadata, resources,
+     * or other properties. The implementation of this method may vary depending on the mod loader, but it generally retrieves the mod container from the list
+     * of loaded mods based on the specified mod ID.
+     * @param modId The mod ID to get the mod container for. This should be the unique identifier of the mod, which is typically defined in the mod's metadata
+     *              and used for registration and integration purposes.
+     * @return The mod container for the mod with the given mod ID, or null if no such mod is loaded. The mod container provides access to various properties
+     * and information about the mod, allowing you to interact with it in a more detailed way if needed.
+     */
+    MatthiesenLibModContainer getModContainer(String modId);
+
+    /**
+     * Get the configuration file path for the mod. This method can be used to access the configuration file for the mod, allowing you to read and write configuration
+     * @param dir The directory where the configuration file is located. This should be a string that specifies the path to the directory, which must be relative to the game's /config/`<dir>` directory. The method will combine this directory path with the file name provided in the 'file' parameter to construct the full path to the configuration file for the mod. This allows you to organize your mod's configuration files in a specific subdirectory within the main config directory, helping to keep things organized and preventing conflicts with other mods' configuration files.
+     * @param file The name of the configuration file. This should be a string that specifies the name of the file, including the file extension (e.g., "config.json"). The method will combine this file name with the directory path provided in the 'dir' parameter to construct the full path to the configuration file, which can then be accessed for reading or writing configuration data for the mod.
+     * @return The Path object representing the full path to the configuration file for the mod. This allows you to access the configuration file in a way that is compatible with the underlying file system and the specific mod loader's conventions for storing configuration files. You can use this Path object to read from or write to the configuration file as needed for your mod's functionality.
+     */
+    Path getModConfig(String dir, String file);
+
+    /**
      * Check if the current environment is a development environment. This method can be used to conditionally execute code that should only
      * run in a development environment, such as debug logging or testing utilities. The implementation of this method may vary depending on
      * the mod loader and the specific environment, but it generally checks for indicators that the mod is running in a development environment
@@ -231,6 +252,26 @@ public interface MatthiesenLibPlatform {
      * @return true if the current environment is a development environment, false otherwise.
      */
     boolean isDevelopmentEnvironment();
+
+    /**
+     * Get the current environment type (e.g., client, server, or dedicated server) using the platform-specific implementation provided by the CommonPlatform service. This method allows you to determine the current environment in which the mod is running, which can be useful for conditionally executing code that should only run on certain sides (e.g., client-only code or server-only code).
+     * @return The current environment type, represented as a value from the MatthiesenLibPlatform.ENVIRONMENT enum. This value indicates whether the mod is running in a client environment, a server environment, or a dedicated server environment, allowing you to make informed decisions about which code to execute based on the current environment context.
+     */
+    ENVIRONMENT getEnvironmentType();
+
+    /**
+     * An enum representing the different environment types that a mod can run in. This enum is used to indicate whether the mod is running in a client environment, a server environment, or a dedicated server environment. By using this enum, mod developers can write code that conditionally executes based on the current environment, allowing for better compatibility and performance by only running code that is relevant to the specific environment.
+     */
+    enum ENVIRONMENT {
+        /**
+         * The client environment, which is the environment that runs on the player's computer and is responsible for rendering the game, handling user input, and managing the client-side logic of the game. Code that should only run on the client side, such as rendering code or client-specific event handlers, can be conditionally executed when the environment type is CLIENT.
+         */
+        CLIENT,
+        /**
+         * The server environment, which is the environment that runs on the game server and is responsible for managing the game world, handling player interactions, and processing server-side logic. Code that should only run on the server side, such as world generation code or server-specific event handlers, can be conditionally executed when the environment type is SERVER.
+         */
+        SERVER
+    }
 
     /**
      * Create a new CreativeModeTab.Builder instance. This method is used to create a new builder for creating a creative mode tab, which

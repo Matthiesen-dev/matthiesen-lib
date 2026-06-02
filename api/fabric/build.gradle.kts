@@ -27,6 +27,10 @@ dependencies {
     implementation(project(":api-common", configuration = "namedElements"))
     "developmentFabric"(project(":api-common", configuration = "namedElements"))
     shadowCommon(project(":api-common", configuration = "transformProductionFabric"))
+
+    // Metrics
+    api(libs.faststatsCore)
+    implementation(libs.faststatsConfig)
 }
 
 

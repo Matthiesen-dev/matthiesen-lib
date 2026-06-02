@@ -35,6 +35,10 @@ dependencies {
         isTransitive = false
     }
     shadowBundle(project(":api-common", configuration = "transformProductionNeoForge"))
+
+    // Metrics
+    api(libs.faststatsCore)
+    implementation(libs.faststatsConfig)
 }
 
 
