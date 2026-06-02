@@ -8,6 +8,7 @@ import dev.faststats.config.SimpleConfig;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
+import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
 
@@ -16,7 +17,7 @@ import org.jspecify.annotations.NonNull;
  * The Factory inner class provides a convenient way to create instances of UniversalMetricContext by accepting the mod ID and token as parameters. This allows for easy integration of metrics collection into mods by simply creating a new Factory instance with the appropriate mod ID and token, and then calling the create method to obtain a UniversalMetricContext instance ready for use with the UniversalMetrics implementation.
  */
 @SuppressWarnings("UnstableApiUsage")
-public class UniversalMetricContext extends SimpleContext {
+public final class UniversalMetricContext extends SimpleContext {
     final MatthiesenLibModContainer mod;
 
     /**
@@ -58,8 +59,8 @@ public class UniversalMetricContext extends SimpleContext {
             public @NonNull Metrics create() throws IllegalStateException {
                 final var mod = ((UniversalMetricContext) context).mod;
                 return switch (MatthiesenLibApi.getEnvironmentType()) {
-                    case CLIENT -> new UniversalMetricsClientImpl(this, mod);
-                    case SERVER -> new UniversalMetricsServerImpl(this, mod);
+                    case CLIENT -> new UniversalMetricsClient(this, mod);
+                    case SERVER -> new UniversalMetricsServer(this, mod);
                 };
             }
         };

@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib_api.core.metric;
+package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.faststats.SimpleMetrics;
@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Contract;
  * The actual submission logic and environment-specific data collection are implemented in the subclasses.
  */
 @SuppressWarnings("UnstableApiUsage")
-public abstract class UniversalMetricsImpl extends SimpleMetrics {
+public abstract class AbstractUniversalMetric extends SimpleMetrics {
     /**
      * The mod container associated with this metrics instance. This provides access to the mod's information such as version and platform, which can be included in the metrics data.
      */
@@ -27,7 +27,7 @@ public abstract class UniversalMetricsImpl extends SimpleMetrics {
      */
     @Async.Schedule
     @Contract(mutates = "io")
-    UniversalMetricsImpl(final Factory factory, final MatthiesenLibModContainer modContainer) throws IllegalStateException {
+    AbstractUniversalMetric(final Factory factory, final MatthiesenLibModContainer modContainer) throws IllegalStateException {
         super(factory);
         this.modContainer = modContainer;
     }

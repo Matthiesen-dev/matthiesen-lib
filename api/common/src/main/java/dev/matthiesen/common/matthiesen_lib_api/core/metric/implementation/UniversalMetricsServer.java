@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib_api.core.metric;
+package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
@@ -15,7 +15,7 @@ import org.jspecify.annotations.NonNull;
  * When the server starts, it initializes the metrics collection and starts submitting data. When the server stops, it shuts down the metrics collection to ensure that all data is properly sent before the server fully shuts down. The metrics collected include server-specific information such as Minecraft version, online mode status, and player count, in addition to any universal data defined in the parent class.
  */
 @SuppressWarnings("UnstableApiUsage")
-public class UniversalMetricsServerImpl extends UniversalMetricsImpl {
+public final class UniversalMetricsServer extends AbstractUniversalMetric {
     private volatile MinecraftServer SERVER;
 
     /**
@@ -26,7 +26,7 @@ public class UniversalMetricsServerImpl extends UniversalMetricsImpl {
      */
     @Async.Schedule
     @Contract(mutates = "io")
-    UniversalMetricsServerImpl(final Factory factory, final MatthiesenLibModContainer mod) throws IllegalStateException {
+    public UniversalMetricsServer(final Factory factory, final MatthiesenLibModContainer mod) throws IllegalStateException {
         super(factory, mod);
         MatthiesenLibApiServerEventsManager.registerServerEventHandler(MatthiesenLibApiConstants.MOD_ID + "_metrics", getServerEventHandler());
     }
