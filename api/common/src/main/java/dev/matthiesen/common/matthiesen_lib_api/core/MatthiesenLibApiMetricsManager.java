@@ -76,7 +76,6 @@ public final class MatthiesenLibApiMetricsManager {
             MatthiesenLibApiConstants.MOD_ID,
             MatthiesenLibApiConstants.METRICS_TOKEN
     )
-            .metrics(Metrics.Factory::create)
             .metrics(factory -> factory
                     .addMetric(Metric.stringMap("registered_mods", MatthiesenLibApiMetricsManager::getRegisteredMods))
                     .create()
