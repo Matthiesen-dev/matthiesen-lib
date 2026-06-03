@@ -58,6 +58,14 @@ public final class MatthiesenLibApiConstants {
     }
 
     /**
+     * Creates a debug log with the specified message. This method is intended for logging detailed information that may be useful for debugging purposes, and will only be logged if the logger is configured to include debug level messages.
+     * @param message The message to log as debug. This will be logged at the debug level, which is typically used for detailed information that may be useful for debugging but is not necessary for regular operation. The actual logging of this message will depend on the logger's configuration and whether debug level logging is enabled.
+     */
+    public static void createDebugLog(String message) {
+        logger.debug(message);
+    }
+
+    /**
      * Creates an extended info log with the specified message. This method checks the API configuration to determine if logging is suppressed,
      * @param message The message to log as info. This will be logged at the info level if logging is not suppressed in the API configuration.
      *                If logging is suppressed, this method will return without logging the message, allowing for dynamic control over logging
