@@ -60,7 +60,7 @@ public class ConfigManager<T> {
             gsonField.setAccessible(true);
             return (Gson) gsonField.get(null);
         } catch (NoSuchFieldException | IllegalAccessException | ClassCastException e) {
-            MatthiesenLibApiConstants.createExtendedLog("No GSON field found in " + configClass.getSimpleName() + ", using default Gson instance");
+            MatthiesenLibApiConstants.createDebugLog("No GSON field found in " + configClass.getSimpleName() + ", using default Gson instance");
             return new GsonBuilder()
                     .disableHtmlEscaping()
                     .setPrettyPrinting()
@@ -87,12 +87,12 @@ public class ConfigManager<T> {
      */
     public T loadConfig() {
         String configFileLoc = getConfigFileLocation();
-        MatthiesenLibApiConstants.createExtendedLog("Loading config file found at: " + configFileLoc);
+        MatthiesenLibApiConstants.createDebugLog("Loading config file found at: " + configFileLoc);
         File configFile = new File(configFileLoc);
         boolean madeDir = configFile.getParentFile().mkdirs();
 
         if (madeDir) {
-            MatthiesenLibApiConstants.createExtendedLog("Config Directory exists");
+            MatthiesenLibApiConstants.createDebugLog("Config Directory exists");
         }
 
         if (configFile.exists()) {
@@ -129,13 +129,13 @@ public class ConfigManager<T> {
      * @return The merged config as a JsonElement
      */
     private JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
-        MatthiesenLibApiConstants.createExtendedLog("Checking for config merge.");
+        MatthiesenLibApiConstants.createDebugLog("Checking for config merge.");
         boolean merged = false;
 
         for (String key : defaultConfig.keySet()) {
             if (!fileConfig.has(key)) {
                 fileConfig.add(key, defaultConfig.get(key));
-                MatthiesenLibApiConstants.createExtendedLog(key + " not found in file config, adding from default.");
+                MatthiesenLibApiConstants.createDebugLog(key + " not found in file config, adding from default.");
                 merged = true;
             } else if (defaultConfig.get(key).isJsonObject() && fileConfig.get(key).isJsonObject()) {
                 mergeConfigs(defaultConfig.getAsJsonObject(key), fileConfig.getAsJsonObject(key));
@@ -143,7 +143,7 @@ public class ConfigManager<T> {
         }
 
         if (merged) {
-            MatthiesenLibApiConstants.createExtendedLog("Successfully merged config.");
+            MatthiesenLibApiConstants.createDebugLog("Successfully merged config.");
         }
 
         return fileConfig;
@@ -155,7 +155,7 @@ public class ConfigManager<T> {
     public void saveConfig() {
         try {
             String configFileLoc = getConfigFileLocation();
-            MatthiesenLibApiConstants.createExtendedLog("Saving config to: " + configFileLoc);
+            MatthiesenLibApiConstants.createDebugLog("Saving config to: " + configFileLoc);
             File configFile = new File(configFileLoc);
             try (FileWriter fileWriter = new FileWriter(configFile)) {
                 gson.toJson(config, fileWriter);
