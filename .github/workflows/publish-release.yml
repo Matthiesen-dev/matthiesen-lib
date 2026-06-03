@@ -226,6 +226,8 @@ jobs:
           echo "webhook_url=$webhook_url" >> "$GITHUB_OUTPUT"
       - name: Build Discord Embed Payload
         id: build_payload
+        env:
+          RELEASE_BODY: ${{ github.event.release.body }}
         run: |
           payload=$(jq -cn \
             --arg title "New Release: ${{ matrix.project_label }} ${{ needs.prepare.outputs.version }}" \
@@ -236,7 +238,7 @@ jobs:
               "embeds": [
                 {
                   "title": $title,
-                  "description": $description,
+                  "description": $ENV.RELEASE_BODY,
                   "color": 5763719,
                   "thumbnail": {
                     "url": "https://raw.githubusercontent.com/Matthiesen-dev/.github/refs/heads/main/logo-transparent.png"
