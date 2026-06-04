@@ -1,6 +1,8 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
 import dev.faststats.ErrorTracker;
+import dev.faststats.Metrics;
+import dev.faststats.Token;
 import dev.faststats.data.Metric;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.UniversalMetricContext;
@@ -20,7 +22,8 @@ import java.util.Map;
  */
 public final class MatthiesenLibApiMetricsManager {
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
-    private static final UniversalMetricContext metricContext = new UniversalMetricContext.Factory(
+    @SuppressWarnings("unused")
+    private static final UniversalMetricContext METRIC_CONTEXT = new UniversalMetricContext.Factory(
             MatthiesenLibApiConstants.MOD_ID,
             MatthiesenLibApiConstants.METRICS_TOKEN
     )
@@ -33,12 +36,51 @@ public final class MatthiesenLibApiMetricsManager {
             .create();
 
     /**
+     * Creates a base UniversalMetricContext.Factory with the given mod ID and token, and configures it to include the registered mods metric and error tracker service. This factory can be used to create UniversalMetricContext instances for submitting metrics with the registered mods data and error tracking capabilities. The registered mods metric is defined as a string map that retrieves the current set of registered mods from the getRegisteredMods method, and it is configured to clear the registered mods data after each flush using the clearRegisteredMods method. The error tracker service is set to use the ERROR_TRACKER defined in this class, which captures and anonymizes errors that occur during metrics collection and submission.
+     * @param modId the mod ID to use for the UniversalMetricContext.Factory. This should be the unique identifier for the mod, as defined in its metadata. The mod ID is used to associate the metrics data with the correct mod when it is submitted to the metrics collection service.
+     * @param token the token to use for the UniversalMetricContext.Factory. This token is used to authenticate and identify the source of the metrics data when it is submitted to the metrics collection service. It should be a valid token that is registered with the metrics collection service to ensure that the data is accepted and processed correctly.
+     * @return a UniversalMetricContext.Factory instance configured with the registered mods metric and error tracker service. This factory can be used to create UniversalMetricContext instances for submitting metrics with the registered mods data and error tracking capabilities. The registered mods metric is defined as a string map that retrieves the current set of registered mods from the getRegisteredMods method, and it is configured to clear the registered mods data after each flush using the clearRegisteredMods method. The error tracker service is set to use the ERROR_TRACKER defined in this class, which captures and anonymizes errors that occur during metrics collection and submission.
+     */
+    public static UniversalMetricContext.Factory getBaseMetricFactory(String modId, @Token String token) {
+        return new UniversalMetricContext.Factory(modId, token).metrics(Metrics.Factory::create);
+    }
+
+    /**
+     * Creates a basic UniversalMetricContext for submitting metrics with the registered mods data and error tracking capabilities. This method uses the getBaseMetricFactory method to create a factory configured with the registered mods metric and error tracker service, and then creates a UniversalMetricContext instance from that factory. The resulting context can be used to submit metrics with the registered mods data included as a custom metric, and any errors that occur during submission will be captured and anonymized by the configured error tracker service.
+     * @param modId the mod ID to use for the UniversalMetricContext. This should be the unique identifier for the mod, as defined in its metadata. The mod ID is used to associate the metrics data with the correct mod when it is submitted to the metrics collection service.
+     * @param token the token to use for the UniversalMetricContext. This token is used to authenticate and identify the source of the metrics data when it is submitted to the metrics collection service. It should be a valid token that is registered with the metrics collection service to ensure that the data is accepted and processed correctly.
+     * @return a UniversalMetricContext instance configured with the registered mods metric and error tracking capabilities. This context can be used to submit metrics with the registered mods data included as a custom metric, and any errors that occur during submission will be captured and anonymized by the configured error tracker service. The context is created using the getBaseMetricFactory method, which sets up the necessary configuration for the registered mods metric and error tracker service before creating the context instance.
+     */
+    public static UniversalMetricContext makeBasicMetricsContext(String modId, @Token String token) {
+        return getBaseMetricFactory(modId, token).create();
+    }
+
+    /**
+     * Creates a UniversalMetricContext for submitting metrics with the registered mods data and error tracking capabilities, using a custom ErrorTracker provided as a parameter. This method uses the getBaseMetricFactory method to create a factory configured with the registered mods metric, and then sets the error tracker service to use the provided ErrorTracker before creating a UniversalMetricContext instance. The resulting context can be used to submit metrics with the registered mods data included as a custom metric, and any errors that occur during submission will be captured and anonymized by the provided ErrorTracker according to its configuration.
+     * @param modId the mod ID to use for the UniversalMetricContext. This should be the unique identifier for the mod, as defined in its metadata. The mod ID is used to associate the metrics data with the correct mod when it is submitted to the metrics collection service.
+     * @param token the token to use for the UniversalMetricContext. This token is used to authenticate and identify the source of the metrics data when it is submitted to the metrics collection service. It should be a valid token that is registered with the metrics collection service to ensure that the data is accepted and processed correctly.
+     * @param errorTracker the ErrorTracker instance to use for capturing and anonymizing errors that occur during metrics collection and submission. This allows consumers to provide their own custom error tracking configuration if they want to capture additional types of errors or anonymize different patterns of sensitive information. The provided ErrorTracker will be used in place of the default ERROR_TRACKER defined in this class, allowing for flexible error tracking based on the consumer's specific needs and preferences.
+     * @return a UniversalMetricContext instance configured with the registered mods metric and the provided error tracking capabilities. This context can be used to submit metrics with the registered mods data included as a custom metric, and any errors that occur during submission will be captured and anonymized by the provided ErrorTracker according to its configuration. The context is created using the getBaseMetricFactory method, which sets up the necessary configuration for the registered mods metric before setting the error tracker service to use the provided ErrorTracker and creating the context instance.
+     */
+    public static UniversalMetricContext makeErrorMetricsContext(String modId, @Token String token, ErrorTracker errorTracker) {
+        return getBaseMetricFactory(modId, token).errorTrackerService(errorTracker).create();
+    }
+
+    /**
      * Private constructor to prevent instantiation of the MatthiesenLibApiMetricsManager class. This class is designed to be a utility class
      * with static methods and fields, so there is no need for instances of this class to be created. By making the constructor private, we ensure
      * that the class cannot be instantiated from outside, enforcing its intended use as a static utility class for managing metrics registration
      * and providing the UniversalMetricContext.
      */
     private MatthiesenLibApiMetricsManager() {}
+
+    /**
+     * Initializes the metrics manager. This method is currently empty, but it can be used in the future for any necessary setup or initialization logic
+     * related to the metrics manager. It is intended to be called during the mod initialization process to ensure that the metrics manager is ready to
+     * handle mod registrations and provide the UniversalMetricContext when needed. Consumers should call this method during their mod's initialization
+     * phase to ensure that the metrics manager is properly set up before any mods attempt to register for metrics or submit metrics data.
+     */
+    public static void modInitializer() {}
 
     /**
      * Registers a mod with the metrics system by its mod ID. This method retrieves the mod container for the given mod ID using
@@ -52,7 +94,7 @@ public final class MatthiesenLibApiMetricsManager {
      *              ID is invalid or if the mod is already registered, a warning will be logged to inform developers of potential
      *              issues with registration.
      */
-    public static void registerMod(String modId) {
+    public static void registerModToMatthiesenLibApi(String modId) {
         var modInfo = MatthiesenLibApi.getModContainer(modId);
         if (modInfo == null) {
             MatthiesenLibApiConstants.getLogger().warn("Attempted to register mod with ID '{}' for metrics, but no mod container was found. This may indicate an issue with the mod loader integration.", modId);
@@ -118,19 +160,5 @@ public final class MatthiesenLibApiMetricsManager {
                 .anonymize("AKIA[0-9A-Z]{16}", "[aws-key hidden]")
                 .anonymize("[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}", "[uuid hidden]")
                 .anonymize("([?&](?:api_?key|token|secret)=)[^&\\s]+", "$1[redacted]");
-    }
-
-    /**
-     * Gets the UniversalMetricContext instance used for metrics collection and submission. This context is initialized with the mod ID,
-     * metrics token, and a custom metric for tracking registered mods. The context also integrates with the error tracker to capture and
-     * anonymize errors that occur during metrics collection and submission. Consumers can use this context to submit custom metrics or
-     * track errors in their own code, while benefiting from the common configuration and integration provided by this manager.
-     * @return the UniversalMetricContext instance used for metrics collection and submission. This context is initialized with the mod ID,
-     * metrics token, and a custom metric for tracking registered mods, as well as integration with the error tracker for capturing and
-     * anonymizing errors. Consumers can use this context to submit custom metrics or track errors in their own code, while benefiting from
-     * the common configuration and integration provided by this manager.
-     */
-    public static UniversalMetricContext getMetricContext() {
-        return metricContext;
     }
 }

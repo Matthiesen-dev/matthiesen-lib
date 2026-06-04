@@ -6,8 +6,6 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import net.minecraft.server.MinecraftServer;
-import org.jetbrains.annotations.Async;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -24,24 +22,9 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
      * @param mod the mod container associated with this metrics instance. This provides access to the mod's information such as version and platform, which can be included in the metrics data.
      * @throws IllegalStateException if there is an issue with initializing the metrics instance, such as invalid configuration or missing dependencies. The actual conditions for throwing this exception depend on the implementation of the superclass and the context initialization.
      */
-    @Async.Schedule
-    @Contract(mutates = "io")
     public UniversalMetricsServer(final Factory factory, final MatthiesenLibModContainer mod) throws IllegalStateException {
         super(factory, mod);
-        MatthiesenLibApiServerEventsManager.registerServerEventHandler(MatthiesenLibApiConstants.MOD_ID + "_metrics", getServerEventHandler());
-    }
-
-    /**
-     * Appends server-specific data to the metrics JSON object. This method is called by the parent class to add common data fields to the metrics before submission. In addition to the universal data added by the parent class, this implementation adds server-specific information such as the Minecraft version, online mode status, and player count. This allows for more detailed analysis of the server environment in which the mod is running, providing valuable insights for both mod developers and users.
-     * @param metrics the JsonObject representing the metrics data that will be submitted. This object is modified by adding properties for the Minecraft version, online mode status, and player count, which are obtained from the SERVER instance. The parent class's appendUniversalData method is also called to ensure that universal data fields are included in the metrics submission.
-     */
-    @Override
-    protected void appendDefaultData(final @NonNull JsonObject metrics) {
-        assert SERVER != null : "Server not initialized";
-        metrics.addProperty("minecraft_version", SERVER.getServerVersion());
-        metrics.addProperty("online_mode", SERVER.usesAuthentication());
-        metrics.addProperty("player_count", SERVER.getPlayerCount());
-        appendUniversalData(metrics);
+        MatthiesenLibApiServerEventsManager.registerServerEventHandler(MatthiesenLibApiConstants.MOD_ID + "_metrics_server", getServerEventHandler());
     }
 
     /**
@@ -53,7 +36,6 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
             @Override
             public void onServerStart(MinecraftServer server) {
                 SERVER = server;
-                startSubmitting();
             }
 
             @Override
@@ -61,5 +43,17 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
                 shutdown();
             }
         };
+    }
+
+    /**
+     * Appends server-specific data to the metrics JSON object. This method is called by the parent class to add common data fields to the metrics before submission. In addition to the universal data added by the parent class, this implementation adds server-specific information such as the Minecraft version, online mode status, and player count. This allows for more detailed analysis of the server environment in which the mod is running, providing valuable insights for both mod developers and users.
+     * @param metrics the JsonObject representing the metrics data that will be submitted. This object is modified by adding properties for the Minecraft version, online mode status, and player count, which are obtained from the SERVER instance. The parent class's appendUniversalData method is also called to ensure that universal data fields are included in the metrics submission.
+     */
+    @Override
+    protected void appendDefaultData(final @NonNull JsonObject metrics) {
+        assert SERVER != null : "Server not initialized";
+        metrics.addProperty("online_mode", SERVER.usesAuthentication());
+        metrics.addProperty("player_count", SERVER.getPlayerCount());
+        appendUniversalData(metrics, SERVER.getServerVersion());
     }
 }
