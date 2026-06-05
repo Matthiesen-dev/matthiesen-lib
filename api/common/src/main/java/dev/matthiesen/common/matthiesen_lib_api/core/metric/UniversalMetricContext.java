@@ -62,31 +62,6 @@ public final class UniversalMetricContext extends SimpleContext {
         }
     }
 
-    private static void clientOptOut() {}
-
-    @Override
-    protected boolean preSubmissionStart() {
-        return ((SimpleConfig) getConfig()).preSubmissionStart();
-    }
-
-    public static SimpleConfig getPlatformConfig() {
-        return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
-    }
-
-    @Override
-    public void scheduleAtFixedRate(final @NonNull Runnable task, final long initialDelay, final long period, final @NonNull TimeUnit unit) {
-        tasks.add(executor.scheduleAtFixedRate(task, initialDelay, period, unit));
-    }
-
-    /**
-     * Returns the project name for this metrics context, which is the unique identifier of the mod associated with this context. This method is used in the metrics submission process to associate the collected data with the correct mod. The project name is obtained from the mod container's getModMetricId method, ensuring that it is unique and consistent with the mod's information. This allows for accurate tracking and analysis of metrics data for each individual mod using this UniversalMetricContext.
-     * @return the project name for this metrics context, which is the unique identifier of the mod associated with this context. This value is used in the metrics submission process to associate the collected data with the correct mod, allowing for accurate tracking and analysis of metrics data for each individual mod using this UniversalMetricContext.
-     */
-    @Override
-    public @NonNull String getProjectName() {
-        return mod.getModMetricId();
-    }
-
     /**
      * Creates and returns a Metrics.Factory instance for this context. This factory is responsible for creating Metrics instances that will be used to collect and submit metrics data for the mod associated with this context. The factory implementation checks the environment type (client or server) and creates the appropriate Metrics implementation (UniversalMetricsClientImpl for client and UniversalMetricsServerImpl for server). This allows for environment-specific handling of metrics collection and submission while still utilizing the common functionality provided by the UniversalMetricsImpl base class.
      * The Metrics instances created by this factory will utilize the mod information from the context to include relevant data in the metrics submissions, ensuring that the collected data is associated with the correct mod and environment. This design allows for flexible and efficient metrics collection tailored to the specific needs of both client and server environments while maintaining a consistent interface for mods to use when integrating metrics collection into their functionality.
@@ -105,6 +80,31 @@ public final class UniversalMetricContext extends SimpleContext {
                 };
             }
         };
+    }
+
+    private static void clientOptOut() {}
+
+    public static SimpleConfig getPlatformConfig() {
+        return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
+    }
+
+    @Override
+    protected boolean preSubmissionStart() {
+        return ((SimpleConfig) getConfig()).preSubmissionStart();
+    }
+
+    /**
+     * Returns the project name for this metrics context, which is the unique identifier of the mod associated with this context. This method is used in the metrics submission process to associate the collected data with the correct mod. The project name is obtained from the mod container's getModMetricId method, ensuring that it is unique and consistent with the mod's information. This allows for accurate tracking and analysis of metrics data for each individual mod using this UniversalMetricContext.
+     * @return the project name for this metrics context, which is the unique identifier of the mod associated with this context. This value is used in the metrics submission process to associate the collected data with the correct mod, allowing for accurate tracking and analysis of metrics data for each individual mod using this UniversalMetricContext.
+     */
+    @Override
+    public @NonNull String getProjectName() {
+        return mod.getModMetricId();
+    }
+
+    @Override
+    public void scheduleAtFixedRate(final @NonNull Runnable task, final long initialDelay, final long period, final @NonNull TimeUnit unit) {
+        tasks.add(executor.scheduleAtFixedRate(task, initialDelay, period, unit));
     }
 
     @Override
