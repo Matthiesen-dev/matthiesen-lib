@@ -48,7 +48,7 @@ public final class UniversalMetricContext extends SimpleContext {
             case CLIENT -> {
                 // Client metrics are opt-out, we are only interested in server-metrics
                 ready();
-                ClientUtils.onClientLoad(this::shutdown);
+                ClientUtils.appendRunnable(this::shutdown);
             }
             case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
                     MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
