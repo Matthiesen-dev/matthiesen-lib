@@ -25,7 +25,19 @@ project.repositories {
     maven("https://artefacts.cobblemon.com/releases/")
     maven("https://repo.spongepowered.org/repository/maven-public")
     maven("https://api.modrinth.com/maven")
-    maven("https://maven.tysontheember.dev/")
+    maven("https://maven.matthiesen.dev/releases") {
+        name = "devMatthiesenMavenReleases"
+        content {
+            includeGroup("dev.matthiesen")
+            includeGroup("net.tysontheember.emberstextapi")
+        }
+    }
+    maven("https://maven.matthiesen.dev/snapshots") {
+        name = "devMatthiesenMavenSnapshots"
+        content {
+            includeGroup("dev.matthiesen")
+        }
+    }
     maven("https://repo.faststats.dev/releases")
 }
 

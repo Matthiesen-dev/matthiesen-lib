@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.architectury.plugin) apply false
 }
 
-
 tasks.register<Copy>("copyJars") {
     group = "build"
     description = "Copies JAR files from fabric and neoforge to output directory"
