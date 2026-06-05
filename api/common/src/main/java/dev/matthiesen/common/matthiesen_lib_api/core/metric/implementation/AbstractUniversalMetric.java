@@ -23,7 +23,7 @@ public abstract class AbstractUniversalMetric extends SimpleMetrics {
      * @param modContainer the mod container associated with this metrics instance. This provides access to the mod's information such as version and platform, which can be included in the metrics data.
      * @throws IllegalStateException if there is an issue with initializing the metrics instance, such as invalid configuration or missing dependencies. The actual conditions for throwing this exception depend on the implementation of the superclass and the context initialization.
      */
-    AbstractUniversalMetric(final Factory factory, final MatthiesenLibModContainer modContainer) throws IllegalStateException {
+    public AbstractUniversalMetric(final Factory factory, final MatthiesenLibModContainer modContainer) throws IllegalStateException {
         super(factory);
         this.modContainer = modContainer;
     }

@@ -11,7 +11,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
-import dev.matthiesen.common.matthiesen_lib_api.utility.ClientUtils;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiClientUtils;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
@@ -48,7 +48,7 @@ public final class UniversalMetricContext extends SimpleContext {
             case CLIENT -> {
                 // Client metrics are opt-out, we are only interested in server-metrics
                 ready();
-                ClientUtils.appendRunnable(this::shutdown);
+                MatthiesenLibApiClientUtils.appendRunnable(this::shutdown);
             }
             case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
                     MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
@@ -87,10 +87,18 @@ public final class UniversalMetricContext extends SimpleContext {
         };
     }
 
+    /**
+     * Retrieves the platform-specific configuration for this metrics context. This method reads the configuration from the mod's config file, allowing for customizable behavior based on the mod's settings. The configuration is expected to be in a properties file format and is read using the SimpleConfig class from the FastStats library. This allows mod developers to define specific settings for their metrics collection and submission process, such as enabling or disabling certain features, adjusting submission intervals, or configuring other aspects of the metrics behavior based on their specific requirements.
+     * @return a SimpleConfig instance containing the platform-specific configuration for this metrics context. This configuration is read from the mod's config file and allows for customizable behavior based on the mod's settings, providing flexibility for mod developers to tailor the metrics collection and submission process to their specific needs. The configuration is expected to be in a properties file format and is read using the SimpleConfig class from the FastStats library, ensuring compatibility with the metrics system and allowing for easy integration of custom settings for metrics behavior.
+     */
     public static SimpleConfig getPlatformConfig() {
         return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
     }
 
+    /**
+     * Pre-submission start hook for the metrics context. This method is called before the metrics submission process begins and can be used to perform any necessary setup or initialization before metrics are collected and submitted. In this implementation, it retrieves the pre-submission start value from the context's configuration, allowing for customizable behavior based on the mod's settings. This can be used to enable or disable certain features or perform specific actions before the metrics submission process starts, providing flexibility for mod developers to tailor the metrics collection process to their specific needs.
+     * @return a boolean value indicating whether the pre-submission start process should proceed. This value is retrieved from the context's configuration, allowing for customizable behavior based on the mod's settings. If this method returns false, the metrics submission process will not proceed, allowing mod developers to control when metrics collection and submission should occur based on their specific requirements or conditions defined in the configuration.
+     */
     @Override
     protected boolean preSubmissionStart() {
         return ((SimpleConfig) getConfig()).preSubmissionStart();
@@ -105,11 +113,21 @@ public final class UniversalMetricContext extends SimpleContext {
         return mod.getModMetricId();
     }
 
+    /**
+     * Schedules a task to be executed at a fixed rate. This method is used to schedule recurring tasks for metrics collection or submission. The task will be executed after the specified initial delay and then repeatedly with the specified period between executions. The scheduled task is added to a set of tasks that can be canceled when the context is shut down, ensuring that all scheduled tasks are properly managed and do not continue to run after the context is no longer active.
+     * @param task the Runnable task to be scheduled for execution at a fixed rate. This task will be executed after the specified initial delay and then repeatedly with the specified period between executions. The task is added to a set of tasks that can be canceled when the context is shut down, ensuring proper management of scheduled tasks.
+     * @param initialDelay the initial delay before the task is first executed. This is the time to wait before the first execution of the task, allowing for any necessary setup or initialization before the task starts running.
+     * @param period the period between successive executions of the task. This is the time to wait between the end of one execution and the start of the next execution, allowing for consistent scheduling of recurring tasks for metrics collection or submission.
+     * @param unit the time unit for the initial delay and period parameters. This specifies the time unit for the initial delay and period, allowing for flexible scheduling of tasks based on different time units such as seconds, minutes, or hours. The scheduled task is added to a set of tasks that can be canceled when the context is shut down, ensuring proper management of scheduled tasks and preventing them from running after the context is no longer active.
+     */
     @Override
     public void scheduleAtFixedRate(final @NonNull Runnable task, final long initialDelay, final long period, final @NonNull TimeUnit unit) {
         tasks.add(executor.scheduleAtFixedRate(task, initialDelay, period, unit));
     }
 
+    /**
+     * Shuts down the metrics context and cancels all scheduled tasks. This method is called when the context is no longer active, such as when the server stops or the client shuts down. It ensures that all scheduled tasks are properly canceled to prevent them from running after the context is shut down, and then it shuts down the executor service to release any resources associated with it. This allows for clean shutdown of the metrics collection process and ensures that no tasks continue to run after the context is no longer active.
+     */
     @Override
     public void shutdown() {
         super.shutdown();

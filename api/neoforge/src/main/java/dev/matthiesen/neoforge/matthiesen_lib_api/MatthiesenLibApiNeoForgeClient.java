@@ -1,7 +1,7 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api;
 
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
-import dev.matthiesen.common.matthiesen_lib_api.utility.ClientUtils;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiClientUtils;
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibClientNeoForgeHelper;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.IEventBus;
@@ -19,6 +19,6 @@ public class MatthiesenLibApiNeoForgeClient {
      */
     public MatthiesenLibApiNeoForgeClient(IEventBus modBus) {
         MatthiesenLibClientNeoForgeHelper.init(modBus);
-        ClientUtils.registerClientLoadRunnables();
+        MatthiesenLibApiClientUtils.registerClientLoadRunnables();
     }
 }
