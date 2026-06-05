@@ -69,6 +69,9 @@ public class MatthiesenLibApi {
         // Initialize the Config
         MatthiesenLibApiConfigManager.modInitializer();
 
+        // Metrics
+        MatthiesenLibApiMetricsManager.modInitializer();
+
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
         // Initialize Permissions Validators
@@ -85,9 +88,6 @@ public class MatthiesenLibApi {
         // Event Managers
         MatthiesenLibApiPlayerEventsManager.modInitializer();
         MatthiesenLibApiServerEventsManager.modInitializer();
-
-        // Metrics
-        MatthiesenLibApiMetricsManager.modInitializer();
 
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized API");

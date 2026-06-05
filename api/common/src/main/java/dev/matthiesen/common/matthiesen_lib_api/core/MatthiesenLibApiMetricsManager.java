@@ -23,7 +23,7 @@ import java.util.Map;
 public final class MatthiesenLibApiMetricsManager {
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
     @SuppressWarnings("unused")
-    private static final UniversalMetricContext METRIC_CONTEXT = new UniversalMetricContext.Factory(
+    private static final UniversalMetricContext METRIC_CONTEXT = getBaseMetricFactory(
             MatthiesenLibApiConstants.MOD_ID,
             MatthiesenLibApiConstants.METRICS_TOKEN
     )
