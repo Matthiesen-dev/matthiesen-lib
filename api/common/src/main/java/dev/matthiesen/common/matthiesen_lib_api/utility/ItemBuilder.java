@@ -12,6 +12,7 @@ import net.minecraft.world.item.component.ItemLore;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.UnaryOperator;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -130,6 +131,16 @@ public class ItemBuilder {
      */
     public ItemBuilder setModelData(int value) {
         stack.set(DataComponents.CUSTOM_MODEL_DATA, new CustomModelData(value));
+        return this;
+    }
+
+    /**
+     * Modifies the ItemStack with a custom modifier function. This allows for any additional modifications to the ItemStack that are not covered by the provided methods.
+     * @param modifier A UnaryOperator that takes the current ItemStack and returns a modified ItemStack. This function will be applied to the current ItemStack, allowing for any custom modifications to be made.
+     * @return The ItemBuilder instance, for chaining. After calling this method, the provided modifier function will have been applied to the current ItemStack, allowing for any custom modifications to be made before building the final ItemStack with the build() method.
+     */
+    public ItemBuilder modifyStack(UnaryOperator<ItemStack> modifier) {
+        modifier.apply(this.stack);
         return this;
     }
 

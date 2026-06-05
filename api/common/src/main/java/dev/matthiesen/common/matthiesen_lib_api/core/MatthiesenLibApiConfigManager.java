@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.core;
 
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.config.ApiConfig;
+import dev.matthiesen.common.matthiesen_lib_api.core.config.ApiConfigManager;
 
 /**
  * A manager class for handling the API configuration. This class is responsible for loading, caching, and providing access to the API config instance.
@@ -14,7 +15,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.config.ApiConfig;
 public final class MatthiesenLibApiConfigManager {
     private static boolean initialized;
     private static final ConfigManager<ApiConfig> API_CONFIG_MANAGER =
-            new ConfigManager<>(ApiConfig.class, "config");
+            new ApiConfigManager<>(ApiConfig.class, "config");
 
     /**
      * Private constructor to prevent instantiation. This class is not meant to be instantiated, as it serves as a static manager
