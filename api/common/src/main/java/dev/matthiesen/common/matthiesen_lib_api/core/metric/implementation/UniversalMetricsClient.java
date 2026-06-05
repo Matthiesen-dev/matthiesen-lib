@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
@@ -29,7 +30,7 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
-        metrics.addProperty("online_mode", client.getUser().getXuid().isPresent());
+        metrics.addProperty("online_mode", client.getUser().getXuid().isPresent() && !MatthiesenLibApi.isDevelopmentEnvironment());
         metrics.addProperty("player_count", getPlayerCount());
         appendUniversalData(metrics);
     }
