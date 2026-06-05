@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.faststats.SimpleMetrics;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 
 /**
@@ -32,7 +33,8 @@ public abstract class AbstractUniversalMetric extends SimpleMetrics {
      * Appends universal data to the metrics JSON object. This method is called by the subclasses to add common data fields to the metrics before submission. The data added in this method includes the mod version and platform, which are retrieved from the mod container. This allows for consistent inclusion of these fields in both client and server metrics, providing valuable information about the mod's environment and version for analysis.
      * @param metrics the JsonObject representing the metrics data that will be submitted. This object is modified by adding properties for the mod version and platform, which are obtained from the mod container. Subclasses can call this method to ensure that these universal data fields are included in the metrics submission, regardless of whether it's client or server metrics.
      */
-    protected void appendUniversalData(final JsonObject metrics, final String mcVersion) {
+    protected void appendUniversalData(final JsonObject metrics) {
+        String mcVersion = MatthiesenLibApi.getModContainer("minecraft").getModVersion();
         metrics.addProperty("minecraft_version", mcVersion);
         metrics.addProperty("plugin_version", modContainer.getModVersion());
         metrics.addProperty("server_type", modContainer.getPlatform());

@@ -27,6 +27,6 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
-        appendUniversalData(metrics, "client");
+        appendUniversalData(metrics);
     }
 }

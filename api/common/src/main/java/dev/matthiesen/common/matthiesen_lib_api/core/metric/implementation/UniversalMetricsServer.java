@@ -24,15 +24,7 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
      */
     public UniversalMetricsServer(final Factory factory, final MatthiesenLibModContainer mod) throws IllegalStateException {
         super(factory, mod);
-        MatthiesenLibApiServerEventsManager.registerServerEventHandler(MatthiesenLibApiConstants.MOD_ID + "_metrics_server", getServerEventHandler());
-    }
-
-    /**
-     * Creates and returns a server event handler that listens for server start and stop events. This handler is responsible for managing the lifecycle of the metrics collection based on these events. When the server starts, it initializes the metrics collection and starts submitting data. When the server stops, it shuts down the metrics collection to ensure that all data is properly sent before the server fully shuts down. This allows for efficient management of resources and ensures that metrics are collected and submitted appropriately throughout the server's lifecycle.
-     * @return a MatthiesenLibServerEventHandler instance that listens for server start and stop events to manage the lifecycle of the metrics collection. The onServerStart method initializes the metrics collection and starts submitting data when the server starts, while the onServerStop method shuts down the metrics collection when the server stops.
-     */
-    private MatthiesenLibServerEventHandler getServerEventHandler() {
-        return new MatthiesenLibServerEventHandler() {
+        MatthiesenLibApiServerEventsManager.registerServerEventHandler(MatthiesenLibApiConstants.MOD_ID + "_metrics_server", new MatthiesenLibServerEventHandler() {
             @Override
             public void onServerStart(MinecraftServer server) {
                 SERVER = server;
@@ -42,7 +34,7 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
             public void onServerStop(MinecraftServer server) {
                 shutdown();
             }
-        };
+        });
     }
 
     /**
@@ -51,9 +43,12 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(final @NonNull JsonObject metrics) {
-        assert SERVER != null : "Server not initialized";
+        if (SERVER == null) {
+            MatthiesenLibApiConstants.createErrorLog("Attempted to append server metrics data before server was initialized");
+            return;
+        }
         metrics.addProperty("online_mode", SERVER.usesAuthentication());
         metrics.addProperty("player_count", SERVER.getPlayerCount());
-        appendUniversalData(metrics, SERVER.getServerVersion());
+        appendUniversalData(metrics);
     }
 }

@@ -47,23 +47,19 @@ public final class UniversalMetricContext extends SimpleContext {
             case CLIENT -> clientOptOut();
             case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
                     MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
-                    getServerHandler(this::ready, this::shutdown)
+                    new MatthiesenLibServerEventHandler() {
+                        @Override
+                        public void onServerStart(MinecraftServer server) {
+                            ready();
+                        }
+
+                        @Override
+                        public void onServerStop(MinecraftServer server) {
+                            shutdown();
+                        }
+                    }
             );
         }
-    }
-
-    private static MatthiesenLibServerEventHandler getServerHandler(Runnable ready, Runnable shutdown) {
-        return new MatthiesenLibServerEventHandler() {
-            @Override
-            public void onServerStart(MinecraftServer server) {
-                ready.run();
-            }
-
-            @Override
-            public void onServerStop(MinecraftServer server) {
-                shutdown.run();
-            }
-        };
     }
 
     private static void clientOptOut() {}
