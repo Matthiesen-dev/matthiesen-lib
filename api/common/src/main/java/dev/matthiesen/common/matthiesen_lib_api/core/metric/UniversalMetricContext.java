@@ -11,6 +11,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
+import dev.matthiesen.common.matthiesen_lib_api.utility.ClientUtils;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
@@ -44,7 +45,11 @@ public final class UniversalMetricContext extends SimpleContext {
         if (mod == null) throw new IllegalArgumentException("Mod with id '" + modId + "' not found");
         initializeServices(factory);
         switch (MatthiesenLibApi.getEnvironmentType()) {
-            case CLIENT -> clientOptOut();
+            case CLIENT -> {
+                // Client metrics are opt-out, we are only interested in server-metrics
+                ready();
+                ClientUtils.onClientLoad(this::shutdown);
+            }
             case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
                     MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
                     new MatthiesenLibServerEventHandler() {
@@ -81,8 +86,6 @@ public final class UniversalMetricContext extends SimpleContext {
             }
         };
     }
-
-    private static void clientOptOut() {}
 
     public static SimpleConfig getPlatformConfig() {
         return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));

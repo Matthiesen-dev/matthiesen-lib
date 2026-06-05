@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
+import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -10,6 +11,7 @@ import org.jspecify.annotations.NonNull;
  */
 @SuppressWarnings("UnstableApiUsage")
 public final class UniversalMetricsClient extends AbstractUniversalMetric {
+    private final Minecraft client = Minecraft.getInstance();
 
     /**
      * Constructs a new UniversalMetricsClientImpl instance with the given factory and mod container. This constructor calls the superclass constructor to initialize the common functionality of the metrics implementation, and then allows for any client-specific initialization if needed. The actual submission logic is handled by the superclass, while this subclass focuses on adding client-specific data to the metrics before submission.
@@ -27,6 +29,18 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
+        metrics.addProperty("online_mode", client.getUser().getXuid().isPresent());
+        metrics.addProperty("player_count", getPlayerCount());
         appendUniversalData(metrics);
+    }
+
+    private int getPlayerCount() {
+        final var connection = client.getConnection();
+        if (connection != null) return connection.getOnlinePlayers().size();
+
+        final var server = client.getSingleplayerServer();
+        if (server != null) return server.getPlayerCount();
+
+        return client.player == null ? 0 : 1;
     }
 }
