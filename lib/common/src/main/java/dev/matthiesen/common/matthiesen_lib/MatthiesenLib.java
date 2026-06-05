@@ -41,7 +41,7 @@ public class MatthiesenLib {
         }
 
         initialized = true;
-        MatthiesenLibApi.registerModToMetrics(MatthiesenLibConstants.MOD_ID);
+        MatthiesenLibApi.registerModToApiMetrics(MatthiesenLibConstants.MOD_ID);
 
         // Final step: Log that the core has been initialized.
         MatthiesenLibConstants.createInfoLog("Initialized Lib");

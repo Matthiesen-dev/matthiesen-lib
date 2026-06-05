@@ -2,8 +2,6 @@ package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
-import org.jetbrains.annotations.Async;
-import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -19,8 +17,6 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      * @param mod the mod container associated with this metrics instance. This provides access to the mod's information such as version and platform, which can be included in the metrics data.
      * @throws IllegalStateException if there is an issue with initializing the metrics instance, such as invalid configuration or missing dependencies. The actual conditions for throwing this exception depend on the implementation of the superclass and the context initialization.
      */
-    @Async.Schedule
-    @Contract(mutates = "io")
     public UniversalMetricsClient(final Factory factory, final MatthiesenLibModContainer mod) throws IllegalStateException {
         super(factory, mod);
     }
@@ -31,6 +27,6 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
-        appendUniversalData(metrics);
+        appendUniversalData(metrics, "client");
     }
 }

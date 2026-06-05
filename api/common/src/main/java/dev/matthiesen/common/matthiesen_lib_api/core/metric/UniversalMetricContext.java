@@ -7,10 +7,16 @@ import dev.faststats.Token;
 import dev.faststats.config.SimpleConfig;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
+import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
+import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
 import org.jspecify.annotations.NonNull;
+
+import java.util.Set;
+import java.util.concurrent.*;
 
 /**
  * UniversalMetricContext is a specialized context for collecting and submitting metrics data for a specific mod. It extends the SimpleContext from the FastStats library and provides mod-specific information such as the mod version and platform. This context is designed to be used with the UniversalMetrics implementation, which handles the actual collection and submission of metrics data. The UniversalMetricContext initializes the mod container based on the provided mod ID and ensures that the necessary services for metrics collection are set up correctly. It also overrides the getProjectName method to return a unique identifier for the mod, which is used in the metrics submission process to associate the collected data with the correct mod.
@@ -18,7 +24,13 @@ import org.jspecify.annotations.NonNull;
  */
 @SuppressWarnings("UnstableApiUsage")
 public final class UniversalMetricContext extends SimpleContext {
-    final MatthiesenLibModContainer mod;
+    private final ScheduledExecutorService executor = Executors.newSingleThreadScheduledExecutor(runnable -> {
+        final var thread = new Thread(runnable, "matthiesen-lib-faststats-submitter");
+        thread.setDaemon(true);
+        return thread;
+    });
+    private final Set<Future<?>> tasks = new CopyOnWriteArraySet<>();
+    private final MatthiesenLibModContainer mod;
 
     /**
      * Constructs a new UniversalMetricContext instance with the given factory, mod ID, and token. This constructor initializes the mod container based on the provided mod ID and sets up the necessary services for metrics collection. It also ensures that the mod with the specified ID exists, throwing an IllegalArgumentException if it does not. The context is initialized with a configuration read from the mod's config file, allowing for customizable behavior based on the mod's settings. This context is designed to be used with the UniversalMetrics implementation, which will utilize this context to collect and submit metrics data specific to the mod.
@@ -31,10 +43,43 @@ public final class UniversalMetricContext extends SimpleContext {
         this.mod = MatthiesenLibApi.getModContainer(modId);
         if (mod == null) throw new IllegalArgumentException("Mod with id '" + modId + "' not found");
         initializeServices(factory);
+        switch (MatthiesenLibApi.getEnvironmentType()) {
+            case CLIENT -> clientOptOut();
+            case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
+                    MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
+                    getServerHandler(this::ready, this::shutdown)
+            );
+        }
+    }
+
+    private static MatthiesenLibServerEventHandler getServerHandler(Runnable ready, Runnable shutdown) {
+        return new MatthiesenLibServerEventHandler() {
+            @Override
+            public void onServerStart(MinecraftServer server) {
+                ready.run();
+            }
+
+            @Override
+            public void onServerStop(MinecraftServer server) {
+                shutdown.run();
+            }
+        };
+    }
+
+    private static void clientOptOut() {}
+
+    @Override
+    protected boolean preSubmissionStart() {
+        return ((SimpleConfig) getConfig()).preSubmissionStart();
     }
 
     public static SimpleConfig getPlatformConfig() {
         return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
+    }
+
+    @Override
+    public void scheduleAtFixedRate(final @NonNull Runnable task, final long initialDelay, final long period, final @NonNull TimeUnit unit) {
+        tasks.add(executor.scheduleAtFixedRate(task, initialDelay, period, unit));
     }
 
     /**
@@ -66,6 +111,14 @@ public final class UniversalMetricContext extends SimpleContext {
         };
     }
 
+    @Override
+    public void shutdown() {
+        super.shutdown();
+        tasks.forEach(task -> task.cancel(true));
+        tasks.clear();
+        executor.shutdown();
+    }
+
     /**
      * Factory class for creating instances of UniversalMetricContext. This factory accepts the mod ID and token as parameters and provides a create method to instantiate a new UniversalMetricContext with the specified mod information. By using this factory, mods can easily integrate metrics collection by simply providing their mod ID and token, allowing for streamlined creation of the necessary context for metrics collection and submission.
      * The Factory class extends the SimpleContext.Factory, providing the necessary functionality to create instances of UniversalMetricContext while also allowing for customization of the context initialization process if needed. This design promotes ease of use and flexibility for mod developers when integrating metrics collection into their mods using the UniversalMetricContext and UniversalMetrics implementations.
@@ -88,6 +141,7 @@ public final class UniversalMetricContext extends SimpleContext {
          * Creates and returns a new UniversalMetricContext instance using the provided mod ID and token. This method utilizes the Factory's constructor parameters to initialize the necessary information for creating the UniversalMetricContext, including retrieving the mod container based on the mod ID and setting up the context with the appropriate configuration and services for metrics collection. By calling this create method, mods can easily obtain a UniversalMetricContext instance that is ready for use with the UniversalMetrics implementation, allowing for efficient integration of metrics collection into their functionality.
          * @return a new UniversalMetricContext instance initialized with the mod information and token provided to this Factory. This context is ready for use with the UniversalMetrics implementation, allowing for efficient integration of metrics collection into the mod's functionality. The created UniversalMetricContext will include the necessary mod information and services for collecting and submitting metrics data specific to the mod associated with this context.
          */
+        @Override
         public @NonNull UniversalMetricContext create() {
             return new UniversalMetricContext(this, modId, token);
         }
