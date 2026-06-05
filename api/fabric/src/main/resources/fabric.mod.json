@@ -19,6 +19,9 @@
   "entrypoints": {
     "main": [
       "dev.matthiesen.fabric.matthiesen_lib_api.MatthiesenLibApiFabric"
+    ],
+    "client": [
+      "dev.matthiesen.fabric.matthiesen_lib_api.MatthiesenLibApiClientFabric"
     ]
   },
   "depends": {

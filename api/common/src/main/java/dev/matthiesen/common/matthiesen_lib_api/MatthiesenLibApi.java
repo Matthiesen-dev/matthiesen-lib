@@ -69,6 +69,12 @@ public class MatthiesenLibApi {
         // Initialize the Config
         MatthiesenLibApiConfigManager.modInitializer();
 
+        // Event Managers
+        MatthiesenLibApiPlayerEventsManager.modInitializer();
+        MatthiesenLibApiServerEventsManager.modInitializer();
+        // Metrics
+        MatthiesenLibApiMetricsManager.modInitializer();
+
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();
         // Initialize Permissions Validators
@@ -81,13 +87,6 @@ public class MatthiesenLibApi {
         // Initialize the reload manager
         MatthiesenLibReloadManager.modInitializer();
         MatthiesenLibReloadManager.registerReloadRunnable(MatthiesenLibApiConstants.MOD_ID + "_config", MatthiesenLibApiConfigManager::reload);
-
-        // Event Managers
-        MatthiesenLibApiPlayerEventsManager.modInitializer();
-        MatthiesenLibApiServerEventsManager.modInitializer();
-
-        // Metrics
-        MatthiesenLibApiMetricsManager.modInitializer();
 
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized API");

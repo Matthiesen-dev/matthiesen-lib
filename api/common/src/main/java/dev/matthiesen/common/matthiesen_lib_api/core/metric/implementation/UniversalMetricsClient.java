@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
+import net.minecraft.client.Minecraft;
 import org.jspecify.annotations.NonNull;
 
 /**
@@ -10,6 +11,7 @@ import org.jspecify.annotations.NonNull;
  */
 @SuppressWarnings("UnstableApiUsage")
 public final class UniversalMetricsClient extends AbstractUniversalMetric {
+    private final Minecraft client = Minecraft.getInstance();
 
     /**
      * Constructs a new UniversalMetricsClientImpl instance with the given factory and mod container. This constructor calls the superclass constructor to initialize the common functionality of the metrics implementation, and then allows for any client-specific initialization if needed. The actual submission logic is handled by the superclass, while this subclass focuses on adding client-specific data to the metrics before submission.
@@ -27,6 +29,22 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
-        appendUniversalData(metrics, "client");
+        metrics.addProperty("online_mode", client.getUser().getXuid().isPresent());
+        metrics.addProperty("player_count", getPlayerCount());
+        appendUniversalData(metrics);
+    }
+
+    /**
+     * Retrieves the player count for the client environment. This method checks if the client is currently connected to a server and retrieves the player count accordingly. If the client is connected to a multiplayer server, it retrieves the online player count from the server connection. If the client is running in singleplayer mode, it retrieves the player count from the integrated server. If neither of these conditions are met, it checks if the client player instance is null (indicating that the player has not fully initialized) and returns 0 if it is null, or 1 if it is not null (indicating that there is one player instance present). This method provides an accurate player count for both singleplayer and multiplayer environments on the client side.
+     * @return the player count for the client environment, which can be 0 if the player instance is not initialized, 1 if the client is in singleplayer mode with a player instance, or the online player count from the server connection if the client is connected to a multiplayer server.
+     */
+    private int getPlayerCount() {
+        final var connection = client.getConnection();
+        if (connection != null) return connection.getOnlinePlayers().size();
+
+        final var server = client.getSingleplayerServer();
+        if (server != null) return server.getPlayerCount();
+
+        return client.player == null ? 0 : 1;
     }
 }
