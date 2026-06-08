@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation;
 
 import com.google.gson.JsonObject;
+import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
@@ -47,7 +48,7 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
             MatthiesenLibApiConstants.createErrorLog("Attempted to append server metrics data before server was initialized");
             return;
         }
-        metrics.addProperty("online_mode", SERVER.usesAuthentication());
+        metrics.addProperty("online_mode", SERVER.usesAuthentication() && !MatthiesenLibApi.isDevelopmentEnvironment());
         metrics.addProperty("player_count", SERVER.getPlayerCount());
         appendUniversalData(metrics);
     }

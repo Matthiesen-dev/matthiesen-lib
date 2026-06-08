@@ -29,7 +29,6 @@ public final class MatthiesenLibApiMetricsManager {
     )
             .metrics(factory -> factory
                     .addMetric(Metric.stringMap("registered_mods", MatthiesenLibApiMetricsManager::getRegisteredMods))
-                    .onFlush(MatthiesenLibApiMetricsManager::clearRegisteredMods)
                     .create()
             )
             .errorTrackerService(MatthiesenLibApi.ERROR_TRACKER)
@@ -122,18 +121,6 @@ public final class MatthiesenLibApiMetricsManager {
      */
     private static Map<String, String> getRegisteredMods() {
         return Map.copyOf(REGISTERED_MODS);
-    }
-
-    /**
-     * Clears the map of registered mods for metrics purposes. This method is called after the metrics data is flushed to ensure that the
-     * registered mods are only included in the metrics submission for the relevant time period. By clearing the map after flushing, we
-     * prevent stale data from being included in future metrics submissions and ensure that the registered mods metric accurately reflects
-     * the current state of registered mods at the time of each submission. Consumers should not call this method directly, as it is intended
-     * to be used internally by the metrics system to manage the lifecycle of the registered mods data in the context of metrics collection
-     * and submission.
-     */
-    private static void clearRegisteredMods() {
-        REGISTERED_MODS.clear();
     }
 
     /**
