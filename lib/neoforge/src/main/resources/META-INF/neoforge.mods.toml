@@ -35,6 +35,7 @@ side = "BOTH"
 
 [[dependencies.${mod_id}]]
 modId = "emberstextapi"
+type = "optional"
 mandatory = false
 versionRange = "[2.9.4,3.0.0)"
 ordering = "AFTER"
