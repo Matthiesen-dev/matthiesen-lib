@@ -2,6 +2,7 @@ package dev.matthiesen.fabric.matthiesen_lib_api;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import net.fabricmc.api.ModInitializer;
@@ -56,7 +57,7 @@ public class MatthiesenLibApiFabric implements ModInitializer {
                         MatthiesenLibApiConstants.createExtendedLog("Executing reload runnable for mod: " + entry.getKey());
                         entry.getValue().run();
                     } catch (Exception e) {
-                        MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+                        MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                         MatthiesenLibApiConstants.createErrorLog("Error executing reload runnable for mod: " + entry.getKey(), e);
                     }
                 }

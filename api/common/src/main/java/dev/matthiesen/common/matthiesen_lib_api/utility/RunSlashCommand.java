@@ -1,7 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.utility;
 
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -30,7 +30,7 @@ public class RunSlashCommand {
         try {
             server.getCommands().performPrefixedCommand(server.createCommandSourceStack(), command);
         } catch (RuntimeException e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.createErrorLog("An error occurred while executing the command: " + command, e);
         }
     }
@@ -48,7 +48,7 @@ public class RunSlashCommand {
         try {
             server.getCommands().performPrefixedCommand(player.createCommandSourceStack(), command);
         } catch (RuntimeException e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.createErrorLog("An error occurred while executing the command: " + command, e);
         }
     }

@@ -30,9 +30,19 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      */
     @Override
     protected void appendDefaultData(@NonNull JsonObject metrics) {
-        metrics.addProperty("online_mode", client.getUser().getXuid().isPresent() && !MatthiesenLibApi.isDevelopmentEnvironment());
+        metrics.addProperty("online_mode", isOnlineMode());
         metrics.addProperty("player_count", getPlayerCount());
         appendUniversalData(metrics);
+    }
+
+    /**
+     * Determines if the client is currently in online mode. This method checks the client's session information to determine if the player is authenticated and connected to a server. The result is used to populate the "online_mode" property in the metrics JSON object, which can be useful for analyzing the distribution of online vs offline players in the collected metrics data.
+     * @return true if the client is in online mode (authenticated and connected to a server), false otherwise. This information is derived from the client's session data, and it provides insight into the player's connection status, which can be relevant for understanding player behavior and engagement in the collected metrics.
+     */
+    private boolean isOnlineMode() {
+        if (MatthiesenLibApi.isDevelopmentEnvironment())
+            return true;
+        return client.getUser().getXuid().isPresent();
     }
 
     /**

@@ -1,6 +1,5 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPlayerEventHandler;
 import net.minecraft.server.level.ServerPlayer;
 
@@ -49,7 +48,7 @@ public final class MatthiesenLibApiPlayerEventsManager {
             try {
                 handler.onPlayerJoin(player);
             } catch (RuntimeException e) {
-                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+                MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling player join event for player {} in mod {}", player.getName().getString(), handler.getClass().getName(), e);
             }
         }
@@ -66,7 +65,7 @@ public final class MatthiesenLibApiPlayerEventsManager {
             try {
                 handler.onPlayerLeave(player);
             } catch (RuntimeException e) {
-                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+                MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {} in mod {}", player.getName().getString(), handler.getClass().getName(), e);
             }
         }
