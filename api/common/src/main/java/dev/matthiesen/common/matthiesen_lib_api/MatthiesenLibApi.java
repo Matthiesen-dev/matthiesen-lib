@@ -80,7 +80,7 @@ public class MatthiesenLibApi {
         MatthiesenLibReloadManager.registerReloadRunnable(MatthiesenLibApiConstants.MOD_ID + "_config", MatthiesenLibApiConfigManager::reload);
 
         initialized = true;
-        MatthiesenLibApiConstants.createInfoLog("Initialized API");
+        MatthiesenLibApiConstants.createInfoLog("Initialized Matthiesen Lib API");
     }
 
     /**
