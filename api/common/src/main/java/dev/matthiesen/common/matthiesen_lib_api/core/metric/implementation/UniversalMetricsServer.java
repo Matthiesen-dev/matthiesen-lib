@@ -48,8 +48,18 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
             MatthiesenLibApiConstants.createErrorLog("Attempted to append server metrics data before server was initialized");
             return;
         }
-        metrics.addProperty("online_mode", SERVER.usesAuthentication() && !MatthiesenLibApi.isDevelopmentEnvironment());
+        metrics.addProperty("online_mode", isOnlineMode());
         metrics.addProperty("player_count", SERVER.getPlayerCount());
         appendUniversalData(metrics);
+    }
+
+    /**
+     * Determines whether the server is running in online mode. This method checks if the server is in a development environment, in which case it assumes online mode is enabled for testing purposes. If not in a development environment, it checks the server's authentication settings to determine if online mode is enabled. This information is important for metrics collection as it can affect player behavior and server performance, providing valuable insights for mod developers and users.
+     * @return true if the server is running in online mode, false otherwise. The method first checks if the server is in a development environment, returning true if it is. If not in a development environment, it checks the server's authentication settings using the SERVER.usesAuthentication() method to determine if online mode is enabled, returning the result accordingly.
+     */
+    private boolean isOnlineMode() {
+        if (MatthiesenLibApi.isDevelopmentEnvironment())
+            return true;
+        return SERVER.usesAuthentication();
     }
 }
