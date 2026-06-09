@@ -21,6 +21,17 @@ import java.util.Map;
  * properly handled and anonymized.
  */
 public final class MatthiesenLibApiMetricsManager {
+    /**
+     * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
+     * This error tracker is configured to ignore certain expected exceptions, such as InvocationTargetException with specific
+     * messages and AccessDeniedException, which may occur in normal operation and do not indicate issues that need to be tracked.
+     * Additionally, the error tracker is set up to anonymize sensitive information such as email addresses, bearer tokens, AWS keys,
+     * UUIDs, and API keys or tokens in query parameters. This ensures that any errors captured by the tracker do not contain personally
+     * identifiable information or sensitive data, while still allowing for effective tracking and analysis of errors that may occur during
+     * the metrics collection process.
+     */
+    public static final ErrorTracker ERROR_TRACKER = getErrorTracker();
+
     private static final Map<String, String> REGISTERED_MODS = new HashMap<>();
     @SuppressWarnings("unused")
     private static final UniversalMetricContext METRIC_CONTEXT = getBaseMetricFactory(
@@ -31,7 +42,7 @@ public final class MatthiesenLibApiMetricsManager {
                     .addMetric(Metric.stringMap("registered_mods", MatthiesenLibApiMetricsManager::getRegisteredMods))
                     .create()
             )
-            .errorTrackerService(MatthiesenLibApi.ERROR_TRACKER)
+            .errorTrackerService(ERROR_TRACKER)
             .create();
 
     /**
@@ -122,17 +133,6 @@ public final class MatthiesenLibApiMetricsManager {
     private static Map<String, String> getRegisteredMods() {
         return Map.copyOf(REGISTERED_MODS);
     }
-
-    /**
-     * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
-     * This error tracker is configured to ignore certain expected exceptions, such as InvocationTargetException with specific
-     * messages and AccessDeniedException, which may occur in normal operation and do not indicate issues that need to be tracked.
-     * Additionally, the error tracker is set up to anonymize sensitive information such as email addresses, bearer tokens, AWS keys,
-     * UUIDs, and API keys or tokens in query parameters. This ensures that any errors captured by the tracker do not contain personally
-     * identifiable information or sensitive data, while still allowing for effective tracking and analysis of errors that may occur during
-     * the metrics collection process.
-     */
-    public static final ErrorTracker ERROR_TRACKER = getErrorTracker();
 
     /**
      * Configures and returns an ErrorTracker instance for capturing and anonymizing errors that occur during metrics collection and submission.

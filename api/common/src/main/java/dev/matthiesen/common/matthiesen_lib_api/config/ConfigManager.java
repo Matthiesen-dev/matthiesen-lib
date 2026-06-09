@@ -5,7 +5,6 @@ import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 
 import java.io.File;
@@ -77,7 +76,6 @@ public class ConfigManager<T> {
         try {
             return configClass.getDeclaredConstructor().newInstance();
         } catch (Exception e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.createErrorLog("Failed to create default instance of " + configClass.getSimpleName());
             throw new RuntimeException(e);
         }
@@ -164,7 +162,6 @@ public class ConfigManager<T> {
                 fileWriter.flush();
             }
         } catch (Exception e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.createErrorLog("Failed to save config", e);
         }
     }

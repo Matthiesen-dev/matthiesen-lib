@@ -43,15 +43,6 @@ public class MatthiesenLibApi {
     private static MatthiesenLibPermissionValidator permissionValidator;
 
     /**
-     * The ErrorTracker instance used for capturing and anonymizing errors that occur during metrics collection and submission.
-     * This tracker is defined in the MatthiesenLibApiMetricsManager class and is used to ensure that any errors encountered during
-     * metrics operations are properly handled and anonymized before being reported. By providing a centralized ErrorTracker, the
-     * API can maintain consistency in error handling across all metrics-related functionality, allowing for better debugging and
-     * analysis of issues that may arise during metrics collection and submission.
-     */
-    public static final ErrorTracker ERROR_TRACKER = MatthiesenLibApiMetricsManager.ERROR_TRACKER;
-
-    /**
      * Private constructor to prevent instantiation. This class is not meant to be instantiated, as it only contains static
      * methods and fields for managing the API initialization state.
      */
@@ -65,6 +56,8 @@ public class MatthiesenLibApi {
         if (initialized) {
             return;
         }
+        // Metrics
+        MatthiesenLibApiMetricsManager.modInitializer();
 
         // Initialize the Config
         MatthiesenLibApiConfigManager.modInitializer();
@@ -72,8 +65,6 @@ public class MatthiesenLibApi {
         // Event Managers
         MatthiesenLibApiPlayerEventsManager.modInitializer();
         MatthiesenLibApiServerEventsManager.modInitializer();
-        // Metrics
-        MatthiesenLibApiMetricsManager.modInitializer();
 
         // Initialize the permissions registry
         MatthiesenLibPermissionsManager.modInitializer();

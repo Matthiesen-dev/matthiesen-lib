@@ -1,7 +1,7 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api.helper;
 
-import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import net.minecraft.server.packs.resources.ResourceManager;
 import net.minecraft.server.packs.resources.SimplePreparableReloadListener;
 import net.minecraft.util.profiling.ProfilerFiller;
@@ -73,7 +73,7 @@ public final class MatthiesenLibReloadListener extends SimplePreparableReloadLis
                 MatthiesenLibApiConstants.createExtendedLog("Executing reload runnable for mod: " + entry.getKey());
                 entry.getValue().run();
             } catch (Exception e) {
-                MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+                MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.createErrorLog("Error executing reload runnable for mod: " + entry.getKey(), e);
             }
         }

@@ -2,6 +2,7 @@ package dev.matthiesen.neoforge.matthiesen_lib_api;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
@@ -87,7 +88,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
             if (player == null) return;
             MatthiesenLibApiPlayerEventsManager.onPlayerJoin(player);
         } catch (RuntimeException e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player join event for player {}", event.getEntity().getName().getString(), e);
         }
     }
@@ -104,7 +105,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
             if (player == null) return;
             MatthiesenLibApiPlayerEventsManager.onPlayerLeave(player);
         } catch (RuntimeException e) {
-            MatthiesenLibApi.ERROR_TRACKER.trackError(e);
+            MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {}", event.getEntity().getName().getString(), e);
         }
     }
