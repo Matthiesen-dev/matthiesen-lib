@@ -35,5 +35,10 @@ tasks {
     shadowJar {
         configurations.set(listOf(shadowBundle))
         relocate("dev.faststats", "dev.matthiesen.libs.faststats")
+
+        // FastStats uses a nested-class service file name that relocation does not rename automatically.
+        filesMatching("META-INF/services/dev.faststats.SdkInfo\$UserAgentProvider") {
+            name = "dev.matthiesen.libs.faststats.SdkInfo\$UserAgentProvider"
+        }
     }
 }
