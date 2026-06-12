@@ -41,10 +41,7 @@ dependencies {
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
     // Depend on matthiesen-lib-api mod
-    implementation(project(":api-common", configuration = "namedElements"))
-    modRuntimeOnly(project(":api-neoforge")) {
-        isTransitive = false
-    }
+    implementation(project(":api-common")) { isTransitive = false }
 }
 
 

@@ -41,10 +41,7 @@ dependencies {
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
     // Depend on matthiesen-lib-api mod
-    implementation(project(":api-common", configuration = "namedElements"))
-    modRuntimeOnly(project(":api-fabric")) {
-        isTransitive = false
-    }
+    implementation(project(":api-common")) { isTransitive = false }
 }
 
 
