@@ -1,4 +1,5 @@
 import com.github.jengelman.gradle.plugins.shadow.tasks.ShadowJar
+import dev.architectury.plugin.TransformingTask
 import net.fabricmc.loom.task.RemapJarTask
 import org.gradle.kotlin.dsl.named
 
@@ -16,6 +17,11 @@ pluginManager.withPlugin("com.gradleup.shadow") {
         tasks.withType<RemapJarTask>().configureEach {
             dependsOn(shadowJar)
             inputFile.set(shadowJar.flatMap { it.archiveFile })
+        }
+
+        tasks.withType<TransformingTask>().configureEach {
+            dependsOn(shadowJar)
+            input.set(shadowJar.flatMap { it.archiveFile })
         }
     }
 }

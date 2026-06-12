@@ -41,12 +41,12 @@ dependencies {
     shadowCommon(project(":common", configuration = "transformProductionFabric"))
 
     // Depend on matthiesen-lib-api mod
-    implementation(project(":api-common", configuration = "namedElements"))
-    modRuntimeOnly(project(":api-fabric")) {
-        isTransitive = false
-    }
-}
+    implementation(project(":api-common", configuration = "namedElements")) { isTransitive = false }
 
+    // In order to run the local server for testing, you'll need this, but you can't init the
+    // project with it due to fabric loom bs...
+//    modRuntimeOnly(project(":api-fabric")) { isTransitive = false }
+}
 
 tasks {
     // The AW file is needed in :fabric project resources when the game is run.

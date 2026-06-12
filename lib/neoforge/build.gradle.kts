@@ -11,6 +11,8 @@ architectury {
     neoForge()
 }
 
+evaluationDependsOn(":common")
+
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
@@ -41,10 +43,11 @@ dependencies {
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
     // Depend on matthiesen-lib-api mod
-    implementation(project(":api-common", configuration = "namedElements"))
-    modRuntimeOnly(project(":api-neoforge")) {
-        isTransitive = false
-    }
+    implementation(project(":api-common", configuration = "namedElements")) { isTransitive = false }
+
+    // In order to run the local server for testing, you'll need this, but you can't init the
+    // project with it due to fabric loom bs...
+//    modRuntimeOnly(project(":api-neoforge")) { isTransitive = false }
 }
 
 
@@ -56,10 +59,10 @@ tasks {
     }
 
     sourcesJar {
-        val depSources = project(":common").tasks.sourcesJar
+        val depSources = project(":common").tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         dependsOn(depSources)
-        from(depSources.get().archiveFile.map { zipTree(it) }) {
+        from(depSources.flatMap { it.archiveFile }.map { zipTree(it) }) {
             exclude("architectury.accessWidener")
         }
     }

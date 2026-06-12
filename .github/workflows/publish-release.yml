@@ -66,10 +66,7 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
 
       - name: Ensure Executable Permissions
-        run: chmod +x ./gradlew ./bootstrap.sh
-
-      - name: Prime API platform jars for Loom metadata resolution
-        run: ./bootstrap.sh
+        run: chmod +x ./gradlew
 
       - name: Build with Gradle and Publish to DevMatthiesenMavenRepository
         run: ./gradlew build publishAllPublicationsToDevMatthiesenMavenRepository
