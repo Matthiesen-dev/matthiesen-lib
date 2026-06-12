@@ -11,6 +11,8 @@ architectury {
     neoForge()
 }
 
+evaluationDependsOn(":api-common")
+
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
@@ -50,7 +52,7 @@ tasks {
     }
 
     sourcesJar {
-        val depSources = project(":api-common").tasks.sourcesJar
+        val depSources = project(":api-common").tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar")
         duplicatesStrategy = DuplicatesStrategy.INCLUDE
         dependsOn(depSources)
     }

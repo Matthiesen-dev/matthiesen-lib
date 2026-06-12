@@ -11,6 +11,8 @@ architectury {
     neoForge()
 }
 
+evaluationDependsOn(":common")
+
 repositories {
     mavenCentral()
     maven("https://hub.spigotmc.org/nexus/content/groups/public/")
@@ -53,10 +55,10 @@ tasks {
     }
 
     sourcesJar {
-        val depSources = project(":common").tasks.sourcesJar
+        val depSources = project(":common").tasks.named<org.gradle.jvm.tasks.Jar>("sourcesJar")
         duplicatesStrategy = DuplicatesStrategy.EXCLUDE
         dependsOn(depSources)
-        from(depSources.get().archiveFile.map { zipTree(it) }) {
+        from(depSources.flatMap { it.archiveFile }.map { zipTree(it) }) {
             exclude("architectury.accessWidener")
         }
     }
