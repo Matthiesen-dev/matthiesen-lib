@@ -44,7 +44,6 @@ dependencies {
     implementation(project(":api-common")) { isTransitive = false }
 }
 
-
 tasks {
     // The AW file is needed in :fabric project resources when the game is run.
     val copyAccessWidener by registering(Copy::class) {

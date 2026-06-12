@@ -51,7 +51,7 @@ tasks {
 
     sourcesJar {
         val depSources = project(":api-common").tasks.sourcesJar
-        duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+        duplicatesStrategy = DuplicatesStrategy.INCLUDE
         dependsOn(depSources)
     }
 
