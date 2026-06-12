@@ -19,8 +19,8 @@ dependencies {
     compileOnly(libs.spongeMixin)
 
     // Metrics
-    implementation(libs.bundles.faststats)
-    shadowBundle(libs.bundles.faststats)
+    implementation(libs.faststats)
+    shadowBundle(libs.faststats)
 }
 
 tasks {
@@ -34,6 +34,5 @@ tasks {
 
     shadowJar {
         configurations.set(listOf(shadowBundle))
-        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }

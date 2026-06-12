@@ -1,8 +1,8 @@
 package dev.matthiesen.common.matthiesen_lib_api;
 
 import com.mojang.serialization.MapCodec;
-import dev.faststats.ErrorTracker;
-import dev.faststats.Token;
+import dev.matthiesen.libs.faststats.ErrorTracker;
+import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.core.*;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.*;

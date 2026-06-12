@@ -17,7 +17,7 @@ fabric_api_version = "0.116.6+1.21.1"
 fabric_permissions_api_version = "0.3.1"
 sponge_mixin_version = "0.8.5"
 emberstextapi_version = "2.9.4"
-faststats_version = "0.25.2"
+faststats_version = "0.26.0"
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
@@ -41,8 +41,7 @@ fabric = { group = "net.fabricmc", name = "fabric-loader", version.ref = "fabric
 fabricApi = { group = "net.fabricmc.fabric-api", name = "fabric-api", version.ref = "fabric_api_version" }
 fabricPermissionsApi = { group = "me.lucko", name = "fabric-permissions-api", version.ref = "fabric_permissions_api_version" }
 spongeMixin = { group = "org.spongepowered", name = "mixin", version.ref = "sponge_mixin_version" }
-faststatsConfig = { group = "dev.faststats.metrics", name = "config", version.ref = "faststats_version" }
-faststatsCore = { group = "dev.faststats.metrics", name = "core", version.ref = "faststats_version" }
+faststats = { group = "dev.matthiesen.libs", name = "faststats", version.ref = "faststats_version" }
 
 emberstextapiFabric = { group = "net.tysontheember.emberstextapi", name = "emberstextapi-fabric-1.21.1", version.ref = "emberstextapi_version" }
 emberstextapiNeoForge = { group = "net.tysontheember.emberstextapi", name = "emberstextapi-neoforge-1.21.1", version.ref = "emberstextapi_version" }
@@ -50,4 +49,3 @@ emberstextapiNeoForge = { group = "net.tysontheember.emberstextapi", name = "emb
 [bundles]
 fabricModImplementation = ["fabric", "fabricApi"]
 fabricModCompileOnly = ["fabricPermissionsApi"]
-faststats = ["faststatsConfig", "faststatsCore"]
