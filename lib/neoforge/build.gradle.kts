@@ -43,7 +43,11 @@ dependencies {
     shadowBundle(project(":common", configuration = "transformProductionNeoForge"))
 
     // Depend on matthiesen-lib-api mod
-    implementation(project(":api-common")) { isTransitive = false }
+    implementation(project(":api-common", configuration = "namedElements")) { isTransitive = false }
+
+    // In order to run the local server for testing, you'll need this, but you can't init the
+    // project with it due to fabric loom bs...
+//    modRuntimeOnly(project(":api-neoforge")) { isTransitive = false }
 }
 
 

@@ -42,6 +42,10 @@ dependencies {
 
     // Depend on matthiesen-lib-api mod
     implementation(project(":api-common", configuration = "namedElements")) { isTransitive = false }
+
+    // In order to run the local server for testing, you'll need this, but you can't init the
+    // project with it due to fabric loom bs...
+//    modRuntimeOnly(project(":api-fabric")) { isTransitive = false }
 }
 
 tasks {
