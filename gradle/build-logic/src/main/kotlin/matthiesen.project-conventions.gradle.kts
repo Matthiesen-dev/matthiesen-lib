@@ -29,6 +29,7 @@ project.repositories {
         name = "devMatthiesenMavenReleases"
         content {
             includeGroup("dev.matthiesen")
+            includeGroup("dev.matthiesen.libs")
             includeGroup("net.tysontheember.emberstextapi")
         }
     }

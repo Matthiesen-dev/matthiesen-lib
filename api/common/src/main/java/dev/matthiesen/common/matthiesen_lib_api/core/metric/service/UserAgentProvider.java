@@ -1,9 +1,8 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.metric.service;
 
-import dev.faststats.SdkInfo;
+import dev.matthiesen.libs.faststats.SdkInfo;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Provides a custom user agent for the FastStats SDK, including the mod name and version.
@@ -24,7 +23,7 @@ public final class UserAgentProvider {
         public MatthiesenLibUniversalAgent() {}
 
         @Override
-        public @NonNull String getUserAgent(@NonNull SdkInfo sdkInfo) {
+        public String getUserAgent(SdkInfo sdkInfo) {
             return "Matthiesen Lib API Metrics " + sdkInfo.getName() + "/" + getVersion() + " https://mods.matthiesen.dev/matthiesen-lib-api/";
         }
 

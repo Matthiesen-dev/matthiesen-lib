@@ -4,7 +4,6 @@ import com.google.gson.JsonObject;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import net.minecraft.client.Minecraft;
-import org.jspecify.annotations.NonNull;
 
 /**
  * Client-specific implementation of the UniversalMetrics. This class extends the base UniversalMetricsImpl and provides client-specific data collection and submission logic. It overrides the appendDefaultData method to include a client-specific property in the metrics JSON object, indicating that this is a client metrics submission. The actual submission logic is handled by the superclass, while this subclass focuses on adding client-specific data to the metrics before submission.
@@ -29,7 +28,7 @@ public final class UniversalMetricsClient extends AbstractUniversalMetric {
      * @param metrics the JsonObject representing the metrics data that will be submitted. This object is modified by adding a property "client_no_op" with a value of 1, which serves as an identifier for client metrics submissions. The parent class's appendUniversalData method is also called to ensure that universal data fields such as mod version and platform are included in the metrics submission, providing consistent information across both client and server metrics.
      */
     @Override
-    protected void appendDefaultData(@NonNull JsonObject metrics) {
+    protected void appendDefaultData(JsonObject metrics) {
         metrics.addProperty("online_mode", isOnlineMode());
         metrics.addProperty("player_count", getPlayerCount());
         appendUniversalData(metrics);

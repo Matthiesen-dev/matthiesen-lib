@@ -1,6 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib_api.core;
 
-import dev.faststats.Token;
+import dev.matthiesen.libs.faststats.Token;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

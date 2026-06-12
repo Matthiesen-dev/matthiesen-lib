@@ -7,7 +7,6 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibModContainer;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import net.minecraft.server.MinecraftServer;
-import org.jspecify.annotations.NonNull;
 
 /**
  * This class implements the UniversalMetrics interface for the server environment. It listens for server start and stop events to manage the lifecycle of the metrics collection.
@@ -43,7 +42,7 @@ public final class UniversalMetricsServer extends AbstractUniversalMetric {
      * @param metrics the JsonObject representing the metrics data that will be submitted. This object is modified by adding properties for the Minecraft version, online mode status, and player count, which are obtained from the SERVER instance. The parent class's appendUniversalData method is also called to ensure that universal data fields are included in the metrics submission.
      */
     @Override
-    protected void appendDefaultData(final @NonNull JsonObject metrics) {
+    protected void appendDefaultData(final JsonObject metrics) {
         if (SERVER == null) {
             MatthiesenLibApiConstants.createErrorLog("Attempted to append server metrics data before server was initialized");
             return;

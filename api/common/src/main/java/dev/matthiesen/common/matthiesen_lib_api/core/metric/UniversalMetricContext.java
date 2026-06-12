@@ -1,10 +1,10 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.metric;
 
-import dev.faststats.Metrics;
-import dev.faststats.SimpleContext;
-import dev.faststats.SimpleMetrics;
-import dev.faststats.Token;
-import dev.faststats.config.SimpleConfig;
+import dev.matthiesen.libs.faststats.Metrics;
+import dev.matthiesen.libs.faststats.SimpleContext;
+import dev.matthiesen.libs.faststats.SimpleMetrics;
+import dev.matthiesen.libs.faststats.Token;
+import dev.matthiesen.libs.faststats.config.SimpleConfig;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEventsManager;
@@ -14,7 +14,6 @@ import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiClientUtils;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
-import org.jspecify.annotations.NonNull;
 
 import java.util.Set;
 import java.util.concurrent.*;
@@ -74,10 +73,10 @@ public final class UniversalMetricContext extends SimpleContext {
      */
     @Override
     @Contract(value = " -> new", pure = true)
-    protected Metrics.@NonNull Factory metricsFactory() {
+    protected Metrics.Factory metricsFactory() {
         return new SimpleMetrics.Factory(this) {
             @Override
-            public @NonNull Metrics create() throws IllegalStateException {
+            public Metrics create() throws IllegalStateException {
                 final var mod = ((UniversalMetricContext) context).mod;
                 return switch (MatthiesenLibApi.getEnvironmentType()) {
                     case CLIENT -> new UniversalMetricsClient(this, mod);
@@ -109,7 +108,7 @@ public final class UniversalMetricContext extends SimpleContext {
      * @return the project name for this metrics context, which is the unique identifier of the mod associated with this context. This value is used in the metrics submission process to associate the collected data with the correct mod, allowing for accurate tracking and analysis of metrics data for each individual mod using this UniversalMetricContext.
      */
     @Override
-    public @NonNull String getProjectName() {
+    public String getProjectName() {
         return mod.getModMetricId();
     }
 
@@ -121,7 +120,7 @@ public final class UniversalMetricContext extends SimpleContext {
      * @param unit the time unit for the initial delay and period parameters. This specifies the time unit for the initial delay and period, allowing for flexible scheduling of tasks based on different time units such as seconds, minutes, or hours. The scheduled task is added to a set of tasks that can be canceled when the context is shut down, ensuring proper management of scheduled tasks and preventing them from running after the context is no longer active.
      */
     @Override
-    public void scheduleAtFixedRate(final @NonNull Runnable task, final long initialDelay, final long period, final @NonNull TimeUnit unit) {
+    public void scheduleAtFixedRate(final Runnable task, final long initialDelay, final long period, final TimeUnit unit) {
         tasks.add(executor.scheduleAtFixedRate(task, initialDelay, period, unit));
     }
 
@@ -159,7 +158,7 @@ public final class UniversalMetricContext extends SimpleContext {
          * @return a new UniversalMetricContext instance initialized with the mod information and token provided to this Factory. This context is ready for use with the UniversalMetrics implementation, allowing for efficient integration of metrics collection into the mod's functionality. The created UniversalMetricContext will include the necessary mod information and services for collecting and submitting metrics data specific to the mod associated with this context.
          */
         @Override
-        public @NonNull UniversalMetricContext create() {
+        public UniversalMetricContext create() {
             return new UniversalMetricContext(this, modId, token);
         }
     }

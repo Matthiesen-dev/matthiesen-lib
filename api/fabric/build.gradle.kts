@@ -21,8 +21,8 @@ dependencies {
     modCompileOnly(libs.bundles.fabricModCompileOnly)
 
     // Metrics
-    implementation(libs.bundles.faststats)
-    shadowBundle(libs.bundles.faststats)
+    implementation(libs.faststats)
+    shadowBundle(libs.faststats)
 
     // Bundle api-common
     implementation(project(":api-common", configuration = "namedElements"))
@@ -40,6 +40,5 @@ tasks {
 
     shadowJar {
         configurations.set(listOf(shadowBundle))
-        relocate("dev.faststats", "dev.matthiesen.libs.faststats")
     }
 }
