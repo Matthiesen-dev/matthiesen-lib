@@ -15,20 +15,6 @@ Documentation for the library can be found at [mods.matthiesen.dev](https://mods
 |-------------------|-----------------|
 | 1.21.1            | 1.x.x           |
 
-## Fresh Clone Setup
-
-Loom requires API platform JARs to exist before it can configure the Fabric/NeoForge subprojects. On a fresh clone, run this first:
-
-```bash
-./bootstrap.sh
-```
-
-Then trigger an IDE Gradle sync, or run a full build:
-
-```bash
-./gradlew build
-```
-
 ## License
 
 MIT - see `LICENSE`.
