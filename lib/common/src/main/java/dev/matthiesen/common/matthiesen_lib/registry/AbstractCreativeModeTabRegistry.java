@@ -28,5 +28,13 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
     protected AbstractCreativeModeTabRegistry(MatthiesenLib.RegistryBuilder registryBuilder) {
         super(registryBuilder, SupportedRegistries.CREATIVE_MODE_TAB);
     }
+
+    /**
+     * Creates a new {@link CreativeModeTab.Builder} instance for use in registrations. This is a convenience method that simply delegates to the underlying registry builder's {@code newCreativeTabBuilder()} method, but it can be overridden by subclasses if they need to customize the builder creation process.
+     * @return A new instance of {@link CreativeModeTab.Builder} for use in creative mode tab registrations.
+     */
+    protected final CreativeModeTab.Builder newCreativeModeTabBuilder() {
+        return this.getRegistryBuilder().newCreativeTabBuilder();
+    }
 }
 

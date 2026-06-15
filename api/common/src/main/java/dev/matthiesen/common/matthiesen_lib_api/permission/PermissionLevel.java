@@ -66,6 +66,7 @@ public enum PermissionLevel {
      *              corresponds to ALL_COMMANDS.
      * @return The PermissionLevel corresponding to the given numerical value.
      */
+    @SuppressWarnings("unused")
     public static PermissionLevel byNumericValue(int value) {
         for (PermissionLevel level : PermissionLevel.values()) {
             if (level.numericalValue == value) {
