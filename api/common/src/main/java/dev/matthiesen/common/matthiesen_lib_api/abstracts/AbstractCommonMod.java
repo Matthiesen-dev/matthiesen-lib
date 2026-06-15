@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.abstracts;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.*;
@@ -200,6 +201,14 @@ public abstract class AbstractCommonMod {
      */
     public <T> ConfigManager<T> createConfigManager(Class<T> configClass, String fileName) {
         return new ConfigManager<>(configClass, fileName, MOD_ID);
+    }
+
+    /**
+     * Registers a command with the MatthiesenLib command system. This method can be called at any time, and the command will be registered appropriately based on the state of the command registrar.
+     * @param command The AbstractCommand to register. This command will be added to the MatthiesenLib command system and will be available for use once the registrar is ready.
+     */
+    public void registerCommand(AbstractCommand command) {
+        MatthiesenLibApi.registerCommand(command);
     }
 
     /**
