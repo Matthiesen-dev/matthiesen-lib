@@ -217,18 +217,6 @@ public class MatthiesenLibApi {
     /**
      * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
      * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
-     * @param handler the implementation of the IPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
-     * @deprecated This method is deprecated in favor of the overload that accepts a MatthiesenLibPlayerEventHandler, which provides default implementations for player event handling methods and allows for more flexible event handling logic.
-     */
-    @Deprecated(forRemoval = true)
-    @SuppressWarnings({"unused", "removal"})
-    public static void registerPlayerEventHandler(String modId, MatthiesenLibApiPlayerEventsManager.IPlayerEventHandler handler) {
-        MatthiesenLibApiPlayerEventsManager.registerPlayerEventHandler(modId, handler);
-    }
-
-    /**
-     * Registers a player event handler for a specific mod. This method allows mods to register their own implementations of the IPlayerEventHandler interface,
-     * @param modId the unique identifier of the mod registering the event handler. This parameter is used to associate the handler with a specific mod, allowing for organized management of handlers and potential debugging or logging purposes.
      * @param handler the implementation of the MatthiesenLibPlayerEventHandler interface that will handle player events for the specified mod. This parameter allows mods to define their own logic for handling player join and leave events, enabling custom behavior in response to these events.
      */
     public static void registerPlayerEventHandler(String modId, MatthiesenLibPlayerEventHandler handler) {
@@ -274,24 +262,6 @@ public class MatthiesenLibApi {
      */
     public static MatthiesenLibPlatform.ENVIRONMENT getEnvironmentType() {
         return PLATFORM.getEnvironmentType();
-    }
-
-    /**
-     * Registers a mod with the metrics system by its mod ID. This method retrieves the mod container for the given mod ID using
-     * the MatthiesenLibApi, and if found, extracts the mod name and version to store in the REGISTERED_MODS map. The map uses the
-     * mod ID as the key and a string containing the mod name and version as the value. If no mod container is found for the given
-     * mod ID, or if the mod is already registered, a warning is logged using the API's logger. This method allows mods to be tracked
-     * in the metrics system, providing insight into which mods are present in the environment when metrics are collected.
-     * @param modId the mod ID of the mod to register with the metrics system. This should be the unique identifier for the mod, as
-     *              defined in its metadata. The method will attempt to retrieve the mod container for this ID and, if successful,
-     *              will store the mod's name and version in the REGISTERED_MODS map for tracking in the metrics system. If the mod
-     *              ID is invalid or if the mod is already registered, a warning will be logged to inform developers of potential
-     *              issues with registration.
-     * @deprecated Use the registerModToApiMetrics method instead, which is designed to work with the API's metrics system and provides better integration and tracking of registered mods in the context of API-related metrics collection.
-     */
-    @Deprecated(forRemoval = true)
-    public static void registerModToMetrics(String modId) {
-        registerModToApiMetrics(modId);
     }
 
     /**
