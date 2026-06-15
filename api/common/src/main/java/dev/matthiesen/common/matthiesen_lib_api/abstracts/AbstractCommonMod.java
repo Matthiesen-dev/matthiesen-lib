@@ -40,7 +40,9 @@ public abstract class AbstractCommonMod {
     public abstract Runnable reload();
 
     /**
+     * The method to register the mod's configuration with the API.
      * @param MOD_ID The mod id of the mod registering
+     * @param MOD_NAME The mod name of the mod registering
      */
     public AbstractCommonMod(String MOD_ID, String MOD_NAME) {
         this.MOD_ID = MOD_ID;
@@ -56,6 +58,10 @@ public abstract class AbstractCommonMod {
         LOGGER = LogManager.getLogger(MOD_NAME);
     }
 
+    /**
+     * Registers the mod's configuration with the API.
+     * @param MOD_ID The mod id of the mod registering
+     */
     public AbstractCommonMod(String MOD_ID) {
         this(MOD_ID, MOD_ID);
     }
