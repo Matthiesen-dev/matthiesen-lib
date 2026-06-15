@@ -17,11 +17,10 @@ public final class ApiConfig {
     public ApiConfig() {}
 
     /**
-     * If true, the API will suppress most internal logging output. This is intended for use in cases where the API is being used in a context
-     * where logging is not desired, such as in a mod that wants to handle its own logging or in a testing environment.
+     * If true, the API will enable additional debug logging output. This is intended for use during development or troubleshooting to provide more detailed information about the API's internal operations.
      */
-    @SerializedName("suppressedLogging")
-    public boolean suppressedLogging = false;
+    @SerializedName("enableDebugLogging")
+    public boolean enableDebugLogging = false;
 
     /**
      * A shared GSON instance for all configs to use, with HTML escaping disabled and pretty printing enabled.
