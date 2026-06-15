@@ -140,7 +140,7 @@ public abstract class AbstractCommonMod {
      * Retrieves the current instance of the Minecraft server. This method is thread-safe and returns null if the server is not currently running.
      * @return The current MinecraftServer instance, or null if the server is not running.
      */
-    public static MinecraftServer getMinecraftServer() {
+    public MinecraftServer getMinecraftServer() {
         return MatthiesenLibApi.getMinecraftServer();
     }
 
@@ -149,7 +149,7 @@ public abstract class AbstractCommonMod {
      * @param modId The mod ID to check for (e.g., "minecraft", "fabric", "forge")
      * @return true if the mod is loaded, false otherwise
      */
-    public static boolean isModLoaded(String modId) {
+    public boolean isModLoaded(String modId) {
         return MatthiesenLibApi.isModLoaded(modId);
     }
 
@@ -157,7 +157,7 @@ public abstract class AbstractCommonMod {
      * Checks if the current environment is a development environment using the platform-specific implementation provided by the CommonPlatform service.
      * @return true if the current environment is a development environment, false otherwise
      */
-    public static boolean isDevelopmentEnvironment() {
+    public boolean isDevelopmentEnvironment() {
         return MatthiesenLibApi.isDevelopmentEnvironment();
     }
 
@@ -170,7 +170,7 @@ public abstract class AbstractCommonMod {
      * @return The mod container for the mod with the given mod ID, or null if no such mod is loaded. The mod container provides access to various properties
      * and information about the mod, allowing you to interact with it in a more detailed way if needed.
      */
-    public static MatthiesenLibModContainer getModContainer(String modId) {
+    public MatthiesenLibModContainer getModContainer(String modId) {
         return MatthiesenLibApi.getModContainer(modId);
     }
 
