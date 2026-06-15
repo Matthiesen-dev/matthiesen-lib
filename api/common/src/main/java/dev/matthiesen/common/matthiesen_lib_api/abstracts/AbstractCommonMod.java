@@ -9,6 +9,8 @@ import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibPlatf
 import dev.matthiesen.libs.faststats.ErrorTracker;
 import dev.matthiesen.libs.faststats.Token;
 import net.minecraft.server.MinecraftServer;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
 import java.nio.file.Path;
@@ -19,9 +21,10 @@ import java.nio.file.Path;
 @SuppressWarnings("unused")
 public abstract class AbstractCommonMod {
     private final String MOD_ID;
-    private MatthiesenLibApi.RegistryBuilder registryBuilder;
-
+    private final String MOD_NAME;
+    private final Logger LOGGER;
     private final ErrorTracker ERROR_TRACKER = MatthiesenLibApiMetricsManager.getErrorTracker();
+    private MatthiesenLibApi.RegistryBuilder registryBuilder;
     private UniversalMetricContext METRIC_CONTEXT;
 
     /**
@@ -31,10 +34,17 @@ public abstract class AbstractCommonMod {
     public abstract @Nullable @Token String getMetricsToken();
 
     /**
+     * The reload task to run when the server reloads datapacks, or when the /reload command is used.
+     * @return A Runnable containing the code to run on reload, or null if no task is needed
+     */
+    public abstract Runnable reload();
+
+    /**
      * @param MOD_ID The mod id of the mod registering
      */
-    public AbstractCommonMod(String MOD_ID) {
+    public AbstractCommonMod(String MOD_ID, String MOD_NAME) {
         this.MOD_ID = MOD_ID;
+        this.MOD_NAME = MOD_NAME;
         var metricToken = getMetricsToken();
         if (metricToken != null) {
             METRIC_CONTEXT = MatthiesenLibApiMetricsManager.makeErrorMetricsContext(
@@ -43,14 +53,20 @@ public abstract class AbstractCommonMod {
                     ERROR_TRACKER
             );
         }
+        LOGGER = LogManager.getLogger(MOD_NAME);
+    }
+
+    public AbstractCommonMod(String MOD_ID) {
+        this(MOD_ID, MOD_ID);
     }
 
     /**
-     * Initializes the mod. This should be called in the mod's main class during initialization. (Or overridden and called using super())
+     * Initializes the mod. This should be called in the mod's main class during initialization.
      */
     public void initialize() {
         this.registryBuilder = new MatthiesenLibApi.RegistryBuilder(MOD_ID);
         MatthiesenLibApi.registerModToApiMetrics(MOD_ID);
+        MatthiesenLibApi.registerReloadRunnable(MOD_ID, reload());
     }
 
     /**
@@ -59,6 +75,22 @@ public abstract class AbstractCommonMod {
      */
     public String getModId() {
         return MOD_ID;
+    }
+
+    /**
+     * Get the mod's name
+     * @return The mod's name
+     */
+    public String getModName() {
+        return MOD_NAME;
+    }
+
+    /**
+     * Get the mod's logger
+     * @return The mod's logger
+     */
+    public Logger getLogger() {
+        return LOGGER;
     }
 
     /**
@@ -78,6 +110,24 @@ public abstract class AbstractCommonMod {
     }
 
     // ---- Utils ----
+
+    /**
+     * Send an info log message using the mod's logger
+     * @param message The message to log
+     */
+    public void createInfoLog(String message) {
+        getLogger().info(message);
+    }
+
+    /**
+     * Send an error log message using the mod's logger, and track the error with the metrics system if a metrics token is provided
+     * @param message The message to log
+     * @param throwable The error to log and track
+     */
+    public void createErrorLog(String message, Throwable throwable) {
+        trackError(throwable);
+        getLogger().error(message, throwable);
+    }
 
     /**
      * Retrieves the current instance of the Minecraft server. This method is thread-safe and returns null if the server is not currently running.
@@ -180,17 +230,6 @@ public abstract class AbstractCommonMod {
      */
     public MatthiesenLibTextParser getTextParser(MatthiesenLibBuiltInTextParsers type) {
         return MatthiesenLibApi.getTextParser(type);
-    }
-
-    /**
-     * Registers a reload runnable for a mod. This runnable will be executed when the reload command is triggered.
-     * @param modId The ID of the mod registering the reload runnable. This should be a unique identifier for the mod,
-     *              typically the mod ID used in the mod's metadata.
-     * @param runnable The runnable to execute during a reload. This should contain the logic that the mod wants to
-     *                 perform when a reload is triggered, such as reloading configurations or refreshing data.
-     */
-    public void registerReloadRunnable(String modId, Runnable runnable) {
-        MatthiesenLibApi.registerReloadRunnable(modId, runnable);
     }
 
     /**
