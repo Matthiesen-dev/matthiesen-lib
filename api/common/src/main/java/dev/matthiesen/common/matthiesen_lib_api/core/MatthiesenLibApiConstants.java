@@ -72,8 +72,8 @@ public final class MatthiesenLibApiConstants {
      *                behavior based on the API configuration settings.
      */
     public static void createExtendedLog(String message) {
-        boolean cannotContinue = MatthiesenLibApiConfigManager.getApiConfig().suppressedLogging;
-        if (cannotContinue) return;
+        boolean canContinue = MatthiesenLibApiConfigManager.getApiConfig().enableDebugLogging;
+        if (!canContinue) return;
         logger.info(message);
     }
 
