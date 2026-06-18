@@ -1,53 +1,51 @@
 package dev.matthiesen.common.matthiesen_lib_api.config;
 
-import com.google.gson.*;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonParser;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 
 import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.lang.reflect.Field;
-
-// TODO: Change this to be able to load multiple instances of a type of config from a folder, using the filename as the ID (minus the `.json` extension)
-//  and adding a method to get a config by its ID. This will allow for more flexible config management, such as having multiple configs for different
-//  dimensions, entities, or other categories without needing to create separate config classes for each one. The current implementation only
-//  supports a single instance of each config class, which can be limiting in some cases. For instance, let's say you want a folder of "presets" with identical config structures
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.LinkedHashMap;
+import java.util.Locale;
+import java.util.Map;
+import java.util.Objects;
 
 /**
- * A generic configuration manager for handling JSON-based config files.
- * It supports loading, saving, and merging default values with existing config files.
+ * A generic configuration manager for handling multiple JSON-based config files inside a single folder.
+ * Each file is identified by its filename without the {@code .json} extension.
+ *
  * @param <T> The type of the config class to manage
  */
 @SuppressWarnings("unused")
 public class ConfigFolderManager<T> {
+    private static final String JSON_EXTENSION = ".json";
+
     private final Class<T> configClass;
-    private final String configName;
+    private final String folderName;
     private final String modId;
     private final Gson gson;
-    private T config;
+    private final Map<String, T> configs = new LinkedHashMap<>();
+    private boolean loaded;
 
     /**
-     * Creates a new ConfigManager for the specified config class and name.
+     * Creates a new ConfigFolderManager for the specified config class, folder name, and mod id namespace.
      *
      * @param configClass The class of the config to manage
-     * @param configName The name of the config file (without .json extension)
-     * @deprecated Use the constructor that includes the modId parameter to specify the config folder namespace. This will default to using the API's mod id, which may not be appropriate for all configs and can lead to conflicts if multiple configs use the same name. By specifying a mod id namespace, you can ensure that your config is stored in a unique folder and avoid potential conflicts with other configs.
-     */
-    @Deprecated(forRemoval = true)
-    public ConfigFolderManager(Class<T> configClass, String configName) {
-        this(configClass, configName, MatthiesenLibApiConstants.MOD_ID);
-    }
-
-    /**
-     * Creates a new ConfigManager for the specified config class, name, and mod id namespace.
-     *
-     * @param configClass The class of the config to manage
-     * @param configName The name of the config file (without .json extension)
+     * @param folderName The folder that contains config files for this manager
      * @param modId The mod id namespace used for the config folder
      */
-    public ConfigFolderManager(Class<T> configClass, String configName, String modId) {
+    public ConfigFolderManager(Class<T> configClass, String folderName, String modId) {
         this.configClass = configClass;
-        this.configName = configName;
+        this.folderName = folderName;
         this.modId = modId;
         this.gson = getGsonFromConfigClass();
     }
@@ -83,53 +81,64 @@ public class ConfigFolderManager<T> {
     }
 
     /**
-     * Loads the config from the file system. If the config file does not exist, it will create a new one with default values.
+     * Loads all config files from the configured folder and stores them using their filename (without {@code .json}) as the id.
+     *
+     * @return An unmodifiable view of the loaded configs keyed by config id
+     */
+    public Map<String, T> loadConfigs() {
+        File configFolder = getConfigFolder();
+        MatthiesenLibApiConstants.createDebugLog("Loading config folder found at: " + configFolder.getAbsolutePath());
+        ensureConfigDirectoryExists(configFolder);
+
+        configs.clear();
+
+        File[] configFiles = configFolder.listFiles(file ->
+                file.isFile() && file.getName().toLowerCase(Locale.ROOT).endsWith(JSON_EXTENSION)
+        );
+
+        if (configFiles != null) {
+            Arrays.sort(configFiles, Comparator.comparing(File::getName));
+
+            for (File configFile : configFiles) {
+                String configId = getConfigIdFromFileName(configFile.getName());
+                configs.put(configId, readConfig(configFile, configId));
+                saveConfig(configId);
+            }
+        }
+
+        loaded = true;
+        return Collections.unmodifiableMap(configs);
+    }
+
+    /**
+     * Loads a single config by id. The id maps directly to the config filename without the {@code .json} extension.
+     * If the file does not exist, a default config is created, cached, and saved to disk.
+     *
+     * @param configId The config id / filename without extension
      * @return The loaded config instance
      */
-    public T loadConfig() {
-        String configFileLoc = getConfigFileLocation();
-        MatthiesenLibApiConstants.createDebugLog("Loading config file found at: " + configFileLoc);
-        File configFile = new File(configFileLoc);
-        boolean madeDir = configFile.getParentFile().mkdirs();
+    public T loadConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+        File configFile = getConfigFile(normalizedConfigId);
+        MatthiesenLibApiConstants.createDebugLog("Loading config file found at: " + configFile.getAbsolutePath());
+        ensureConfigDirectoryExists(configFile.getParentFile());
 
-        if (madeDir) {
-            MatthiesenLibApiConstants.createDebugLog("Config Directory exists");
-        }
-
-        if (configFile.exists()) {
-            try (FileReader fileReader = new FileReader(configFile)) {
-                T defaultConfig = createDefaultConfig();
-                String defaultConfigJson = gson.toJson(defaultConfig);
-
-                JsonElement fileConfigElement = JsonParser.parseReader(fileReader);
-                JsonElement defaultConfigElement = JsonParser.parseString(defaultConfigJson);
-
-                JsonElement mergedConfigElement = mergeConfigs(
-                        defaultConfigElement.getAsJsonObject(),
-                        fileConfigElement.getAsJsonObject()
-                );
-
-                config = gson.fromJson(mergedConfigElement, configClass);
-            } catch (Exception e) {
-                MatthiesenLibApiConstants.createErrorLog("Failed to load the config! Using default config as fallback", e);
-                config = createDefaultConfig();
-            }
-        } else {
-            config = createDefaultConfig();
-        }
-
-        saveConfig();
+        T config = readConfig(configFile, normalizedConfigId);
+        configs.put(normalizedConfigId, config);
+        loaded = true;
+        saveConfig(normalizedConfigId);
         return config;
     }
 
     /**
      * Merges the default config with the file config. If a key is missing in the file config, it will be added from the default config.
      * If a key is present in both configs and is a nested object, it will recursively merge them.
+     *
      * @param defaultConfig The default config as a JsonObject
      * @param fileConfig The file config as a JsonObject
-     * @return The merged config as a JsonElement
+     * @return The merged config as a JsonObject
      */
-    private JsonElement mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
+    private JsonObject mergeConfigs(JsonObject defaultConfig, JsonObject fileConfig) {
         MatthiesenLibApiConstants.createDebugLog("Checking for config merge.");
         boolean merged = false;
 
@@ -151,52 +160,173 @@ public class ConfigFolderManager<T> {
     }
 
     /**
-     * Saves the current config to the file system. If the config is null, it will not save and log an error.
+     * Saves all loaded configs to the file system.
      */
-    public void saveConfig() {
+    public void saveConfigs() {
+        if (!loaded) {
+            loadConfigs();
+        }
+
+        for (String configId : configs.keySet()) {
+            saveConfig(configId);
+        }
+    }
+
+    /**
+     * Saves a specific config to the file system.
+     *
+     * @param configId The config id / filename without extension
+     */
+    public void saveConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+        T config = configs.get(normalizedConfigId);
+
+        if (config == null) {
+            MatthiesenLibApiConstants.createErrorLog("Failed to save config '" + normalizedConfigId + "' because it has not been loaded or set yet.");
+            return;
+        }
+
         try {
-            String configFileLoc = getConfigFileLocation();
-            MatthiesenLibApiConstants.createDebugLog("Saving config to: " + configFileLoc);
-            File configFile = new File(configFileLoc);
+            File configFile = getConfigFile(normalizedConfigId);
+            ensureConfigDirectoryExists(configFile.getParentFile());
+            MatthiesenLibApiConstants.createDebugLog("Saving config to: " + configFile.getAbsolutePath());
+
             try (FileWriter fileWriter = new FileWriter(configFile)) {
                 gson.toJson(config, fileWriter);
                 fileWriter.flush();
             }
         } catch (Exception e) {
-            MatthiesenLibApiConstants.createErrorLog("Failed to save config", e);
+            MatthiesenLibApiConstants.createErrorLog("Failed to save config '" + normalizedConfigId + "'", e);
         }
     }
 
     /**
-     * Gets the current config. If the config is null, it will attempt to load it from the file system.
-     * @return The current config instance
-     */
-    public T getConfig() {
-        if (config == null) {
-            return loadConfig();
-        }
-        return config;
-    }
-
-    /**
-     * Sets the current config. This will not automatically save the config to the file system, so you should call saveConfig()
-     * after setting the config if you want to persist it.
+     * Gets a config by id. If it has not been loaded yet, the manager will attempt to load it from disk.
      *
+     * @param configId The config id / filename without extension
+     * @return The config instance for the given id
+     */
+    public T getConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+
+        if (!loaded) {
+            loadConfigs();
+        }
+
+        if (!configs.containsKey(normalizedConfigId)) {
+            return loadConfig(normalizedConfigId);
+        }
+
+        return configs.get(normalizedConfigId);
+    }
+
+    /**
+     * Gets all loaded configs keyed by their config id. If configs have not yet been loaded, the entire folder will be scanned first.
+     *
+     * @return An unmodifiable view of the loaded configs
+     */
+    public Map<String, T> getConfigs() {
+        if (!loaded) {
+            return loadConfigs();
+        }
+
+        return Collections.unmodifiableMap(configs);
+    }
+
+    /**
+     * Checks whether a config with the given id has already been loaded or exists on disk.
+     *
+     * @param configId The config id / filename without extension
+     * @return {@code true} if the config exists in memory or on disk
+     */
+    public boolean hasConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+
+        if (configs.containsKey(normalizedConfigId)) {
+            return true;
+        }
+
+        return getConfigFile(normalizedConfigId).exists();
+    }
+
+    /**
+     * Sets a config for the given id. This will not automatically save the config to the file system, so you should call {@link #saveConfig(String)}
+     * or {@link #saveConfigs()} after setting it if you want to persist it.
+     *
+     * @param configId The config id / filename without extension
      * @param config The new config to set
      */
-    public void setConfig(T config) {
-        this.config = config;
+    public void setConfig(String configId, T config) {
+        String normalizedConfigId = normalizeConfigId(configId);
+        configs.put(normalizedConfigId, Objects.requireNonNull(config, "config cannot be null"));
+        loaded = true;
     }
 
-    private String getConfigFileLocation() {
-        return System.getProperty("user.dir")
+    private T readConfig(File configFile, String configId) {
+        if (configFile.exists()) {
+            try (FileReader fileReader = new FileReader(configFile)) {
+                T defaultConfig = createDefaultConfig();
+                JsonObject defaultConfigObject = gson.toJsonTree(defaultConfig).getAsJsonObject();
+                var fileConfigElement = JsonParser.parseReader(fileReader);
+
+                if (!fileConfigElement.isJsonObject()) {
+                    throw new JsonParseException("Config file must contain a JSON object");
+                }
+
+                JsonObject mergedConfig = mergeConfigs(defaultConfigObject, fileConfigElement.getAsJsonObject());
+                return gson.fromJson(mergedConfig, configClass);
+            } catch (Exception e) {
+                MatthiesenLibApiConstants.createErrorLog("Failed to load config '" + configId + "'! Using default config as fallback", e);
+                return createDefaultConfig();
+            }
+        }
+
+        MatthiesenLibApiConstants.createDebugLog("Config '" + configId + "' not found, creating default config.");
+        return createDefaultConfig();
+    }
+
+    private void ensureConfigDirectoryExists(File configDirectory) {
+        boolean madeDir = configDirectory.mkdirs();
+
+        if (madeDir) {
+            MatthiesenLibApiConstants.createDebugLog("Config Directory exists");
+        }
+    }
+
+    private String normalizeConfigId(String configId) {
+        String normalizedConfigId = Objects.requireNonNull(configId, "configId cannot be null").trim();
+
+        if (normalizedConfigId.endsWith(JSON_EXTENSION)) {
+            normalizedConfigId = normalizedConfigId.substring(0, normalizedConfigId.length() - JSON_EXTENSION.length());
+        }
+
+        if (normalizedConfigId.isEmpty()) {
+            throw new IllegalArgumentException("configId cannot be blank");
+        }
+
+        if (normalizedConfigId.contains("/") || normalizedConfigId.contains("\\") || normalizedConfigId.contains("..")) {
+            throw new IllegalArgumentException("configId cannot contain path separators or traversal sequences");
+        }
+
+        return normalizedConfigId;
+    }
+
+    private String getConfigIdFromFileName(String fileName) {
+        return fileName.substring(0, fileName.length() - JSON_EXTENSION.length());
+    }
+
+    private File getConfigFolder() {
+        return new File(System.getProperty("user.dir")
                 + File.separator
                 + "config"
                 + File.separator
                 + modId
                 + File.separator
-                + configName
-                + ".json";
+                + folderName);
+    }
+
+    private File getConfigFile(String configId) {
+        return new File(getConfigFolder(), normalizeConfigId(configId) + JSON_EXTENSION);
     }
 }
 

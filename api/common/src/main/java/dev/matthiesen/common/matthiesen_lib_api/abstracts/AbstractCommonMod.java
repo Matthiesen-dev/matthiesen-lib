@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.abstracts;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
+import dev.matthiesen.common.matthiesen_lib_api.config.ConfigFolderManager;
 import dev.matthiesen.common.matthiesen_lib_api.config.ConfigManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiMetricsManager;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.*;
@@ -201,6 +202,18 @@ public abstract class AbstractCommonMod {
      */
     public <T> ConfigManager<T> createConfigManager(Class<T> configClass, String fileName) {
         return new ConfigManager<>(configClass, fileName, MOD_ID);
+    }
+
+    /**
+     * Creates a folder-based config manager for the mod. This is useful when you want multiple configs with the same schema,
+     * keyed by filename inside a single folder such as presets, dimensions, or entity profiles.
+     * @param configClass The class of the config.
+     * @param folderName The name of the config folder.
+     * @return The config folder manager instance.
+     * @param <T> The type of the config.
+     */
+    public <T> ConfigFolderManager<T> createConfigFolderManager(Class<T> configClass, String folderName) {
+        return new ConfigFolderManager<>(configClass, folderName, MOD_ID);
     }
 
     /**
