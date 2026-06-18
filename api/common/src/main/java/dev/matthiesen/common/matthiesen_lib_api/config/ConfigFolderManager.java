@@ -262,6 +262,58 @@ public class ConfigFolderManager<T> {
         loaded = true;
     }
 
+    /**
+     * Reloads all configs from disk, discarding any in-memory state.
+     *
+     * @return An unmodifiable view of the reloaded configs keyed by config id
+     */
+    public Map<String, T> reloadConfigs() {
+        loaded = false;
+        return loadConfigs();
+    }
+
+    /**
+     * Reloads a single config from disk, replacing any cached in-memory value.
+     * If the file does not exist, a default config is created and saved.
+     *
+     * @param configId The config id / filename without extension
+     * @return The reloaded config instance
+     */
+    public T reloadConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+        configs.remove(normalizedConfigId);
+        return loadConfig(normalizedConfigId);
+    }
+
+    /**
+     * Deletes a config both from memory and from disk.
+     * Does nothing (and logs a warning) if the config has not been loaded and the file does not exist.
+     *
+     * @param configId The config id / filename without extension
+     * @return {@code true} if the file was successfully deleted or did not exist on disk; {@code false} if deletion failed
+     */
+    public boolean deleteConfig(String configId) {
+        String normalizedConfigId = normalizeConfigId(configId);
+        configs.remove(normalizedConfigId);
+
+        File configFile = getConfigFile(normalizedConfigId);
+
+        if (!configFile.exists()) {
+            MatthiesenLibApiConstants.createDebugLog("Config '" + normalizedConfigId + "' does not exist on disk, nothing to delete.");
+            return true;
+        }
+
+        boolean deleted = configFile.delete();
+
+        if (deleted) {
+            MatthiesenLibApiConstants.createDebugLog("Deleted config file: " + configFile.getAbsolutePath());
+        } else {
+            MatthiesenLibApiConstants.createErrorLog("Failed to delete config file: " + configFile.getAbsolutePath());
+        }
+
+        return deleted;
+    }
+
     private T readConfig(File configFile, String configId) {
         if (configFile.exists()) {
             try (FileReader fileReader = new FileReader(configFile)) {
