@@ -39,7 +39,7 @@ public class ChatTableBuilder {
      *                   title, keys, values, separators, and default text in the table.
      */
     public ChatTableBuilder(String title, Formatting formatting) {
-        this.title = title == null ? "Status" : title;
+        this.title = title == null ? "Unknown" : title;
         this.formatting = formatting == null ? Formatting.DEFAULT : formatting;
     }
 
