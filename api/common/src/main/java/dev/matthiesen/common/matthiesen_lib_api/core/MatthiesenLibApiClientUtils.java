@@ -25,7 +25,7 @@ public final class MatthiesenLibApiClientUtils {
      * Appends a Runnable to the list of client load runnables. These runnables will be executed during the client's initialization phase.
      * @param runnable The Runnable to be executed on client load. This can contain any client-specific code that needs to run during initialization.
      */
-    public static void appendRunnable(Runnable runnable) {
+    public static void appendRunnableShutdown(Runnable runnable) {
         synchronized (CLIENT_LOAD_RUNNABLES) {
             CLIENT_LOAD_RUNNABLES.add(runnable);
         }
@@ -35,6 +35,6 @@ public final class MatthiesenLibApiClientUtils {
      * Registers the client load runnables with the platform-specific client load event. This should be called during the mod's initialization phase to ensure that all appended runnables are executed when the client loads.
      */
     public static void registerClientLoadRunnables() {
-        PLATFORM.onClientLoad(CLIENT_LOAD_RUNNABLES);
+        PLATFORM.onClientShutdown(CLIENT_LOAD_RUNNABLES);
     }
 }

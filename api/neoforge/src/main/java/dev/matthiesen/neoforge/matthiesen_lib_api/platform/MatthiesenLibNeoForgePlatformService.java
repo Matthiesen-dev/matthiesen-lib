@@ -117,6 +117,11 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
                 public String getPlatform() {
                     return Platform.NEOFORGE.getLabel();
                 }
+
+                @Override
+                public String getPlatformId() {
+                    return Platform.NEOFORGE.getModId();
+                }
             };
         } else {
             return null;
