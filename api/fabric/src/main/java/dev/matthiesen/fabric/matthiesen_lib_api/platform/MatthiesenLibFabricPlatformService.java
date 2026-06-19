@@ -119,6 +119,11 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
             public String getPlatform() {
                 return Platform.FABRIC.getLabel();
             }
+
+            @Override
+            public String getPlatformId() {
+                return Platform.FABRIC.getModId();
+            }
         }).orElse(null);
     }
 

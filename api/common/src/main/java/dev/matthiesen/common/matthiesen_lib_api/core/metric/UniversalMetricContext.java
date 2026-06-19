@@ -47,7 +47,7 @@ public final class UniversalMetricContext extends SimpleContext {
             case CLIENT -> {
                 // Client metrics are opt-out, we are only interested in server-metrics
                 ready();
-                MatthiesenLibApiClientUtils.appendRunnable(this::shutdown);
+                MatthiesenLibApiClientUtils.appendRunnableShutdown(this::shutdown);
             }
             case SERVER -> MatthiesenLibApiServerEventsManager.registerServerEventHandler(
                     MatthiesenLibApiConstants.MOD_ID + "_metrics_context",
@@ -100,7 +100,7 @@ public final class UniversalMetricContext extends SimpleContext {
      */
     @Override
     protected boolean preSubmissionStart() {
-        return ((SimpleConfig) getConfig()).preSubmissionStart();
+        return ((SimpleConfig) getConfig()).preSubmissionStart(getProjectName());
     }
 
     /**

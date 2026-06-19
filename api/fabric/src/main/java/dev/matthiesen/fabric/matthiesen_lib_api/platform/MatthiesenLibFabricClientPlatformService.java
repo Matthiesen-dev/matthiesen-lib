@@ -16,7 +16,7 @@ public class MatthiesenLibFabricClientPlatformService implements MatthiesenLibCl
     public MatthiesenLibFabricClientPlatformService() {}
 
     @Override
-    public void onClientLoad(List<Runnable> runnables) {
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> runnables.forEach(Runnable::run));
+    public void onClientShutdown(List<Runnable> runnables) {
+        ClientLifecycleEvents.CLIENT_STOPPING.register(client -> runnables.forEach(Runnable::run));
     }
 }

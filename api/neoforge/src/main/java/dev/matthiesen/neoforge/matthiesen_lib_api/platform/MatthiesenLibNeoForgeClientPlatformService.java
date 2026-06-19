@@ -1,8 +1,6 @@
 package dev.matthiesen.neoforge.matthiesen_lib_api.platform;
 
 import dev.matthiesen.common.matthiesen_lib_api.core.platform.MatthiesenLibClientPlatform;
-import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibClientNeoForgeHelper;
-import net.neoforged.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.List;
 
@@ -16,7 +14,7 @@ public class MatthiesenLibNeoForgeClientPlatformService implements MatthiesenLib
     public MatthiesenLibNeoForgeClientPlatformService() {}
 
     @Override
-    public void onClientLoad(List<Runnable> runnables) {
-        MatthiesenLibClientNeoForgeHelper.registerStartupEvent((FMLClientSetupEvent event) -> runnables.forEach(Runnable::run));
+    public void onClientShutdown(List<Runnable> runnables) {
+
     }
 }
