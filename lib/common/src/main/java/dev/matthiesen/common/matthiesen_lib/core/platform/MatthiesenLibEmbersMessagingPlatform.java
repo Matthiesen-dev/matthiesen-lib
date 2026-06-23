@@ -17,7 +17,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param message The message to send, represented as an Object for compatibility with the Embers mod's message format.
      * @param duration The duration for which the message should be displayed, in ticks.
      */
-    void sendMessage(ServerPlayer player, Component message, float duration);
+    void sendMessage(ServerPlayer player, Component message, int duration);
 
     /**
      * Sends a component message to a player using a custom builder for immersive messages.
@@ -27,21 +27,21 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the message should be displayed, in ticks.
      * @param builder The custom builder for immersive message visual behavior.
      */
-    void sendMessage(ServerPlayer player, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder);
+    void sendMessage(ServerPlayer player, Component message, int duration, MatthiesenLibImmersiveMessageBuilder builder);
 
     /**
      * Sends a component message using an inline builder configuration callback.
      *
      * <p>This is a convenience overload that creates a new
      * {@link MatthiesenLibImmersiveMessageBuilder}, applies the provided configuration,
-     * then delegates to {@link #sendMessage(ServerPlayer, Component, float, MatthiesenLibImmersiveMessageBuilder)}.
+     * then delegates to {@link #sendMessage(ServerPlayer, Component, int, MatthiesenLibImmersiveMessageBuilder)}.
      *
      * @param player The player to send the message to.
      * @param message The component message to send.
      * @param duration The duration for which the message should be displayed, in ticks.
      * @param builderConfigurer Callback used to configure a new builder instance.
      */
-    default void sendMessage(ServerPlayer player, Component message, float duration,
+    default void sendMessage(ServerPlayer player, Component message, int duration,
                              Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
         if (builderConfigurer == null) {
             sendMessage(player, message, duration);
@@ -59,7 +59,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param message The message to send, represented as a String in markup format for compatibility with the Embers mod's message format.
      * @param duration The duration for which the message should be displayed, in ticks.
      */
-    void sendMessage(ServerPlayer player, String message, float duration);
+    void sendMessage(ServerPlayer player, String message, int duration);
 
     /**
      * Sends a message to a player using a custom builder for immersive messages.
@@ -68,21 +68,21 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the message should be displayed, in ticks.
      * @param builder The custom builder for immersive messages, allowing for additional customization of the message beyond the standard markup format.
      */
-    void sendMessage(ServerPlayer player, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder);
+    void sendMessage(ServerPlayer player, String message, int duration, MatthiesenLibImmersiveMessageBuilder builder);
 
     /**
      * Sends a message using an inline builder configuration callback.
      *
      * <p>This is a convenience overload that creates a new
      * {@link MatthiesenLibImmersiveMessageBuilder}, applies the provided configuration,
-     * then delegates to {@link #sendMessage(ServerPlayer, String, float, MatthiesenLibImmersiveMessageBuilder)}.
+     * then delegates to {@link #sendMessage(ServerPlayer, String, int, MatthiesenLibImmersiveMessageBuilder)}.
      *
      * @param player The player to send the message to.
      * @param message The message to send, represented as a String in markup format.
      * @param duration The duration for which the message should be displayed, in ticks.
      * @param builderConfigurer Callback used to configure a new builder instance.
      */
-    default void sendMessage(ServerPlayer player, String message, float duration,
+    default void sendMessage(ServerPlayer player, String message, int duration,
                              Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
         if (builderConfigurer == null) {
             sendMessage(player, message, duration);
@@ -101,7 +101,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param message The new message content, represented as an Object for compatibility with the Embers mod's message format.
      * @param duration The duration for which the updated message should be displayed, in ticks.
      */
-    void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration);
+    void sendUpdateMessage(ServerPlayer player, String messageId, Component message, int duration);
 
     /**
      * Updates an existing component message for a player using a custom builder.
@@ -112,7 +112,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the updated message should be displayed, in ticks.
      * @param builder The custom builder for immersive message visual behavior.
      */
-    void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration,
+    void sendUpdateMessage(ServerPlayer player, String messageId, Component message, int duration,
                            MatthiesenLibImmersiveMessageBuilder builder);
 
     /**
@@ -120,7 +120,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      *
      * <p>This is a convenience overload that creates a new
      * {@link MatthiesenLibImmersiveMessageBuilder}, applies the provided configuration,
-     * then delegates to {@link #sendUpdateMessage(ServerPlayer, String, Component, float, MatthiesenLibImmersiveMessageBuilder)}.
+     * then delegates to {@link #sendUpdateMessage(ServerPlayer, String, Component, int, MatthiesenLibImmersiveMessageBuilder)}.
      *
      * @param player The player to update the message for.
      * @param messageId The ID of the message to update.
@@ -128,7 +128,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the updated message should be displayed, in ticks.
      * @param builderConfigurer Callback used to configure a new builder instance.
      */
-    default void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration,
+    default void sendUpdateMessage(ServerPlayer player, String messageId, Component message, int duration,
                                    Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
         if (builderConfigurer == null) {
             sendUpdateMessage(player, messageId, message, duration);
@@ -147,7 +147,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param message The new message content, represented as a String in markup format for compatibility with the Embers mod's message format.
      * @param duration The duration for which the updated message should be displayed, in ticks.
      */
-    void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration);
+    void sendUpdateMessage(ServerPlayer player, String messageId, String message, int duration);
 
     /**
      * Updates an existing message for a player using a custom builder for immersive messages.
@@ -157,14 +157,14 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the updated message should be displayed, in ticks.
      * @param builder The custom builder for immersive messages, allowing for additional customization of the updated message beyond the standard markup format.
      */
-    void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder);
+    void sendUpdateMessage(ServerPlayer player, String messageId, String message, int duration, MatthiesenLibImmersiveMessageBuilder builder);
 
     /**
      * Updates an existing message using an inline builder configuration callback.
      *
      * <p>This is a convenience overload that creates a new
      * {@link MatthiesenLibImmersiveMessageBuilder}, applies the provided configuration,
-     * then delegates to {@link #sendUpdateMessage(ServerPlayer, String, String, float, MatthiesenLibImmersiveMessageBuilder)}.
+     * then delegates to {@link #sendUpdateMessage(ServerPlayer, String, String, int, MatthiesenLibImmersiveMessageBuilder)}.
      *
      * @param player The player to update the message for.
      * @param messageId The ID of the message to update.
@@ -172,7 +172,7 @@ public interface MatthiesenLibEmbersMessagingPlatform {
      * @param duration The duration for which the updated message should be displayed, in ticks.
      * @param builderConfigurer Callback used to configure a new builder instance.
      */
-    default void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration,
+    default void sendUpdateMessage(ServerPlayer player, String messageId, String message, int duration,
                                    Consumer<MatthiesenLibImmersiveMessageBuilder> builderConfigurer) {
         if (builderConfigurer == null) {
             sendUpdateMessage(player, messageId, message, duration);

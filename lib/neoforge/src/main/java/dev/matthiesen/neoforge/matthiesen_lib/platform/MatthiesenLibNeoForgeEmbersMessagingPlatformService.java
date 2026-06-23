@@ -21,14 +21,14 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     public MatthiesenLibNeoForgeEmbersMessagingPlatformService() {}
 
     @Override
-    public void sendMessage(ServerPlayer player, Component message, float duration) {
+    public void sendMessage(ServerPlayer player, Component message, int duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendMessage(player, new ImmersiveMessage(message, duration));
         }
     }
 
     @Override
-    public void sendMessage(ServerPlayer player, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+    public void sendMessage(ServerPlayer player, Component message, int duration, MatthiesenLibImmersiveMessageBuilder builder) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             ImmersiveMessage msg = new ImmersiveMessage(message, duration);
             if (builder != null) {
@@ -39,14 +39,14 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     }
 
     @Override
-    public void sendMessage(ServerPlayer player, String message, float duration) {
+    public void sendMessage(ServerPlayer player, String message, int duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendMessage(player, ImmersiveMessage.fromMarkup(duration, message));
         }
     }
 
     @Override
-    public void sendMessage(ServerPlayer player, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+    public void sendMessage(ServerPlayer player, String message, int duration, MatthiesenLibImmersiveMessageBuilder builder) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             ImmersiveMessage msg = ImmersiveMessage.builder(duration, message);
             if (builder != null) {
@@ -57,14 +57,14 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     }
 
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, int duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendUpdateMessage(player, messageId, new ImmersiveMessage(message, duration));
         }
     }
 
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, Component message, int duration, MatthiesenLibImmersiveMessageBuilder builder) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             ImmersiveMessage msg = new ImmersiveMessage(message, duration);
             if (builder != null) {
@@ -75,14 +75,14 @@ public class MatthiesenLibNeoForgeEmbersMessagingPlatformService implements Matt
     }
 
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, int duration) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             NetworkHelper.getInstance().sendUpdateMessage(player, messageId, ImmersiveMessage.fromMarkup(duration, message));
         }
     }
 
     @Override
-    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, float duration, MatthiesenLibImmersiveMessageBuilder builder) {
+    public void sendUpdateMessage(ServerPlayer player, String messageId, String message, int duration, MatthiesenLibImmersiveMessageBuilder builder) {
         if (MatthiesenLib.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             ImmersiveMessage msg = ImmersiveMessage.builder(duration, message);
             if (builder != null) {
