@@ -17,10 +17,10 @@ import java.lang.reflect.Method;
  *
  * if (compat != null) {
  *     // Send a simple message at the top of the screen
- *     compat.sendMessage(player, "Hello World", 100f);
+ *     compat.sendMessage(player, "Hello World", 100);
  *
  *     // Configure style inline using the convenience overload
- *     compat.sendMessage(player, "Inline Styled Message", 100f, builder -> builder
+ *     compat.sendMessage(player, "Inline Styled Message", 100, builder -> builder
  *         .anchor(TextAnchor.TOP_CENTER)
  *         .align(TextAlign.CENTER)
  *         .scale(1.25f)
@@ -35,7 +35,7 @@ import java.lang.reflect.Method;
  *         .fadeInTicks(10)
  *         .fadeOutTicks(20);
  *
- *     compat.sendMessage(player, "Customized Message", 100f, builder);
+ *     compat.sendMessage(player, "Customized Message", 100, builder);
  *
  *     // Send a typewriter effect message
  *     MatthiesenLibImmersiveMessageBuilder typewriterBuilder = MatthiesenLibImmersiveMessageBuilder.create()
@@ -43,7 +43,7 @@ import java.lang.reflect.Method;
  *         .offset(0f, 100f)
  *         .anchor(TextAnchor.MIDDLE);
  *
- *     compat.sendMessage(player, "Typing out letter by letter...", 200f, typewriterBuilder);
+ *     compat.sendMessage(player, "Typing out letter by letter...", 200, typewriterBuilder);
  * }
  * }</pre>
  *
@@ -52,6 +52,8 @@ import java.lang.reflect.Method;
  */
 @SuppressWarnings("unused")
 public class MatthiesenLibImmersiveMessageBuilder {
+	private static final float TICKS_PER_SECOND = 20f;
+
 	/**
 	 * Screen anchor positions for immersive messages.
 	 * Defines a 3×3 grid of horizontal and vertical anchoring points.
@@ -233,6 +235,9 @@ public class MatthiesenLibImmersiveMessageBuilder {
 	/**
 	 * Enables a typewriter effect with optional centering of the reveal animation.
 	 *
+	 * <p>On Embers v3+, this is translated to the new effect API using an equivalent speed
+	 * conversion ({@code charsPerSecond = charsPerTick * 20}).
+	 *
 	 * @param speed characters revealed per tick
 	 * @param center {@code true} to center the text while revealing, {@code false} to align left
 	 * @return this builder for method chaining
@@ -380,7 +385,14 @@ public class MatthiesenLibImmersiveMessageBuilder {
 		}
 
 		if (typewriterSpeed != null) {
-			invoke(immersiveMessage, "typewriter", new Class<?>[] { float.class, boolean.class }, typewriterSpeed, typewriterCenter);
+			// Embers v2 exposed typewriter(float, boolean); v3 moved this to the effect API.
+			boolean applied = invoke(immersiveMessage, "typewriter", new Class<?>[] { float.class, boolean.class }, typewriterSpeed, typewriterCenter);
+			if (!applied) {
+				float charsPerSecond = typewriterSpeed * TICKS_PER_SECOND;
+				if (Float.isFinite(charsPerSecond) && charsPerSecond > 0f) {
+					invoke(immersiveMessage, "effect", new Class<?>[] { String.class }, "typewriter speed=" + charsPerSecond);
+				}
+			}
 		}
 
 		if (wrapMaxWidth != null) {
@@ -398,12 +410,14 @@ public class MatthiesenLibImmersiveMessageBuilder {
 	 * @param parameterTypes the method parameter types
 	 * @param args the method arguments
 	 */
-	private static void invoke(Object target, String methodName, Class<?>[] parameterTypes, Object... args) {
+	private static boolean invoke(Object target, String methodName, Class<?>[] parameterTypes, Object... args) {
 		try {
 			Method method = target.getClass().getMethod(methodName, parameterTypes);
 			method.invoke(target, args);
+			return true;
 		} catch (ReflectiveOperationException ignored) {
 			// The target implementation may not expose every setter across versions.
+			return false;
 		}
 	}
 
