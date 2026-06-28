@@ -12,6 +12,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibMod
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibServerEventHandler;
 import dev.matthiesen.common.matthiesen_lib_api.core.metric.implementation.*;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiClientUtils;
+import dev.matthiesen.libs.faststats.internal.PlatformLoggerFactory;
 import net.minecraft.server.MinecraftServer;
 import org.jetbrains.annotations.Contract;
 
@@ -38,8 +39,8 @@ public final class UniversalMetricContext extends SimpleContext {
      * @param modId the unique identifier of the mod for which this metrics context is being created. This is used to retrieve the mod container and ensure that the correct mod information is included in the metrics data.
      * @param token the token used for authentication or identification purposes in the metrics submission process. This is passed to the superclass constructor to initialize the context and may be used in the metrics submission process to authenticate or identify the source of the metrics data.
      */
-    private UniversalMetricContext(final Factory factory, final String modId, @Token final String token) {
-        super(factory, getPlatformConfig(), "Universal", token);
+    private UniversalMetricContext(final Factory factory, final dev.matthiesen.libs.faststats.internal.LoggerFactory loggerFactory, final String modId, @Token final String token) {
+        super(factory, loggerFactory, getPlatformConfig(loggerFactory), "Universal", token);
         this.mod = MatthiesenLibApi.getModContainer(modId);
         if (mod == null) throw new IllegalArgumentException("Mod with id '" + modId + "' not found");
         initializeServices(factory);
@@ -90,8 +91,8 @@ public final class UniversalMetricContext extends SimpleContext {
      * Retrieves the platform-specific configuration for this metrics context. This method reads the configuration from the mod's config file, allowing for customizable behavior based on the mod's settings. The configuration is expected to be in a properties file format and is read using the SimpleConfig class from the FastStats library. This allows mod developers to define specific settings for their metrics collection and submission process, such as enabling or disabling certain features, adjusting submission intervals, or configuring other aspects of the metrics behavior based on their specific requirements.
      * @return a SimpleConfig instance containing the platform-specific configuration for this metrics context. This configuration is read from the mod's config file and allows for customizable behavior based on the mod's settings, providing flexibility for mod developers to tailor the metrics collection and submission process to their specific needs. The configuration is expected to be in a properties file format and is read using the SimpleConfig class from the FastStats library, ensuring compatibility with the metrics system and allowing for easy integration of custom settings for metrics behavior.
      */
-    public static SimpleConfig getPlatformConfig() {
-        return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"));
+    public static SimpleConfig getPlatformConfig(dev.matthiesen.libs.faststats.internal.LoggerFactory factory) {
+        return SimpleConfig.read(MatthiesenLibApi.getModConfig(MatthiesenLibApiConstants.MOD_ID, "metrics.properties"), factory);
     }
 
     /**
@@ -100,7 +101,7 @@ public final class UniversalMetricContext extends SimpleContext {
      */
     @Override
     protected boolean preSubmissionStart() {
-        return ((SimpleConfig) getConfig()).preSubmissionStart(getProjectName());
+        return ((SimpleConfig) getConfig()).preSubmissionStart(this);
     }
 
     /**
@@ -159,7 +160,24 @@ public final class UniversalMetricContext extends SimpleContext {
          */
         @Override
         public UniversalMetricContext create() {
-            return new UniversalMetricContext(this, modId, token);
+            final var logger = org.slf4j.LoggerFactory.getLogger(modId);
+            final var loggerFactory = new PlatformLoggerFactory((level, throwable, message) -> {
+                switch (level) {
+                    case INFO -> {
+                        if (throwable == null) logger.info(message);
+                        else logger.info(message, throwable);
+                    }
+                    case WARN -> {
+                        if (throwable == null) logger.warn(message);
+                        else logger.warn(message, throwable);
+                    }
+                    case ERROR -> {
+                        if (throwable == null) logger.error(message);
+                        else logger.error(message, throwable);
+                    }
+                }
+            });
+            return new UniversalMetricContext(this, loggerFactory, modId, token);
         }
     }
 }
