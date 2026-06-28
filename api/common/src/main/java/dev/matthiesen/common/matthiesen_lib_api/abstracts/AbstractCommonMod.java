@@ -51,7 +51,7 @@ public abstract class AbstractCommonMod {
         this.MOD_NAME = MOD_NAME;
         var metricToken = getMetricsToken();
         if (metricToken != null) {
-            METRIC_CONTEXT = MatthiesenLibApiMetricsManager.makeErrorMetricsContext(
+            METRIC_CONTEXT = MatthiesenLibApi.makeErrorMetricsContext(
                     MOD_ID,
                     metricToken,
                     ERROR_TRACKER
@@ -74,7 +74,12 @@ public abstract class AbstractCommonMod {
     public void initialize() {
         this.registryBuilder = new MatthiesenLibApi.RegistryBuilder(MOD_ID);
         MatthiesenLibApi.registerModToApiMetrics(MOD_ID);
-        MatthiesenLibApi.registerReloadRunnable(MOD_ID, reload());
+
+        // Get and register the reload task if it's not null
+        Runnable reloadTask = reload();
+        if (reloadTask != null) {
+            MatthiesenLibApi.registerReloadRunnable(MOD_ID, reload());
+        }
     }
 
     /**
@@ -120,11 +125,27 @@ public abstract class AbstractCommonMod {
     // ---- Utils ----
 
     /**
-     * Send an info log message using the mod's logger
+     * Send an info log message using the mod's logger.
      * @param message The message to log
      */
     public void createInfoLog(String message) {
         getLogger().info(message);
+    }
+
+    /**
+     * Send a warning log message using the mod's logger.
+     * @param message The message to log
+     */
+    public void createWarnLog(String message) {
+        getLogger().warn(message);
+    }
+
+    /**
+     * Send an error log message using the mod's logger.
+     * @param message The message to log
+     */
+    public void createErrorLog(String message) {
+        getLogger().error(message);
     }
 
     /**
