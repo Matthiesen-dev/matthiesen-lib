@@ -34,7 +34,6 @@ import java.util.function.Supplier;
  * initialized once. It provides a static method modInitializer() that can be called by mod loaders to initialize the API,
  * and it uses a private static boolean field to track whether the API has already been initialized to prevent multiple initializations.
  */
-@SuppressWarnings("unused")
 public class MatthiesenLibApi {
     private static final MatthiesenLibPlatform PLATFORM =
             ServiceLoader.load(MatthiesenLibPlatform.class).findFirst().orElseThrow();
@@ -285,6 +284,7 @@ public class MatthiesenLibApi {
      * @param token the token to use for the UniversalMetricContext.Factory. This token is used to authenticate and identify the source of the metrics data when it is submitted to the metrics collection service. It should be a valid token that is registered with the metrics collection service to ensure that the data is accepted and processed correctly.
      * @return a UniversalMetricContext.Factory instance configured with the registered mods metric and error tracker service. This factory can be used to create UniversalMetricContext instances for submitting metrics with the registered mods data and error tracking capabilities. The registered mods metric is defined as a string map that retrieves the current set of registered mods from the getRegisteredMods method, and it is configured to clear the registered mods data after each flush using the clearRegisteredMods method. The error tracker service is set to use the ERROR_TRACKER defined in this class, which captures and anonymizes errors that occur during metrics collection and submission.
      */
+    @SuppressWarnings("unused")
     public static UniversalMetricContext.Factory getBaseMetricFactory(String modId, @Token String token) {
         return MatthiesenLibApiMetricsManager.getBaseMetricFactory(modId, token);
     }
@@ -295,6 +295,7 @@ public class MatthiesenLibApi {
      * @param token the token to use for the UniversalMetricContext. This token is used to authenticate and identify the source of the metrics data when it is submitted to the metrics collection service. It should be a valid token that is registered with the metrics collection service to ensure that the data is accepted and processed correctly.
      * @return a UniversalMetricContext instance configured with the registered mods metric and error tracking capabilities. This context can be used to submit metrics with the registered mods data included as a custom metric, and any errors that occur during submission will be captured and anonymized by the configured error tracker service. The context is created using the getBaseMetricFactory method, which sets up the necessary configuration for the registered mods metric and error tracker service before creating the context instance.
      */
+    @SuppressWarnings("unused")
     public static UniversalMetricContext makeBasicMetricsContext(String modId, @Token String token) {
         return MatthiesenLibApiMetricsManager.makeBasicMetricsContext(modId, token);
     }

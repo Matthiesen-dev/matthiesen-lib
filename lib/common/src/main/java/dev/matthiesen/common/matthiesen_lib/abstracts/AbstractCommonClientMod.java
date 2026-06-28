@@ -1,26 +1,12 @@
-package dev.matthiesen.common.matthiesen_lib;
+package dev.matthiesen.common.matthiesen_lib.abstracts;
 
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibEntityRendererManager;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibBlockOutlineManager;
-import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibHudManager;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineContext;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineListener;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineRegistrar;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEntityRendererRegistrar;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudOrdering;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudRegistrar;
-import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
-import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
-import net.minecraft.client.gui.GuiGraphics;
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.*;
+import dev.matthiesen.common.matthiesen_lib_api.abstracts.AbstractCommonMod;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
-import net.minecraft.client.multiplayer.ClientLevel;
-import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
@@ -30,32 +16,95 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.MenuType;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.phys.BlockHitResult;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 import java.util.function.Supplier;
 
 /**
- * Client-side facade for MatthiesenLib. Public registration methods are exposed here,
- * while internal management lives in their own classes to keep the public API clean and focused.
+ * Client side mod class. This class is used to register client side features such as renderers, screens, and other client side features.
  */
-public class MatthiesenLibClient {
-    /**
-     * Default constructor for the MatthiesenLibClient class. No initialization is required as setup is handled in the modInitializer method.
-     */
-    private MatthiesenLibClient() {}
+@SuppressWarnings("unused")
+public abstract class AbstractCommonClientMod {
+    private final String MOD_ID;
+    private final String MOD_NAME;
+    private final Logger LOGGER;
+    private final AbstractCommonMod SERVER_MOD;
 
     /**
-     * Initializes the client-side components of MatthiesenLib. (Do not run this from an external mod.)
+     * Constructor for the AbstractCommonClientMod class.
+     *
+     * @param mod The Server-side mod instance
      */
-    public static synchronized void modInitializer() {
-        MatthiesenLibScreenManager.modInitializer();
-        MatthiesenLibEntityRendererManager.modInitializer();
-        MatthiesenLibBlockOutlineManager.modInitializer();
-        MatthiesenLibHudManager.modInitializer();
+    public AbstractCommonClientMod(AbstractCommonMod mod) {
+        this.MOD_ID = mod.getModId();
+        this.MOD_NAME = mod.getModName() + " (client)";
+        this.SERVER_MOD = mod;
+        this.LOGGER = LogManager.getLogger(this.MOD_NAME);
     }
+
+    /**
+     * Get the mod's ID
+     * @return The mod's ID
+     */
+    public String getModId() {
+        return MOD_ID;
+    }
+
+    /**
+     * Get the mod's name
+     * @return The mod's name
+     */
+    public String getModName() {
+        return MOD_NAME;
+    }
+
+    /**
+     * Get the mod's logger
+     * @return The mod's logger
+     */
+    public Logger getLogger() {
+        return LOGGER;
+    }
+
+    /**
+     * Send an info log message using the mod's logger.
+     * @param message The message to log
+     */
+    public void createInfoLog(String message) {
+        getLogger().info(message);
+    }
+
+    /**
+     * Send a warning log message using the mod's logger.
+     * @param message The message to log
+     */
+    public void createWarnLog(String message) {
+        getLogger().warn(message);
+    }
+
+    /**
+     * Send an error log message using the mod's logger.
+     * @param message The message to log
+     */
+    public void createErrorLog(String message) {
+        getLogger().error(message);
+    }
+
+    /**
+     * Send an error log message using the mod's logger, and track the error with the metrics system if a metrics token is provided
+     * @param message The message to log
+     * @param throwable The error to log and track
+     */
+    public void createErrorLog(String message, Throwable throwable) {
+        SERVER_MOD.trackError(throwable);
+        getLogger().error(message, throwable);
+    }
+
+    // ------- UTILS -------
+
 
     // -------------------------------------------------------------------------
     // Screen registration
@@ -66,8 +115,8 @@ public class MatthiesenLibClient {
      * (Fabric: onInitializeClient, NeoForge: RegisterMenuScreensEvent).
      * @param registrarConsumer A consumer that receives a register helper. Call {@code register.register(...)} once for each menu screen you want to queue.
      */
-    public static void registerMenuScreens(Consumer<MatthiesenLibScreenRegistrar> registrarConsumer) {
-        MatthiesenLibScreenManager.registerMenuScreens(registrarConsumer);
+    public void registerMenuScreens(Consumer<MatthiesenLibScreenRegistrar> registrarConsumer) {
+        MatthiesenLibClient.registerMenuScreens(registrarConsumer);
     }
 
     /**
@@ -81,9 +130,9 @@ public class MatthiesenLibClient {
      * @param screenConstructor The constructor for the screen, which takes the menu and the player's inventory as parameters. This is used to
      *                          create the screen instance when the menu is opened.
      */
-    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
+    public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
     void registerMenuScreen(Supplier<? extends MenuType<? extends M>> menuTypeSupplier, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        MatthiesenLibScreenManager.registerMenuScreen(menuTypeSupplier, screenConstructor);
+        MatthiesenLibClient.registerMenuScreen(menuTypeSupplier, screenConstructor);
     }
 
     /**
@@ -97,20 +146,9 @@ public class MatthiesenLibClient {
      * @param screenConstructor The constructor for the screen, which takes the menu and the player's inventory as parameters. This is used to create
      *                          the screen instance when the menu is opened.
      */
-    public static <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
+    public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
     void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
-        MatthiesenLibScreenManager.registerMenuScreen(menuType, screenConstructor);
-    }
-
-    /**
-     * Applies all queued screen registrations to the provided registrar. Called by each platform at
-     * the correct lifecycle moment.
-     *
-     * @param registrar The ScreenRegistrar provided by the platform, which is used to register screens with their associated menu types. This should be
-     *                  called during the platform's screen registration event, and it will apply all queued screen registrations to the game.
-     */
-    public static synchronized void applyScreenRegistrations(MatthiesenLibScreenRegistrar registrar) {
-        MatthiesenLibScreenManager.applyScreenRegistrations(registrar);
+        MatthiesenLibClient.registerMenuScreen(menuType, screenConstructor);
     }
 
     // -------------------------------------------------------------------------
@@ -124,8 +162,8 @@ public class MatthiesenLibClient {
      * @param registrarConsumer A consumer that receives a registrar helper. Call {@code registrar.registerEntityRenderer(...)} or
      *                          {@code registrar.registerBlockEntityRenderer(...)} once for each renderer you want to queue.
      */
-    public static void registerEntityRenderers(Consumer<MatthiesenLibEntityRendererRegistrar> registrarConsumer) {
-        MatthiesenLibEntityRendererManager.registerEntityRenderers(registrarConsumer);
+    public void registerEntityRenderers(Consumer<MatthiesenLibEntityRendererRegistrar> registrarConsumer) {
+        MatthiesenLibClient.registerEntityRenderers(registrarConsumer);
     }
 
     /**
@@ -137,8 +175,8 @@ public class MatthiesenLibClient {
      *                           so you can pass a reference to an entity type that may not be initialized yet.
      * @param rendererProvider   The provider used to construct the renderer instance.
      */
-    public static <T extends Entity> void registerEntityRenderer(Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<T> rendererProvider) {
-        MatthiesenLibEntityRendererManager.registerEntityRenderer(entityTypeSupplier, rendererProvider);
+    public <T extends Entity> void registerEntityRenderer(Supplier<? extends EntityType<? extends T>> entityTypeSupplier, EntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibClient.registerEntityRenderer(entityTypeSupplier, rendererProvider);
     }
 
     /**
@@ -149,8 +187,8 @@ public class MatthiesenLibClient {
      * @param entityType       The EntityType associated with the renderer.
      * @param rendererProvider The provider used to construct the renderer instance.
      */
-    public static <T extends Entity> void registerEntityRenderer(EntityType<? extends T> entityType, EntityRendererProvider<T> rendererProvider) {
-        MatthiesenLibEntityRendererManager.registerEntityRenderer(entityType, rendererProvider);
+    public <T extends Entity> void registerEntityRenderer(EntityType<? extends T> entityType, EntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibClient.registerEntityRenderer(entityType, rendererProvider);
     }
 
     /**
@@ -162,8 +200,8 @@ public class MatthiesenLibClient {
      *                                   so you can pass a reference to a block entity type that may not be initialized yet.
      * @param rendererProvider           The provider used to construct the block entity renderer instance.
      */
-    public static <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<? extends BlockEntityType<? extends T>> blockEntityTypeSupplier, BlockEntityRendererProvider<T> rendererProvider) {
-        MatthiesenLibEntityRendererManager.registerBlockEntityRenderer(blockEntityTypeSupplier, rendererProvider);
+    public <T extends BlockEntity> void registerBlockEntityRenderer(Supplier<? extends BlockEntityType<? extends T>> blockEntityTypeSupplier, BlockEntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibClient.registerBlockEntityRenderer(blockEntityTypeSupplier, rendererProvider);
     }
 
     /**
@@ -174,31 +212,8 @@ public class MatthiesenLibClient {
      * @param blockEntityType  The BlockEntityType associated with the renderer.
      * @param rendererProvider The provider used to construct the block entity renderer instance.
      */
-    public static <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider<T> rendererProvider) {
-        MatthiesenLibEntityRendererManager.registerBlockEntityRenderer(blockEntityType, rendererProvider);
-    }
-
-    /**
-     * Applies all queued entity and block entity renderer registrations. Called by each platform at the correct lifecycle moment.
-     * (Do not call this from an external mod.)
-     *
-     * @param entityRenderers      A BiConsumer used to register entity renderers on the platform.
-     * @param blockEntityRenderers A BiConsumer used to register block entity renderers on the platform.
-     */
-    @SuppressWarnings("rawtypes")
-    public static synchronized void applyEntityRendererRegistrations(BiConsumer<EntityType<? extends Entity>, EntityRendererProvider> entityRenderers,
-                                                                     BiConsumer<BlockEntityType<? extends BlockEntity>, BlockEntityRendererProvider> blockEntityRenderers) {
-        MatthiesenLibEntityRendererManager.applyEntityRendererRegistrations(new MatthiesenLibEntityRendererRegistrar() {
-            @Override
-            public <T extends Entity> void registerEntityRenderer(EntityType<? extends T> entityType, EntityRendererProvider<T> rendererProvider) {
-                entityRenderers.accept(entityType, rendererProvider);
-            }
-
-            @Override
-            public <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider<T> rendererProvider) {
-                blockEntityRenderers.accept(blockEntityType, rendererProvider);
-            }
-        });
+    public <T extends BlockEntity> void registerBlockEntityRenderer(BlockEntityType<? extends T> blockEntityType, BlockEntityRendererProvider<T> rendererProvider) {
+        MatthiesenLibClient.registerBlockEntityRenderer(blockEntityType, rendererProvider);
     }
 
     // -------------------------------------------------------------------------
@@ -210,8 +225,8 @@ public class MatthiesenLibClient {
      *
      * @param registrarConsumer A consumer that receives a helper to register listeners.
      */
-    public static void registerBlockOutlineListeners(Consumer<MatthiesenLibBlockOutlineRegistrar> registrarConsumer) {
-        MatthiesenLibBlockOutlineManager.registerBlockOutlineListeners(registrarConsumer);
+    public void registerBlockOutlineListeners(Consumer<MatthiesenLibBlockOutlineRegistrar> registrarConsumer) {
+        MatthiesenLibClient.registerBlockOutlineListeners(registrarConsumer);
     }
 
     /**
@@ -221,7 +236,7 @@ public class MatthiesenLibClient {
      *
      * <p>Example:</p>
      * <pre>{@code
-     * MatthiesenLibClient.registerBlockOutlineListener(context -> {
+     * INSTANCE.registerBlockOutlineListener(context -> {
      *     BlockPos basePos = MyClientLogic.resolveBasePos(context.level(), context.blockHitResult().getBlockPos());
      *     if (basePos == null) {
      *         return true; // Keep vanilla outline when there is no override target.
@@ -247,32 +262,8 @@ public class MatthiesenLibClient {
      * });
      * }</pre>
      */
-    public static void registerBlockOutlineListener(MatthiesenLibBlockOutlineListener listener) {
-        MatthiesenLibBlockOutlineManager.registerBlockOutlineListener(listener);
-    }
-
-    /**
-     * Applies registered block outline listeners to event data.
-     *
-     * @param level             The current client level.
-     * @param blockHitResult    The targeted block hit result.
-     * @param poseStack         The active pose stack.
-     * @param camera            The active camera.
-     * @param multiBufferSource The active render buffer source.
-     * @return {@code true} to continue with vanilla outline rendering, {@code false} to cancel it.
-     */
-    public static boolean applyBlockOutlineListeners(ClientLevel level,
-                                                     BlockHitResult blockHitResult,
-                                                     PoseStack poseStack,
-                                                     Camera camera,
-                                                     MultiBufferSource multiBufferSource) {
-        return MatthiesenLibBlockOutlineManager.fireBlockOutlineEvent(new MatthiesenLibBlockOutlineContext(
-                level,
-                blockHitResult,
-                poseStack,
-                camera,
-                multiBufferSource
-        ));
+    public void registerBlockOutlineListener(MatthiesenLibBlockOutlineListener listener) {
+        MatthiesenLibClient.registerBlockOutlineListener(listener);
     }
 
     // -------------------------------------------------------------------------
@@ -285,7 +276,7 @@ public class MatthiesenLibClient {
      *
      * <p>Example:</p>
      * <pre>{@code
-     * MatthiesenLibClient.registerHudLayers(registrar -> {
+     * INSTANCE.registerHudLayers(registrar -> {
      *     registrar.registerBelow(
      *             NeoForgeVanillaGuiLayers.CHAT,
      *             ResourceLocation.fromNamespaceAndPath("examplemod", "status_hud"),
@@ -303,8 +294,8 @@ public class MatthiesenLibClient {
      * });
      * }</pre>
      */
-    public static void registerHudLayers(Consumer<MatthiesenLibHudRegistrar> registrarConsumer) {
-        MatthiesenLibHudManager.registerHudLayers(registrarConsumer);
+    public void registerHudLayers(Consumer<MatthiesenLibHudRegistrar> registrarConsumer) {
+        MatthiesenLibClient.registerHudLayers(registrarConsumer);
     }
 
     /**
@@ -314,7 +305,7 @@ public class MatthiesenLibClient {
      *
      * <p>Example:</p>
      * <pre>{@code
-     * MatthiesenLibClient.registerHudLayer(
+     * INSTANCE.registerHudLayer(
      *         ResourceLocation.fromNamespaceAndPath("examplemod", "simple_hud"),
      *         (guiGraphics, deltaTracker) -> {
      *             // Render a simple always-on-top HUD layer
@@ -322,8 +313,8 @@ public class MatthiesenLibClient {
      * );
      * }</pre>
      */
-    public static void registerHudLayer(ResourceLocation key, LayeredDraw.Layer layer) {
-        MatthiesenLibHudManager.registerHudLayer(key, layer);
+    public void registerHudLayer(ResourceLocation key, LayeredDraw.Layer layer) {
+        MatthiesenLibClient.registerHudLayer(key, layer);
     }
 
     /**
@@ -335,7 +326,7 @@ public class MatthiesenLibClient {
      *
      * <p>Example:</p>
      * <pre>{@code
-     * MatthiesenLibClient.registerHudLayer(
+     * INSTANCE.registerHudLayer(
      *         MatthiesenLibHudOrdering.BEFORE,
      *         NeoForgeVanillaGuiLayers.CHAT,
      *         ResourceLocation.fromNamespaceAndPath("examplemod", "chat_background_hud"),
@@ -345,24 +336,7 @@ public class MatthiesenLibClient {
      * );
      * }</pre>
      */
-    public static void registerHudLayer(MatthiesenLibHudOrdering ordering, @Nullable ResourceLocation other, ResourceLocation key, LayeredDraw.Layer layer) {
-        MatthiesenLibHudManager.registerHudLayer(ordering, other, key, layer);
-    }
-
-    /**
-     * Applies queued HUD layer registrations to a platform registrar.
-     * @param registrar The platform-specific registrar to apply HUD layer registrations with. This is typically provided by the platform's HUD layer registration event (e.g. RegisterGuiLayersEvent for NeoForge).
-     */
-    public static synchronized void applyHudLayerRegistrations(MatthiesenLibHudRegistrar registrar) {
-        MatthiesenLibHudManager.applyHudLayerRegistrations(registrar);
-    }
-
-    /**
-     * Renders registered HUD layers for Fabric's HUD callback.
-     * @param drawContext The rendering context to draw with.
-     * @param tickCounter The tick counter to pass to layers.
-     */
-    public static void applyFabricHudRendering(GuiGraphics drawContext, DeltaTracker tickCounter) {
-        MatthiesenLibHudManager.renderHudLayers(drawContext, tickCounter);
+    public void registerHudLayer(MatthiesenLibHudOrdering ordering, @Nullable ResourceLocation other, ResourceLocation key, LayeredDraw.Layer layer) {
+        MatthiesenLibClient.registerHudLayer(ordering, other, key, layer);
     }
 }
