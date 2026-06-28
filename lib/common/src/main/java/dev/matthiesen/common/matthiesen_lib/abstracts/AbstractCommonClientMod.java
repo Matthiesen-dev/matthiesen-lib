@@ -46,6 +46,11 @@ public abstract class AbstractCommonClientMod {
     }
 
     /**
+     * Initializer for the client mod. This method is called during the mod initialization phase.
+     */
+    public abstract void initialize();
+
+    /**
      * Get the mod's ID
      * @return The mod's ID
      */
