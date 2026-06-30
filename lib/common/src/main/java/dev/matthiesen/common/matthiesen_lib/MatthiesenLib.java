@@ -1,5 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib;
 
+import dev.matthiesen.common.matthiesen_lib.core.network.NetworkingManager;
+import dev.matthiesen.common.matthiesen_lib.core.network.PacketContext;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
 import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager;
@@ -9,11 +11,16 @@ import dev.matthiesen.common.matthiesen_lib_api.permission.Permission;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEmbersTextParserCompat;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibExtendedTextParser;
+import net.minecraft.network.RegistryFriendlyByteBuf;
+import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.function.BiConsumer;
 
 /**
  * Main class for the MatthiesenLib mod. This class is responsible for initializing the mod and setting up any necessary
@@ -269,6 +276,94 @@ public class MatthiesenLib {
      */
     public static void registerServerEventHandler(String modId, MatthiesenLibServerEventHandler handler) {
         MatthiesenLibApi.registerServerEventHandler(modId, handler);
+    }
+
+    /**
+     * Retrieves the networking utilities instance for handling network-related operations.
+     * <pre>
+     * // Common Module Packet Setup Example:
+     * public class ModPackets {
+     *     public static void init() {
+     *         MatthiesenLib.networkingUtils.registerC2S(
+     *             ValueUpdatePacket.TYPE,
+     *             ValueUpdatePacket.STREAM_CODEC,
+     *             (packet, context) -> context.enqueue(() -> {
+     *                 var player = context.player();
+     *                 var stack = player.getItemInHand(InteractionHand.MAIN_HAND);
+     *                 if (stack.is(MyItems.CUSTOM_ITEM.get())) {
+     *                     stack.set(MyComponents.MY_VALUE.get(), packet.value());
+     *                 }
+     *             })
+     *         );
+     *         MatthiesenLib.networkingUtils.registerS2C(
+     *             ValueUpdatePacket.TYPE,
+     *             ValueUpdatePacket.STREAM_CODEC,
+     *             (packet, context) -> context.enqueue(() -> {
+     *                 // RUNNING ON CLIENT THREAD SAFELY
+     *                 var clientPlayer = context.player();
+     *                 // Update client graphics, HUD overlays, or screen instances here!
+     *             })
+     *         );
+     *     }
+     * }
+     *
+     * // Then use it in your Screen:
+     * MatthiesenLib.networkingUtils.sendToServer(new ValueUpdatePacket(newValue));
+     * MatthiesenLib.networkingUtils.sendToPlayer(serverPlayerInstance, new ValueSyncPacket(synchronizedValue));
+     * </pre>
+     */
+    public static final NetworkingUtils networkingUtils = new NetworkingUtils();
+
+    /**
+     * Utilities for interacting and registering with Platform Networking
+     */
+    public static class NetworkingUtils {
+        /**
+         * Registers a client-to-server (C2S) packet type with the specified codec and handler.
+         * @param type The custom packet type to register.
+         * @param codec The codec for encoding and decoding the packet.
+         * @param handler The handler to process the packet when received.
+         * @param <T> The type of the custom packet payload.
+         */
+        public <T extends CustomPacketPayload> void registerC2S(
+                CustomPacketPayload.Type<T> type,
+                StreamCodec<RegistryFriendlyByteBuf, T> codec,
+                BiConsumer<T, PacketContext> handler
+        ) {
+            NetworkingManager.registerC2S(type, codec, handler);
+        }
+
+        /**
+         * Registers a server-to-client (S2C) packet type with the specified codec and handler.
+         * @param type The custom packet type to register.
+         * @param codec The codec for encoding and decoding the packet.
+         * @param handler The handler to process the packet when received.
+         * @param <T> The type of the custom packet payload.
+         */
+        public <T extends CustomPacketPayload> void registerS2C(
+                CustomPacketPayload.Type<T> type,
+                StreamCodec<RegistryFriendlyByteBuf, T> codec,
+                BiConsumer<T, PacketContext> handler
+        ) {
+            NetworkingManager.registerS2C(type, codec, handler);
+        }
+
+        /**
+         * Sends a custom packet payload to the server.
+         * @param payload The custom packet payload to send.
+         */
+        public void sendToServer(CustomPacketPayload payload) {
+            NetworkingManager.sendToServer(payload);
+        }
+
+        /**
+         * Sends a custom packet payload to a specific player on the server.
+         * @param player The player to send the packet to.
+         * @param payload The custom packet payload to send.
+         */
+        public void sendToPlayer(ServerPlayer player, CustomPacketPayload payload) {
+            NetworkingManager.sendToPlayer(player, payload);
+        }
     }
 
     /**
