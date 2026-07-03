@@ -25,6 +25,9 @@
       "dev.matthiesen.fabric.matthiesen_lib.MatthiesenLibFabricClient"
     ]
   },
+  "mixins": [
+    "matthiesen_lib.mixins.json"
+  ],
   "depends": {
     "minecraft": "1.21.1",
     "${api_mod_id}": "*"

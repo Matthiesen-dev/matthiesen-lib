@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
+import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -88,5 +89,18 @@ public final class MatthiesenLibConstants {
      */
     public static void createErrorLog(String message, Throwable throwable) {
         logger.error(message, throwable);
+    }
+
+    private static MatthiesenLib.RegistryBuilder INSTANCE;
+
+    /**
+     * Gets the internal registry builder instance for the Matthiesen Lib. This method provides access to the singleton instance of the registry builder, which is used for registering various components of the mod. If the instance has not been initialized yet, it will create a new instance with the mod ID.
+     * @return the internal registry builder instance for the Matthiesen Lib. If the instance has not been initialized yet, it will create a new instance with the mod ID.
+     */
+    public static MatthiesenLib.RegistryBuilder getInternalBuilder() {
+        if (INSTANCE == null) {
+            INSTANCE = new MatthiesenLib.RegistryBuilder(MOD_ID);
+        }
+        return INSTANCE;
     }
 }

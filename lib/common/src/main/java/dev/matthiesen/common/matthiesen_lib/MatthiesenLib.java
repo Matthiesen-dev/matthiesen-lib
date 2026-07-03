@@ -1,5 +1,6 @@
 package dev.matthiesen.common.matthiesen_lib;
 
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCreativeModeTabSectionsManager;
 import dev.matthiesen.common.matthiesen_lib.core.network.NetworkingManager;
 import dev.matthiesen.common.matthiesen_lib.core.network.PacketContext;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
@@ -49,6 +50,7 @@ public class MatthiesenLib {
 
         initialized = true;
         MatthiesenLibApi.registerModToApiMetrics(MatthiesenLibConstants.MOD_ID);
+        MatthiesenLibCreativeModeTabSectionsManager.init();
 
         // Final step: Log that the core has been initialized.
         MatthiesenLibConstants.createInfoLog("Initialized Lib");
