@@ -56,11 +56,11 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
      * @param displayItems A list of {@link ItemStack} instances that will be displayed in the creative mode tab.
      * @return A {@link Supplier} that provides the registered {@link CreativeModeTab} instance.
      */
-    protected final Supplier<CreativeModeTab> registerSimpleCreativeTab(String name, Component title, Supplier<ItemStack> displayIcon, List<ItemStack> displayItems) {
+    protected final Supplier<CreativeModeTab> registerSimpleCreativeTab(String name, Component title, Supplier<ItemStack> displayIcon, Supplier<List<ItemStack>> displayItems) {
         return register(name, () -> newCreativeModeTabBuilder()
                 .title(title)
                 .icon(displayIcon)
-                .displayItems((parameters, output) -> displayItems.forEach(output::accept))
+                .displayItems((parameters, output) -> displayItems.get().forEach(output::accept))
                 .build()
         );
     }

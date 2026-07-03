@@ -37,6 +37,11 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
     private static final Map<ResourceLocation, CreativeModeTabSectionRegistration> MOD_TAB_SECTIONS = new HashMap<>();
 
     /**
+     * Private constructor to prevent instantiation. This class is intended to be used as a static utility class for managing creative mode tab sections.
+     */
+    private MatthiesenLibCreativeModeTabSectionsManager() {}
+
+    /**
      * Initializes the creative mode tab sections manager by invoking the initialization of the internal registry.
      */
     public static void init() {

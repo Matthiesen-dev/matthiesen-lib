@@ -98,10 +98,21 @@ public final class CreativeTabSectionHeaderItem extends Item {
         }
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param stack the ItemStack to extract the role from
+     * @return the role of the ItemStack, or null if not present
+     */
     private static String getRole(ItemStack stack) {
         return getOrDefault(stack, ROLE_KEY);
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param stack the ItemStack to extract the value from
+     * @param key the key to look for in the CustomData
+     * @return the value associated with the key, or an empty string if not present
+     */
     private static String getOrDefault(ItemStack stack, String key) {
         return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
                 .copyTag()
