@@ -33,12 +33,33 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 public final class MatthiesenLibCreativeModeTabSectionsManager {
+    private static final Map<String, Runnable> autoRegistrations = new HashMap<>();
     private static final Map<ResourceLocation, CreativeModeTabSectionRegistration> MOD_TAB_SECTIONS = new HashMap<>();
 
     /**
      * Initializes the creative mode tab sections manager by invoking the initialization of the internal registry.
      */
     public static void init() {
+    }
+
+    public static void addAutoRegistration(String modId, Runnable task) {
+        autoRegistrations.put(modId, task);
+    }
+
+    public static Map<String, Runnable> getAutoRegistrations() {
+        return autoRegistrations;
+    }
+
+    public static void runAutoRegistrations() {
+        var tasks = MatthiesenLibCreativeModeTabSectionsManager.getAutoRegistrations();
+        if (!tasks.isEmpty()) {
+            for (var entry : tasks.entrySet()) {
+                String modId = entry.getKey();
+                Runnable task = entry.getValue();
+                MatthiesenLibConstants.createInfoLog("Running Creative-mode tab sections registration for " + modId);
+                task.run();
+            }
+        }
     }
 
     /**

@@ -1,5 +1,6 @@
 package dev.matthiesen.fabric.matthiesen_lib;
 
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCreativeModeTabSectionsManager;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibBuiltInTextParsers;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibConstants;
@@ -26,5 +27,6 @@ public class MatthiesenLibFabric implements ModInitializer {
         if (MatthiesenLibApi.isModLoaded(MatthiesenLibBuiltInTextParsers.EMBER.getName())) {
             MatthiesenLib.registerTextParser(new MatthiesenLibEmbersTextParserFabric());
         }
+        MatthiesenLibCreativeModeTabSectionsManager.runAutoRegistrations();
     }
 }
