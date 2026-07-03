@@ -66,6 +66,24 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
     }
 
     /**
+     * Registers a simple creative mode tab with the specified name, title, display icon, and display items. This method creates a new
+     * {@link CreativeModeTab} instance using the provided parameters and registers it with the registry.
+     * @param location The {@link ResourceLocation} representing the name of the creative mode tab to register. The path of the resource location will be used to construct the resource location for the tab.
+     * @param title The title of the creative mode tab, represented as a {@link Component}.
+     * @param displayIcon A {@link Supplier} that provides the display icon for the creative mode tab as an {@link ItemStack}.
+     * @param displayItems A {@link Supplier} that provides a list of {@link ItemStack} instances to be displayed in the creative mode tab.
+     * @return A {@link Supplier} that provides the registered {@link CreativeModeTab} instance.
+     */
+    protected final Supplier<CreativeModeTab> registerSimpleCreativeTab(ResourceLocation location, Component title, Supplier<ItemStack> displayIcon, Supplier<List<ItemStack>> displayItems) {
+        return register(location.getPath(), () -> newCreativeModeTabBuilder()
+                .title(title)
+                .icon(displayIcon)
+                .displayItems((parameters, output) -> displayItems.get().forEach(output::accept))
+                .build()
+        );
+    }
+
+    /**
      * Registers a sectioned creative mode tab with the specified name, title, display icon, and a builder consumer for configuring the sections.
      * This method registers the creative mode tab and delegates the section registration to {@link MatthiesenLibCreativeModeTabSectionsManager}.
      * @param name The name of the creative mode tab to register. This will be used to construct the resource location for the tab.
@@ -75,6 +93,26 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
      * @return A {@link Supplier} that provides the registered {@link CreativeModeTab} instance.
      */
     protected final Supplier<CreativeModeTab> registerSectionedCreativeTab(String name, Component title, Supplier<ItemStack> displayIcon, Consumer<MatthiesenLibCreativeModeTabSectionsManager.SectionBuilder> builderConsumer) {
+        MatthiesenLibCreativeModeTabSectionsManager.addAutoRegistration(modId, () -> registerCreativeModeTabSections(name, builderConsumer));
+        return register(name, () -> newCreativeModeTabBuilder()
+                .title(title)
+                .icon(displayIcon)
+                .displayItems((parameters, output) -> getCreativeModeTabSectionItems(name).forEach(output::accept))
+                .build()
+        );
+    }
+
+    /**
+     * Registers a sectioned creative mode tab with the specified name, title, display icon, and a builder consumer for configuring the sections.
+     * This method registers the creative mode tab and delegates the section registration to {@link MatthiesenLibCreativeModeTabSectionsManager}.
+     * @param location The {@link ResourceLocation} representing the name of the creative mode tab to register. The path of the resource location will be used to construct the resource location for the tab.
+     * @param title The title of the creative mode tab, represented as a {@link Component}.
+     * @param displayIcon A {@link Supplier} that provides the display icon for the creative mode tab as an {@link ItemStack}.
+     * @param builderConsumer A {@link Consumer} that configures the section builder for creative mode tab sections.
+     * @return A {@link Supplier} that provides the registered {@link CreativeModeTab} instance.
+     */
+    protected final Supplier<CreativeModeTab> registerSectionedCreativeTab(ResourceLocation location, Component title, Supplier<ItemStack> displayIcon, Consumer<MatthiesenLibCreativeModeTabSectionsManager.SectionBuilder> builderConsumer) {
+        var name = location.getPath();
         MatthiesenLibCreativeModeTabSectionsManager.addAutoRegistration(modId, () -> registerCreativeModeTabSections(name, builderConsumer));
         return register(name, () -> newCreativeModeTabBuilder()
                 .title(title)
