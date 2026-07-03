@@ -7,6 +7,10 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
 
+/**
+ * This class is used to create section headers and placeholders for creative mode tabs. It allows for the creation of ItemStacks
+ * that represent section headers and placeholders, and provides methods to extract the section ID and creative mode tab ID from these ItemStacks.
+ */
 public final class CreativeTabSectionHeaderItem extends Item {
     private static final String SECTION_ID_KEY = "SectionID";
     private static final String CREATIVE_MODE_TAB_ID = "CreativeModeTabID";
@@ -14,10 +18,20 @@ public final class CreativeTabSectionHeaderItem extends Item {
     private static final String ROLE_HEADER = "header";
     private static final String ROLE_PLACEHOLDER = "placeholder";
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     */
     public CreativeTabSectionHeaderItem() {
         super(new Item.Properties().stacksTo(1));
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param item the Item to create a header stack for
+     * @param creativeModeTabId the ResourceLocation of the CreativeModeTab this section belongs to
+     * @param sectionId the ResourceLocation of the section this header represents
+     * @return an ItemStack representing the section header
+     */
     public static ItemStack createHeaderStack(Item item, ResourceLocation creativeModeTabId, ResourceLocation sectionId) {
         ItemStack stack = new ItemStack(item);
         CompoundTag tag = new CompoundTag();
@@ -28,6 +42,11 @@ public final class CreativeTabSectionHeaderItem extends Item {
         return stack;
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param item the Item to create a placeholder stack for
+     * @return an ItemStack representing a placeholder for the section header
+     */
     public static ItemStack createPlaceholderStack(Item item) {
         ItemStack stack = new ItemStack(item);
         CompoundTag tag = new CompoundTag();
@@ -36,11 +55,20 @@ public final class CreativeTabSectionHeaderItem extends Item {
         return stack;
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param stack the ItemStack to check
+     * @return true if the ItemStack is a placeholder, false otherwise
+     */
     public static boolean isPlaceholder(ItemStack stack) {
         return ROLE_PLACEHOLDER.equals(getRole(stack));
     }
 
-    // Used by the mixin to identify section rows and extract custom section data.
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param stack the ItemStack to extract the section ID from
+     * @return the ResourceLocation of the section ID, or null if not present or invalid
+     */
     public static ResourceLocation getSectionId(ItemStack stack) {
         String sectionId = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
                 .copyTag()
@@ -55,6 +83,11 @@ public final class CreativeTabSectionHeaderItem extends Item {
         }
     }
 
+    /**
+     * Used by the mixin to identify section rows and extract custom section data.
+     * @param stack the ItemStack to extract the CreativeModeTab ID from
+     * @return the ResourceLocation of the CreativeModeTab ID, or null if not present or invalid
+     */
     public static ResourceLocation getCreativeModeTabId(ItemStack stack) {
         String tabId = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
                 .copyTag()
