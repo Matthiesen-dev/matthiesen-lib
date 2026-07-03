@@ -70,9 +70,7 @@ public final class CreativeTabSectionHeaderItem extends Item {
      * @return the ResourceLocation of the section ID, or null if not present or invalid
      */
     public static ResourceLocation getSectionId(ItemStack stack) {
-        String sectionId = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
-                .copyTag()
-                .getString(SECTION_ID_KEY);
+        String sectionId = getOrDefault(stack, SECTION_ID_KEY);
         if (sectionId.isBlank()) {
             return null;
         }
@@ -89,9 +87,7 @@ public final class CreativeTabSectionHeaderItem extends Item {
      * @return the ResourceLocation of the CreativeModeTab ID, or null if not present or invalid
      */
     public static ResourceLocation getCreativeModeTabId(ItemStack stack) {
-        String tabId = stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
-                .copyTag()
-                .getString(CREATIVE_MODE_TAB_ID);
+        String tabId = getOrDefault(stack, CREATIVE_MODE_TAB_ID);
         if (tabId.isBlank()) {
             return null;
         }
@@ -103,8 +99,12 @@ public final class CreativeTabSectionHeaderItem extends Item {
     }
 
     private static String getRole(ItemStack stack) {
+        return getOrDefault(stack, ROLE_KEY);
+    }
+
+    private static String getOrDefault(ItemStack stack, String key) {
         return stack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY)
                 .copyTag()
-                .getString(ROLE_KEY);
+                .getString(key);
     }
 }

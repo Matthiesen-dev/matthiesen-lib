@@ -1,8 +1,7 @@
-package dev.matthiesen.common.matthiesen_lib.mixin;
+package dev.matthiesen.common.matthiesen_lib.core.mixin;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCreativeModeTabSectionsManager;
 import dev.matthiesen.common.matthiesen_lib.core.item.CreativeTabSectionHeaderItem;
-import dev.matthiesen.common.matthiesen_lib.core.item.InternalRegistry;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -47,13 +46,13 @@ public class CreativeModeInventoryScreenMixin {
                     .forEach(entry -> {
                         ResourceLocation sectionId = entry.getKey();
                         ItemStack headerStack = CreativeTabSectionHeaderItem.createHeaderStack(
-                                InternalRegistry.CREATIVE_TAB_SECTION_HEADER_ITEM.get(),
+                                MatthiesenLibCreativeModeTabSectionsManager.CREATIVE_TAB_SECTION_HEADER_ITEM.get(),
                                 selectedTabId,
                                 sectionId
                         );
                         structuredItems.add(headerStack);
                         for (int i = 0; i < 8; i++) {
-                            structuredItems.add(CreativeTabSectionHeaderItem.createPlaceholderStack(InternalRegistry.CREATIVE_TAB_SECTION_HEADER_ITEM.get()));
+                            structuredItems.add(CreativeTabSectionHeaderItem.createPlaceholderStack(MatthiesenLibCreativeModeTabSectionsManager.CREATIVE_TAB_SECTION_HEADER_ITEM.get()));
                         }
                         structuredItems.addAll(entry.getValue());
                         while (structuredItems.size() % 9 != 0) {

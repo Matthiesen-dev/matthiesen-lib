@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.mixin;
+package dev.matthiesen.common.matthiesen_lib.core.mixin;
 
 import net.minecraft.core.NonNullList;
 import net.minecraft.world.item.ItemStack;

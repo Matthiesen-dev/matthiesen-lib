@@ -50,7 +50,6 @@ public class MatthiesenLib {
 
         initialized = true;
         MatthiesenLibApi.registerModToApiMetrics(MatthiesenLibConstants.MOD_ID);
-
         MatthiesenLibCreativeModeTabSectionsManager.init();
 
         // Final step: Log that the core has been initialized.

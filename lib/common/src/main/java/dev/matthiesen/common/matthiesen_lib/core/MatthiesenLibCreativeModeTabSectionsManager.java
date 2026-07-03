@@ -1,14 +1,16 @@
 package dev.matthiesen.common.matthiesen_lib.core;
 
-import dev.matthiesen.common.matthiesen_lib.core.item.InternalRegistry;
+import dev.matthiesen.common.matthiesen_lib.core.item.CreativeTabSectionHeaderItem;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 /**
  * This class manages the registration and retrieval of creative mode tab sections for a mod.
@@ -29,6 +31,7 @@ import java.util.function.Consumer;
  * });
  * </pre>
  */
+@SuppressWarnings("unused")
 public final class MatthiesenLibCreativeModeTabSectionsManager {
     private static final Map<ResourceLocation, CreativeModeTabSectionRegistration> MOD_TAB_SECTIONS = new HashMap<>();
 
@@ -36,7 +39,20 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
      * Initializes the creative mode tab sections manager by invoking the initialization of the internal registry.
      */
     public static void init() {
-        InternalRegistry.init();
+    }
+
+    /**
+     * The Creative Tab Section Header Item
+     */
+    public static final Supplier<CreativeTabSectionHeaderItem> CREATIVE_TAB_SECTION_HEADER_ITEM;
+
+    static {
+        CREATIVE_TAB_SECTION_HEADER_ITEM = registerItem("section_header", CreativeTabSectionHeaderItem::new);
+    }
+
+    @SuppressWarnings("SameParameterValue")
+    private static <T extends Item> Supplier<T> registerItem(String name, Supplier<T> item) {
+        return MatthiesenLibConstants.getInternalBuilder().registerItem(name, item);
     }
 
     /**

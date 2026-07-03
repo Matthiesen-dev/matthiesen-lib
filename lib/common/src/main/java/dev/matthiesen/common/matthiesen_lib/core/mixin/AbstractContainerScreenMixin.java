@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib.mixin;
+package dev.matthiesen.common.matthiesen_lib.core.mixin;
 
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCreativeModeTabSectionsManager;
 import dev.matthiesen.common.matthiesen_lib.core.item.CreativeTabSectionHeaderItem;
