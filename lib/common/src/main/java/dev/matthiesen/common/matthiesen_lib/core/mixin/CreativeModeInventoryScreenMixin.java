@@ -35,7 +35,9 @@ public class CreativeModeInventoryScreenMixin {
         if (selectedTabId == null) return;
         if (MatthiesenLibCreativeModeTabSectionsManager.hasTabSections(selectedTabId)) {
             NonNullList<ItemStack> structuredItems = NonNullList.create();
-            MatthiesenLibCreativeModeTabSectionsManager.getTabSections(selectedTabId).sections().entrySet().stream()
+            Map<ResourceLocation, List<ItemStack>> sections = MatthiesenLibCreativeModeTabSectionsManager.getTabSections(selectedTabId).sections();
+            if (sections == null) return;
+            sections.entrySet().stream()
                     .sorted(Comparator.comparingInt((Map.Entry<ResourceLocation, List<ItemStack>> e) ->
                             MatthiesenLibCreativeModeTabSectionsManager.getTabSections(selectedTabId)
                                     .metadata()
