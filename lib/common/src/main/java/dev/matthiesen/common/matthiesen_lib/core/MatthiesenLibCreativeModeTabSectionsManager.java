@@ -36,6 +36,8 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
     private static final Map<String, Runnable> autoRegistrations = new HashMap<>();
     private static final Map<ResourceLocation, CreativeModeTabSectionRegistration> MOD_TAB_SECTIONS = new HashMap<>();
 
+    private static boolean autoRegistrationStarted = false;
+
     /**
      * Private constructor to prevent instantiation. This class is intended to be used as a static utility class for managing creative mode tab sections.
      */
@@ -53,7 +55,12 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
      * @param task The Runnable task to be executed during the creative mode tab sections registration process.
      */
     public static void addAutoRegistration(String modId, Runnable task) {
-        autoRegistrations.put(modId, task);
+        if (!autoRegistrationStarted) {
+            autoRegistrations.put(modId, task);
+            return;
+        }
+        MatthiesenLibConstants.createInfoLog("Running Creative-mode tab sections registration for " + modId);
+        task.run();
     }
 
     /**
@@ -77,6 +84,7 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
                 task.run();
             }
         }
+        autoRegistrationStarted = true;
     }
 
     /**
