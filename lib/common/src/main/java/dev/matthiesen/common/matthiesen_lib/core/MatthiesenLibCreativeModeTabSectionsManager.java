@@ -17,10 +17,9 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
         InternalRegistry.init();
     }
 
-    public static void registerCreativeModeTabSections(String ModId, String creativeModeTabID, Consumer<SectionBuilder> builderConsumer) {
+    public static void registerCreativeModeTabSections(ResourceLocation creativeTabResource, Consumer<SectionBuilder> builderConsumer) {
         SectionBuilder builder = new SectionBuilder();
         builderConsumer.accept(builder);
-        ResourceLocation creativeTabResource = ResourceLocation.fromNamespaceAndPath(ModId, creativeModeTabID);
         MOD_TAB_SECTIONS.put(creativeTabResource, new CreativeModeTabSectionRegistration(builder.getSections(), builder.getMetadata()));
     }
 
