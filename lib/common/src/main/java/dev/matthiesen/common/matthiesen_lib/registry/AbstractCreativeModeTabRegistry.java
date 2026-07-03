@@ -1,7 +1,16 @@
 package dev.matthiesen.common.matthiesen_lib.registry;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLib;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibCreativeModeTabSectionsManager;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.function.Consumer;
 
 /**
  * Convenience base class for registries that register {@link CreativeModeTab} instances.
@@ -11,6 +20,7 @@ import net.minecraft.world.item.CreativeModeTab;
  */
 @SuppressWarnings("unused")
 public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<CreativeModeTab> {
+    private String modId;
     /**
      * Creates a creative mode tab registry using the given mod ID.
      *
@@ -18,6 +28,7 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
      */
     protected AbstractCreativeModeTabRegistry(String modId) {
         super(modId, SupportedRegistries.CREATIVE_MODE_TAB);
+        this.modId = modId;
     }
 
     /**
@@ -35,6 +46,14 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
      */
     protected final CreativeModeTab.Builder newCreativeModeTabBuilder() {
         return this.getRegistryBuilder().newCreativeTabBuilder();
+    }
+
+    /**
+     * Registers creative mode tab sections using the provided {@link Consumer} to configure the section builder. This method delegates to {@link MatthiesenLibCreativeModeTabSectionsManager#registerCreativeModeTabSections(String, Consumer)} with the mod ID and the provided consumer.
+     * @param builderConsumer A {@link Consumer} that configures the section builder for creative mode tab sections.
+     */
+    protected final void registerCreativeModeTabSections(String creativeModeTabId, Consumer<MatthiesenLibCreativeModeTabSectionsManager.SectionBuilder> builderConsumer) {
+        MatthiesenLibCreativeModeTabSectionsManager.registerCreativeModeTabSections(modId, creativeModeTabId, builderConsumer);
     }
 }
 
