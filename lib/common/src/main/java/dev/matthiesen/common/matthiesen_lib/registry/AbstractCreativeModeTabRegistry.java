@@ -53,7 +53,7 @@ public abstract class AbstractCreativeModeTabRegistry extends AbstractRegistry<C
      * @param name The name of the creative mode tab to register. This will be used to construct the resource location for the tab.
      * @param title The title of the creative mode tab, represented as a {@link Component}.
      * @param displayIcon A {@link Supplier} that provides the display icon for the creative mode tab as an {@link ItemStack}.
-     * @param displayItems A list of {@link ItemStack} instances that will be displayed in the creative mode tab.
+     * @param displayItems A {@link Supplier} that provides a list of {@link ItemStack} instances to be displayed in the creative mode tab.
      * @return A {@link Supplier} that provides the registered {@link CreativeModeTab} instance.
      */
     protected final Supplier<CreativeModeTab> registerSimpleCreativeTab(String name, Component title, Supplier<ItemStack> displayIcon, Supplier<List<ItemStack>> displayItems) {
