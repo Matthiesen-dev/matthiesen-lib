@@ -42,14 +42,26 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
     public static void init() {
     }
 
+    /**
+     * Registers an auto-registration task for a specific mod ID. The provided task will be executed during the creative mode tab sections registration process.
+     * @param modId The mod ID for which the auto-registration task is being registered.
+     * @param task The Runnable task to be executed during the creative mode tab sections registration process.
+     */
     public static void addAutoRegistration(String modId, Runnable task) {
         autoRegistrations.put(modId, task);
     }
 
+    /**
+     * Retrieves the map of auto-registration tasks for creative mode tab sections.
+     * @return A map where the keys are mod IDs and the values are Runnable tasks to be executed during the creative mode tab sections registration process.
+     */
     public static Map<String, Runnable> getAutoRegistrations() {
         return autoRegistrations;
     }
 
+    /**
+     * Executes all registered auto-registration tasks for creative mode tab sections. This method iterates through the registered tasks and runs each one, allowing mods to register their creative mode tab sections automatically.
+     */
     public static void runAutoRegistrations() {
         var tasks = MatthiesenLibCreativeModeTabSectionsManager.getAutoRegistrations();
         if (!tasks.isEmpty()) {
