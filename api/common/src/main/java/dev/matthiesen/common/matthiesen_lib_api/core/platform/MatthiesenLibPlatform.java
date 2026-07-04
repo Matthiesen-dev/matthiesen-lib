@@ -14,6 +14,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -205,6 +206,16 @@ public interface MatthiesenLibPlatform {
      *           creating, and it should be designed to handle the properties and behavior of that effect.
      */
     <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec);
+
+    /**
+     * Register a feature for the mod. This method allows you to register a new type of feature that can be used in world generation. Features are used to define
+     * specific structures, terrain modifications, or other elements that can be generated in the world. By registering a feature, you can create custom world generation content that enhances the player's experience and adds unique elements to the game world. The registered feature can then be referenced in your code when defining world generation settings or when creating custom biomes, allowing you to control how and where the feature is generated in the world.
+     * @param name The unique name for the feature. This should be a ResourceLocation that identifies the feature, and it will be used for registration and reference purposes.
+     * @param feature A supplier that provides the instance of the feature to be registered. This should return an instance of a subclass of Feature that defines the specific properties and behavior of the feature you are creating. The supplier allows for lazy initialization of the feature, which can help with performance and resource management during mod loading.
+     * @return A supplier that provides the registered feature. This allows you to reference the feature in your code after it has been registered, and it ensures that you are using the correct instance of the feature when generating it in the world or checking for its presence.
+     * @param <T> The type of the feature being registered. This should be a subclass of Feature that defines the specific properties and behavior of the feature you are creating. By using a generic type parameter, this method can be used to register any type of feature, allowing for flexibility and extensibility in your mod's world generation content.
+     */
+    <T extends Feature<?>> Supplier<T> registerFeature(ResourceLocation name, Supplier<T> feature);
 
     /**
      * Register a permission validator for the mod. This method should be called during the mod initialization process to set up the permission system

@@ -22,6 +22,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.nio.file.Path;
 import java.util.function.Supplier;
@@ -87,6 +88,11 @@ public class MatthiesenLibFabricPlatformService implements MatthiesenLibPlatform
     @Override
     public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec) {
         return registerSupplier(BuiltInRegistries.ENCHANTMENT_ENTITY_EFFECT_TYPE, name, codec);
+    }
+
+    @Override
+    public <T extends Feature<?>> Supplier<T> registerFeature(ResourceLocation name, Supplier<T> feature) {
+        return registerSupplier(BuiltInRegistries.FEATURE, name, feature);
     }
 
     @Override
