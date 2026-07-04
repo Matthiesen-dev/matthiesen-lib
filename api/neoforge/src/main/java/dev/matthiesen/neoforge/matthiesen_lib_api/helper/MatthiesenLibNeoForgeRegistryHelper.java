@@ -13,6 +13,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
@@ -178,6 +179,18 @@ public final class MatthiesenLibNeoForgeRegistryHelper {
      */
     public static <T extends MenuType<?>> Supplier<T> registerMenuType(ResourceLocation id, Supplier<T> menuType) {
         return registerDeferred(Registries.MENU, id, menuType);
+    }
+
+    /**
+     * Registers a Feature with the given ResourceLocation ID and supplier. This method uses the DeferredRegister system to ensure that the registration occurs at
+     * the correct time during mod loading.
+     * @param id The ResourceLocation ID to register the Feature under. This should be unique within the mod's namespace to avoid conflicts with other mods.
+     * @param feature A Supplier that provides the Feature instance to be registered. This supplier will be called during the registration process to create
+     * @return A Supplier that can be used to retrieve the registered Feature after registration. This allows for lazy retrieval of the registered object,
+     * @param <T> The type of Feature being registered. This is a generic type parameter that allows this method to be used for any specific Feature type
+     */
+    public static <T extends Feature<?>> Supplier<T> registerFeature(ResourceLocation id, Supplier<T> feature) {
+        return registerDeferred(Registries.FEATURE, id, feature);
     }
 
     /**

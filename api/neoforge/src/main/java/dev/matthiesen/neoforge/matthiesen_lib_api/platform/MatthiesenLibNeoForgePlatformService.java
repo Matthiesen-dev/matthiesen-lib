@@ -19,6 +19,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 import net.neoforged.fml.ModList;
 import net.neoforged.fml.loading.FMLEnvironment;
 
@@ -85,6 +86,11 @@ public class MatthiesenLibNeoForgePlatformService implements MatthiesenLibPlatfo
     @Override
     public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(ResourceLocation name, Supplier<T> codec) {
         return MatthiesenLibNeoForgeRegistryHelper.registerEntityEffects(name, codec);
+    }
+
+    @Override
+    public <T extends Feature<?>> Supplier<T> registerFeature(ResourceLocation name, Supplier<T> feature) {
+        return MatthiesenLibNeoForgeRegistryHelper.registerFeature(name, feature);
     }
 
     @Override

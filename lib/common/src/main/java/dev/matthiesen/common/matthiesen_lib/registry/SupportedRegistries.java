@@ -13,6 +13,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.util.function.Supplier;
 
@@ -26,16 +27,17 @@ import java.util.function.Supplier;
  */
 @SuppressWarnings("unused")
 public sealed interface SupportedRegistries<T>
-        permits SupportedRegistries.ItemRegistry,
-                SupportedRegistries.BlockRegistry,
-                SupportedRegistries.BlockEntityRegistry,
-                SupportedRegistries.CreativeModeTabRegistry,
-                SupportedRegistries.SoundRegistry,
-                SupportedRegistries.CriteriaTriggerRegistry,
-                SupportedRegistries.StatsRegistry,
-                SupportedRegistries.MenuTypeRegistry,
-                SupportedRegistries.DataComponentTypeRegistry,
-                SupportedRegistries.EntityEffectsRegistry {
+        permits SupportedRegistries.BlockEntityRegistry,
+        SupportedRegistries.BlockRegistry,
+        SupportedRegistries.CreativeModeTabRegistry,
+        SupportedRegistries.CriteriaTriggerRegistry,
+        SupportedRegistries.DataComponentTypeRegistry,
+        SupportedRegistries.EntityEffectsRegistry,
+        SupportedRegistries.FeatureRegistry,
+        SupportedRegistries.ItemRegistry,
+        SupportedRegistries.MenuTypeRegistry,
+        SupportedRegistries.SoundRegistry,
+        SupportedRegistries.StatsRegistry {
 
     /**
      * Supported registry category for {@link Item} registrations.
@@ -77,6 +79,10 @@ public sealed interface SupportedRegistries<T>
      * Supported registry category for enchantment entity effect codec ({@link MapCodec}) registrations.
      */
     SupportedRegistries<MapCodec<? extends EnchantmentEntityEffect>> ENTITY_EFFECT = new EntityEffectsRegistry();
+    /**
+     * Supported registry category for {@link Feature} registrations.
+     */
+    SupportedRegistries<Feature<?>> FEATURE = new FeatureRegistry();
 
     /**
      * Registers the provided entry through the matching {@link MatthiesenLib.RegistryBuilder} method.
@@ -248,6 +254,21 @@ public sealed interface SupportedRegistries<T>
         @Override
         public <R extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
             return registryBuilder.registerEntityEffects(name, entry);
+        }
+    }
+
+    /**
+     * Implementation for {@link #FEATURE}.
+     */
+    final class FeatureRegistry implements SupportedRegistries<Feature<?>> {
+        /**
+         * No-args constructor to prevent implicit one that would be public, since this type is only intended for internal use.
+         */
+        public FeatureRegistry() {}
+
+        @Override
+        public <R extends Feature<?>> Supplier<R> register(MatthiesenLib.RegistryBuilder registryBuilder, String name, Supplier<R> entry) {
+            return registryBuilder.registerFeature(name, entry);
         }
     }
 }

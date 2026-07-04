@@ -22,6 +22,7 @@ import net.minecraft.world.item.enchantment.effects.EnchantmentEntityEffect;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.levelgen.feature.Feature;
 
 import java.nio.file.Path;
 import java.util.List;
@@ -491,6 +492,17 @@ public class MatthiesenLibApi {
          */
         public <T extends MapCodec<? extends EnchantmentEntityEffect>> Supplier<T> registerEntityEffects(String name, Supplier<T> codec) {
             return PLATFORM.registerEntityEffects(ResourceLocation.fromNamespaceAndPath(modId, name), codec);
+        }
+
+        /**
+         * Registers a new feature with the given ResourceLocation ID and Supplier using the platform-specific implementation provided by the CommonPlatform service.
+         * @param name The name to register the feature under. This should be unique within the mod and should follow the standard format of "name" (without the mod ID, as it will be prefixed automatically).
+         * @param feature A Supplier that provides an instance of the Feature to register. This supplier will be called when the feature needs to be created, allowing for lazy initialization and avoiding potential issues with static initialization order.
+         * @return A Supplier that provides the registered Feature. This allows other parts of the mod to access the feature after it has been registered, and it will return the correct instance regardless of when it is called during the mod's initialization process.
+         * @param <T> The type of the feature being registered. This should be a subclass of Feature, and it will be used to create instances of the feature when needed.
+         */
+        public <T extends Feature<?>> Supplier<T> registerFeature(String name, Supplier<T> feature) {
+            return PLATFORM.registerFeature(ResourceLocation.fromNamespaceAndPath(modId, name), feature);
         }
     }
 }
