@@ -2,6 +2,42 @@
 
 Developer-focused notes and migration details for `matthiesen-lib` and `matthiesen-lib-api`.
 
+## 2026-07-04
+
+### Player Event Handler Additions (new)
+
+The shared player-event system in API common now includes two interaction callbacks in addition to join/leave.
+
+#### Common interface update
+
+- `dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPlayerEventHandler` adds:
+  - `onPlayerUseItem(ServerPlayer player, Level level, InteractionHand hand)`
+  - `onPlayerUseBlock(ServerPlayer player, Level level, InteractionHand hand, BlockPos pos)`
+- Both methods are default no-op methods to preserve backwards compatibility for existing handler implementations.
+
+#### Common manager dispatch update
+
+- `dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiPlayerEventsManager` now dispatches:
+  - `onPlayerUseItem(...)`
+  - `onPlayerUseBlock(...)`
+- Dispatch behavior matches existing join/leave handling:
+  - iterates all registered handlers,
+  - isolates per-handler failures with `try/catch`,
+  - reports exceptions via `MatthiesenLibApiMetricsManager.ERROR_TRACKER`,
+  - logs the failing handler class.
+
+#### Platform bridge wiring
+
+- Fabric (`api/fabric/.../MatthiesenLibApiFabric`):
+  - `UseItemCallback.EVENT` now forwards to `MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(...)`.
+  - `UseBlockCallback.EVENT` now forwards to `MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(...)`.
+  - Forwarding is server-side only (`ServerPlayer` guard), and still returns `PASS` to avoid changing interaction behavior.
+
+- NeoForge (`api/neoforge/.../MatthiesenLibApiNeoForgeServerBusEvents`):
+  - `PlayerInteractEvent.RightClickItem` now forwards to `MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(...)`.
+  - `PlayerInteractEvent.RightClickBlock` now forwards to `MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(...)`.
+  - Forwarding is server-side only and requires a `ServerPlayer` instance.
+
 ## 2026-06-01
 
 ### Metrics System (new)

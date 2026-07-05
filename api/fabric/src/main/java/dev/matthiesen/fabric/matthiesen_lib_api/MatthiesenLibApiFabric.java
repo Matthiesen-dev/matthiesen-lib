@@ -8,8 +8,13 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
+import net.fabricmc.fabric.api.event.player.UseBlockCallback;
+import net.fabricmc.fabric.api.event.player.UseItemCallback;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
+import net.minecraft.world.InteractionResultHolder;
 
 import java.util.Map;
 
@@ -69,6 +74,21 @@ public class MatthiesenLibApiFabric implements ModInitializer {
                 MatthiesenLibApiPlayerEventsManager.onPlayerJoin(handler.getPlayer())));
         ServerPlayConnectionEvents.DISCONNECT.register(((handler, server) ->
                 MatthiesenLibApiPlayerEventsManager.onPlayerLeave(handler.getPlayer())));
+
+        UseItemCallback.EVENT.register((player, level, interactionHand) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(serverPlayer, level, interactionHand);
+            }
+
+            return new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(interactionHand));
+        });
+        UseBlockCallback.EVENT.register((player, level, interactionHand, blockHitResult) -> {
+            if (player instanceof ServerPlayer serverPlayer) {
+                MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(serverPlayer, level, interactionHand, blockHitResult.getBlockPos());
+            }
+
+            return InteractionResult.PASS;
+        });
     }
 
     /**

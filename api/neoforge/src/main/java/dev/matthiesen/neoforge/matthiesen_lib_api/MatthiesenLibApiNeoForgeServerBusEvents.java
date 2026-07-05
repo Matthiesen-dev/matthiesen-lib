@@ -14,6 +14,7 @@ import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -108,5 +109,23 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
             MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {}", event.getEntity().getName().getString(), e);
         }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getEntity().level().isClientSide) return;
+        ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+        if (player == null) return;
+
+        MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(player, event.getLevel(), event.getHand());
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getEntity().level().isClientSide) return;
+        ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+        if (player == null) return;
+
+        MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(player, event.getLevel(), event.getHand(), event.getPos());
     }
 }
