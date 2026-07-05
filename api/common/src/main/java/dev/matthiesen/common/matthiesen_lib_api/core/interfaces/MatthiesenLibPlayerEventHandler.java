@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib_api.core.interfaces;
 
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 import net.minecraft.core.BlockPos;
 
@@ -27,19 +28,27 @@ public interface MatthiesenLibPlayerEventHandler {
     default void onPlayerLeave(ServerPlayer player) {}
 
     /**
-     * Called when a player uses (right-clicks) an item.
+     * Called when a player uses (right-clicks) an item and allows controlling the interaction result.
+     * Return PASS to continue normal processing, or SUCCESS/CONSUME/FAIL to consume or cancel.
      * @param player the server-side player using the item
      * @param level the level where the interaction happened
      * @param hand the hand used for the interaction
+     * @return the desired interaction result
      */
-    default void onPlayerUseItem(ServerPlayer player, Level level, InteractionHand hand) {}
+    default InteractionResult onPlayerUseItemResult(ServerPlayer player, Level level, InteractionHand hand) {
+        return InteractionResult.PASS;
+    }
 
     /**
-     * Called when a player uses (right-clicks) a block.
+     * Called when a player uses (right-clicks) a block and allows controlling the interaction result.
+     * Return PASS to continue normal processing, or SUCCESS/CONSUME/FAIL to consume or cancel.
      * @param player the server-side player using the block
      * @param level the level where the interaction happened
      * @param hand the hand used for the interaction
      * @param pos the block position being interacted with
+     * @return the desired interaction result
      */
-    default void onPlayerUseBlock(ServerPlayer player, Level level, InteractionHand hand, BlockPos pos) {}
+    default InteractionResult onPlayerUseBlockResult(ServerPlayer player, Level level, InteractionHand hand, BlockPos pos) {
+        return InteractionResult.PASS;
+    }
 }

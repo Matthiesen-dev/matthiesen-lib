@@ -8,6 +8,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
@@ -117,7 +118,11 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
         if (player == null) return;
 
-        MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(player, event.getLevel(), event.getHand());
+        InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(player, event.getLevel(), event.getHand());
+        if (result != InteractionResult.PASS) {
+            event.setCancellationResult(result);
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent
@@ -126,6 +131,10 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
         if (player == null) return;
 
-        MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(player, event.getLevel(), event.getHand(), event.getPos());
+        InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(player, event.getLevel(), event.getHand(), event.getPos());
+        if (result != InteractionResult.PASS) {
+            event.setCancellationResult(result);
+            event.setCanceled(true);
+        }
     }
 }

@@ -4,6 +4,7 @@ import dev.matthiesen.common.matthiesen_lib_api.core.interfaces.MatthiesenLibPla
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.InteractionHand;
+import net.minecraft.world.InteractionResult;
 import net.minecraft.world.level.Level;
 
 import java.util.HashMap;
@@ -79,16 +80,25 @@ public final class MatthiesenLibApiPlayerEventsManager {
      * @param player the server-side player
      * @param level the level where the interaction happened
      * @param hand the hand used for the interaction
+     * @return PASS to continue default processing, otherwise a consuming/canceling result from handlers
      */
-    public static void onPlayerUseItem(ServerPlayer player, Level level, InteractionHand hand) {
+    public static InteractionResult onPlayerUseItem(ServerPlayer player, Level level, InteractionHand hand) {
+        InteractionResult result = InteractionResult.PASS;
         for (MatthiesenLibPlayerEventHandler handler : playerEventHandlers.values()) {
             try {
-                handler.onPlayerUseItem(player, level, hand);
+                InteractionResult handlerResult = handler.onPlayerUseItemResult(player, level, hand);
+                if (handlerResult == InteractionResult.FAIL) {
+                    return InteractionResult.FAIL;
+                }
+                if (result == InteractionResult.PASS && handlerResult != InteractionResult.PASS) {
+                    result = handlerResult;
+                }
             } catch (RuntimeException e) {
                 MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling player item use event for player {} in mod {}", player.getName().getString(), handler.getClass().getName(), e);
             }
         }
+        return result;
     }
 
     /**
@@ -97,16 +107,25 @@ public final class MatthiesenLibApiPlayerEventsManager {
      * @param level the level where the interaction happened
      * @param hand the hand used for the interaction
      * @param pos the block position being interacted with
+     * @return PASS to continue default processing, otherwise a consuming/canceling result from handlers
      */
-    public static void onPlayerUseBlock(ServerPlayer player, Level level, InteractionHand hand, BlockPos pos) {
+    public static InteractionResult onPlayerUseBlock(ServerPlayer player, Level level, InteractionHand hand, BlockPos pos) {
+        InteractionResult result = InteractionResult.PASS;
         for (MatthiesenLibPlayerEventHandler handler : playerEventHandlers.values()) {
             try {
-                handler.onPlayerUseBlock(player, level, hand, pos);
+                InteractionResult handlerResult = handler.onPlayerUseBlockResult(player, level, hand, pos);
+                if (handlerResult == InteractionResult.FAIL) {
+                    return InteractionResult.FAIL;
+                }
+                if (result == InteractionResult.PASS && handlerResult != InteractionResult.PASS) {
+                    result = handlerResult;
+                }
             } catch (RuntimeException e) {
                 MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
                 MatthiesenLibApiConstants.getLogger().error("Error handling player block use event for player {} in mod {}", player.getName().getString(), handler.getClass().getName(), e);
             }
         }
+        return result;
     }
 
     /**

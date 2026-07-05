@@ -77,14 +77,15 @@ public class MatthiesenLibApiFabric implements ModInitializer {
 
         UseItemCallback.EVENT.register((player, level, interactionHand) -> {
             if (player instanceof ServerPlayer serverPlayer) {
-                MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(serverPlayer, level, interactionHand);
+                InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(serverPlayer, level, interactionHand);
+                return new InteractionResultHolder<>(result, player.getItemInHand(interactionHand));
             }
 
             return new InteractionResultHolder<>(InteractionResult.PASS, player.getItemInHand(interactionHand));
         });
         UseBlockCallback.EVENT.register((player, level, interactionHand, blockHitResult) -> {
             if (player instanceof ServerPlayer serverPlayer) {
-                MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(serverPlayer, level, interactionHand, blockHitResult.getBlockPos());
+                return MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(serverPlayer, level, interactionHand, blockHitResult.getBlockPos());
             }
 
             return InteractionResult.PASS;
