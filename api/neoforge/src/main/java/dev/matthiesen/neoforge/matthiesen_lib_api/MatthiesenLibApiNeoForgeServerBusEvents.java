@@ -8,12 +8,14 @@ import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiServerEvent
 import dev.matthiesen.neoforge.matthiesen_lib_api.helper.MatthiesenLibReloadListener;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.InteractionResult;
 import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddReloadListenerEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
+import net.neoforged.neoforge.event.entity.player.PlayerInteractEvent;
 import net.neoforged.neoforge.event.server.ServerStartingEvent;
 import net.neoforged.neoforge.event.server.ServerStoppingEvent;
 import net.neoforged.neoforge.event.tick.ServerTickEvent;
@@ -107,6 +109,32 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         } catch (RuntimeException e) {
             MatthiesenLibApiMetricsManager.ERROR_TRACKER.trackError(e);
             MatthiesenLibApiConstants.getLogger().error("Error handling player leave event for player {}", event.getEntity().getName().getString(), e);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickItem(PlayerInteractEvent.RightClickItem event) {
+        if (event.getEntity().level().isClientSide) return;
+        ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+        if (player == null) return;
+
+        InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(player, event.getLevel(), event.getHand());
+        if (result == InteractionResult.FAIL) {
+            event.setCancellationResult(result);
+            event.setCanceled(true);
+        }
+    }
+
+    @SubscribeEvent
+    public static void onRightClickBlock(PlayerInteractEvent.RightClickBlock event) {
+        if (event.getEntity().level().isClientSide) return;
+        ServerPlayer player = event.getEntity() instanceof ServerPlayer ? (ServerPlayer) event.getEntity() : null;
+        if (player == null) return;
+
+        InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(player, event.getLevel(), event.getHand(), event.getPos());
+        if (result == InteractionResult.FAIL) {
+            event.setCancellationResult(result);
+            event.setCanceled(true);
         }
     }
 }
