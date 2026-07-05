@@ -119,7 +119,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         if (player == null) return;
 
         InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseItem(player, event.getLevel(), event.getHand());
-        if (result != InteractionResult.PASS) {
+        if (result == InteractionResult.FAIL) {
             event.setCancellationResult(result);
             event.setCanceled(true);
         }
@@ -132,7 +132,7 @@ public class MatthiesenLibApiNeoForgeServerBusEvents {
         if (player == null) return;
 
         InteractionResult result = MatthiesenLibApiPlayerEventsManager.onPlayerUseBlock(player, event.getLevel(), event.getHand(), event.getPos());
-        if (result != InteractionResult.PASS) {
+        if (result == InteractionResult.FAIL) {
             event.setCancellationResult(result);
             event.setCanceled(true);
         }
