@@ -51,18 +51,34 @@ public abstract class AbstractContainerScreenMixin {
             MatthiesenLibCreativeModeTabSectionsManager.SectionData sectionData = MatthiesenLibCreativeModeTabSectionsManager.getTabMetaData(creativeModeTabId, sectionId);
 
             if (sectionData != null) {
-                // Draw a simple 9-slot-wide header bar so section headers work even without external textures.
                 int barWidth = 160;
                 int barHeight = 16;
-                guiGraphics.fill(x, y, x + barWidth, y + barHeight, sectionData.meta().getSectionBackgroundColor());
-                guiGraphics.fill(x, y, x + barWidth, y + 2, sectionData.meta().getSectionTitleAccentColor());
+                var sectionMeta = sectionData.meta();
+
+                boolean renderedImage = false;
+                ResourceLocation backgroundImage = sectionMeta.getSectionBackgroundImage();
+                if (backgroundImage != null) {
+                    try {
+                        guiGraphics.blit(backgroundImage, x, y, 0, 0, barWidth, barHeight, barWidth, barHeight);
+                        renderedImage = true;
+                    } catch (RuntimeException ignored) {
+                        // Fall back to color-based rendering when a texture is missing or invalid.
+                    }
+                }
+
+                if (!renderedImage) {
+                    // Draw a simple 9-slot-wide header bar so section headers work even without external textures.
+                    guiGraphics.fill(x, y, x + barWidth, y + barHeight, sectionMeta.getSectionBackgroundColor());
+                    guiGraphics.fill(x, y, x + barWidth, y + 2, sectionMeta.getSectionTitleAccentColor());
+                }
+
                 guiGraphics.drawString(
                         Minecraft.getInstance().font,
                         sectionData.title(),
                         x + 5,
                         y + 4,
-                        sectionData.meta().getSectionTitleColor(),
-                        true
+                        sectionMeta.getSectionTitleColor(),
+                        sectionMeta.getSectionTitleShadow()
                 );
             }
         }

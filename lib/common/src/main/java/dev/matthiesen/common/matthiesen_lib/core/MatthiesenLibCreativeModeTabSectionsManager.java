@@ -25,6 +25,8 @@ import java.util.function.Supplier;
  *     builder.registerSection(new ResourceLocation("modid", "section2"), Component.literal("Section 2"), 50, meta -> {
  *         meta.setSectionTitleColor(0xFF0000);
  *         meta.setSectionBackgroundColor(0x000000);
+ *         meta.setSectionBackgroundImage(ResourceLocation.fromNamespaceAndPath("modid", "textures/gui/creative_tabs/section2_header.png"));
+ *         meta.setSectionTitleShadow(false);
  *     });
  *     builder.addItemToSection(new ResourceLocation("modid", "section1"), new ItemStack(Items.DIAMOND));
  *     builder.addItemToSection(new ResourceLocation("modid", "section2"), new ItemStack(Items.GOLD_INGOT));
@@ -194,7 +196,7 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
          * @param id the section identifier
          * @param title the section title as a Component
          * @param priority the priority of the section (higher values indicate higher priority, i.e. closer to the top)
-         * @param metaConsumer a Consumer that allows customization of the SectionDataMeta for this section (e.g., setting colors)
+         * @param metaConsumer a Consumer that allows customization of the SectionDataMeta for this section (e.g., setting colors, title shadow, or background image)
          */
         public void registerSection(ResourceLocation id, Component title, int priority, Consumer<SectionDataMeta> metaConsumer) {
             SectionDataMeta meta = SectionDataMeta.defaults();
@@ -237,6 +239,8 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
         private int sectionTitleColor;
         private int sectionTitleAccentColor;
         private int sectionBackgroundColor;
+        private ResourceLocation sectionBackgroundImage;
+        private boolean sectionTitleShadow;
 
         /**
          * Constructs a SectionDataMeta instance with the specified colors for the section title, accent, and background.
@@ -245,9 +249,23 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
          * @param sectionBackgroundColor the background color for the section
          */
         public SectionDataMeta(int sectionTitleColor, int sectionTitleAccentColor, int sectionBackgroundColor) {
+            this(sectionTitleColor, sectionTitleAccentColor, sectionBackgroundColor, null, true);
+        }
+
+        /**
+         * Constructs a SectionDataMeta instance with all available rendering metadata.
+         * @param sectionTitleColor the color for the section title
+         * @param sectionTitleAccentColor the accent color for the section title
+         * @param sectionBackgroundColor the background color for the section
+         * @param sectionBackgroundImage optional texture location used as the section background image
+         * @param sectionTitleShadow whether title text should be rendered with a shadow
+         */
+        public SectionDataMeta(int sectionTitleColor, int sectionTitleAccentColor, int sectionBackgroundColor, ResourceLocation sectionBackgroundImage, boolean sectionTitleShadow) {
             this.sectionTitleColor = sectionTitleColor;
             this.sectionTitleAccentColor = sectionTitleAccentColor;
             this.sectionBackgroundColor = sectionBackgroundColor;
+            this.sectionBackgroundImage = sectionBackgroundImage;
+            this.sectionTitleShadow = sectionTitleShadow;
         }
 
         /**
@@ -281,6 +299,34 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
         }
 
         /**
+         * Sets the background image for the section header.
+         *
+         * <p>This must be a texture ResourceLocation (for example: {@code modid:textures/gui/creative_tabs/my_section_header.png}).
+         * The recommended image size is {@code 160x16} to match the section header area. Passing {@code null} clears the
+         * custom image and falls back to the color-based section header rendering.</p>
+         *
+         * @param value The texture ResourceLocation to use as the section header background image, or {@code null} to clear it.
+         * @return The current SectionDataMeta instance for method chaining.
+         */
+        public SectionDataMeta setSectionBackgroundImage(ResourceLocation value) {
+            this.sectionBackgroundImage = value;
+            return this;
+        }
+
+        /**
+         * Configures whether the section title text should be rendered with a shadow.
+         *
+         * <p>This setting applies to both color-based and image-based section headers. Defaults to {@code true}.</p>
+         *
+         * @param value {@code true} to render a text shadow, {@code false} to disable it.
+         * @return The current SectionDataMeta instance for method chaining.
+         */
+        public SectionDataMeta setSectionTitleShadow(boolean value) {
+            this.sectionTitleShadow = value;
+            return this;
+        }
+
+        /**
          * Returns the color for the section title.
          * @return The color for the section title.
          */
@@ -305,11 +351,30 @@ public final class MatthiesenLibCreativeModeTabSectionsManager {
         }
 
         /**
+         * Returns the optional section header background image location.
+         *
+         * <p>If this is {@code null}, the section header uses the configured color-based fallback rendering.</p>
+         *
+         * @return the section background texture ResourceLocation, or {@code null} when not configured.
+         */
+        public ResourceLocation getSectionBackgroundImage() {
+            return sectionBackgroundImage;
+        }
+
+        /**
+         * Returns whether section title text should be rendered with a shadow.
+         * @return {@code true} if title shadow is enabled, otherwise {@code false}.
+         */
+        public boolean getSectionTitleShadow() {
+            return sectionTitleShadow;
+        }
+
+        /**
          * Returns a SectionDataMeta instance with default values for title color, accent color, and background color.
          * @return A SectionDataMeta instance with default values.
          */
         public static SectionDataMeta defaults() {
-            return new SectionDataMeta(0xFFFFFF, 0xFF5050B8, 0xCC1A1A1A);
+            return new SectionDataMeta(0xFFFFFF, 0xFF5050B8, 0xCC1A1A1A, null, true);
         }
     }
 
