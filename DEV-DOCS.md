@@ -2,6 +2,41 @@
 
 Developer-focused notes and migration details for `matthiesen-lib` and `matthiesen-lib-api`.
 
+## 2026-07-07
+
+### Creative Tab Section Header Background Images (stable)
+
+Creative mode tab section headers now support optional texture backgrounds in addition to the existing color-based banner styling.
+
+#### Metadata additions (`MatthiesenLibCreativeModeTabSectionsManager.SectionDataMeta`)
+
+- New fluent setter: `setSectionBackgroundImage(ResourceLocation texture)`
+  - Uses `ResourceLocation` only.
+  - Recommended texture dimensions: **`160x16`** (matches the section header render area).
+  - Recommended asset path convention: `textures/gui/creative_tabs/...`.
+  - Passing `null` clears the custom image and reverts to color-based rendering.
+- New fluent setter: `setSectionTitleShadow(boolean value)`
+  - Controls title shadow rendering for both image-based and color-based section headers.
+  - Default is `true`.
+
+#### Rendering behavior
+
+- If `sectionBackgroundImage` is set, the image is rendered as the section header background.
+- Section title text is then rendered on top of that image.
+- If the image is unset (`null`) or cannot be rendered (missing/invalid texture), rendering falls back to the existing color banner:
+  - `sectionBackgroundColor` for the full bar.
+  - `sectionTitleAccentColor` for the top accent strip.
+
+#### Example
+
+```java
+builder.registerSection(ResourceLocation.fromNamespaceAndPath("modid", "my_section"), Component.literal("My Section"), 100, meta -> {
+    meta.setSectionBackgroundImage(ResourceLocation.fromNamespaceAndPath("modid", "textures/gui/creative_tabs/my_section_header.png"));
+    meta.setSectionTitleColor(0xFFFFFF);
+    meta.setSectionTitleShadow(true);
+});
+```
+
 ## 2026-07-04
 
 ### Player Event Handler Additions (new)
