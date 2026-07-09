@@ -20,8 +20,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class AbstractContainerScreenMixin {
     @Shadow protected Slot hoveredSlot;
 
+    // require = 0: NeoForge patches AbstractContainerScreen#render to call a new instance
+    // renderSlotHighlight(GuiGraphics, Slot, int, int, float) instead of the vanilla static
+    // renderSlotHighlight(GuiGraphics, int, int, int), so this callsite no longer exists there.
+    // A NeoForge-specific mixin (AbstractContainerScreenNeoForgeMixin) handles that platform.
     @Redirect(
             method = "render",
+            require = 0,
             at = @At(
                     value = "INVOKE",
                     target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderSlotHighlight(Lnet/minecraft/client/gui/GuiGraphics;III)V"
