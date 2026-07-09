@@ -1,0 +1,13 @@
+{
+  "required": true,
+  "package": "dev.matthiesen.neoforge.matthiesen_lib.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "minVersion": "0.8",
+  "client": [
+    "AbstractContainerScreenNeoForgeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
+

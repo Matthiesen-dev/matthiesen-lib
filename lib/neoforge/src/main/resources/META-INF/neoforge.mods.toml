@@ -15,6 +15,9 @@ ${mod_description}
 [[mixins]]
 config = "matthiesen_lib.mixins.json"
 
+[[mixins]]
+config = "matthiesen_lib_neoforge.mixins.json"
+
 [[dependencies.${mod_id}]]
 modId = "minecraft"
 mandatory = true
