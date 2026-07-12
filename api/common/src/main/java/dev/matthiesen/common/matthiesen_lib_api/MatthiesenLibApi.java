@@ -135,10 +135,21 @@ public class MatthiesenLibApi {
 
     /**
      * Registers a command implementation using the platform-agnostic command registry.
+     * The command is stored permanently and will be re-registered automatically on every server reload.
      * @param command The command to register
      */
     public static void registerCommand(AbstractCommand command) {
         MatthiesenLibCommandsManager.registerCommand(command);
+    }
+
+    /**
+     * Retrieves all commands that have been registered so far.
+     *
+     * @return An unmodifiable list of all registered {@link AbstractCommand} instances.
+     */
+    @SuppressWarnings("unused")
+    public static List<AbstractCommand> getAllRegisteredCommands() {
+        return MatthiesenLibCommandsManager.getAllRegisteredCommands();
     }
 
     /**
