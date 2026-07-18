@@ -2,6 +2,7 @@ package dev.matthiesen.common.matthiesen_lib.abstracts;
 
 import dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.*;
+import net.minecraft.client.KeyMapping;
 import dev.matthiesen.common.matthiesen_lib_api.abstracts.AbstractCommonMod;
 import net.minecraft.client.gui.LayeredDraw;
 import net.minecraft.client.gui.screens.MenuScreens;
@@ -154,6 +155,38 @@ public abstract class AbstractCommonClientMod {
     public <M extends AbstractContainerMenu, S extends Screen & MenuAccess<M>>
     void registerMenuScreen(MenuType<? extends M> menuType, MenuScreens.ScreenConstructor<M, S> screenConstructor) {
         MatthiesenLibClient.registerMenuScreen(menuType, screenConstructor);
+    }
+
+    // -------------------------------------------------------------------------
+    // Keybind registration
+    // -------------------------------------------------------------------------
+
+    /**
+     * Queues multiple keybinds to be registered. Safe to call at any time.
+     */
+    public void registerKeybinds(Consumer<MatthiesenLibKeybindRegistrar> registrarConsumer) {
+        MatthiesenLibClient.registerKeybinds(registrarConsumer);
+    }
+
+    /**
+     * Queues a keybind to be registered. Safe to call at any time.
+     */
+    public void registerKeybind(String name, MatthiesenLibKeybindMapping keybind) {
+        MatthiesenLibClient.registerKeybind(name, keybind);
+    }
+
+    /**
+     * Queues a keybind using only a mapping. Tick handling defaults to no-op.
+     */
+    public void registerKeybind(String name, KeyMapping keyMapping) {
+        MatthiesenLibClient.registerKeybind(name, keyMapping);
+    }
+
+    /**
+     * Queues a keybind using a mapping and a per-client-tick callback.
+     */
+    public void registerKeybind(String name, KeyMapping keyMapping, Runnable onClientTick) {
+        MatthiesenLibClient.registerKeybind(name, keyMapping, onClientTick);
     }
 
     // -------------------------------------------------------------------------

@@ -8,10 +8,7 @@ import net.neoforged.api.distmarker.Dist;
 import net.neoforged.bus.api.EventPriority;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.EntityRenderersEvent;
-import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
-import net.neoforged.neoforge.client.event.RegisterMenuScreensEvent;
-import net.neoforged.neoforge.client.event.RenderHighlightEvent;
+import net.neoforged.neoforge.client.event.*;
 
 /**
  * MatthiesenLibNeoForgeClientBusEvents is a client-side event subscriber class for the NeoForge mod loader.
@@ -74,6 +71,18 @@ public class MatthiesenLibNeoForgeClientBusEvents {
                 }
             }
         });
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void registerBindings(RegisterKeyMappingsEvent event) {
+        MatthiesenLibClient.applyKeybindRegistrations(event::register);
+    }
+
+    @SubscribeEvent(priority = EventPriority.LOWEST)
+    public static void onClientTick(ClientTickEvent.Post event) {
+        if (Minecraft.getInstance().player != null) {
+            MatthiesenLibClient.applyKeybindTicks();
+        }
     }
 
     // -------------------------------------------------------------------------

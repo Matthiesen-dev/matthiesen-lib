@@ -4,12 +4,15 @@ import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibEntityRendererMana
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibScreenManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibBlockOutlineManager;
 import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibHudManager;
+import dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibKeybindsManager;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineContext;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineListener;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibBlockOutlineRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibEntityRendererRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudOrdering;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibHudRegistrar;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibKeybindMapping;
+import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibKeybindRegistrar;
 import dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibScreenRegistrar;
 import net.minecraft.client.Camera;
 import net.minecraft.client.DeltaTracker;
@@ -19,6 +22,7 @@ import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.MenuAccess;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.KeyMapping;
 import com.mojang.blaze3d.vertex.PoseStack;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
@@ -55,6 +59,7 @@ public class MatthiesenLibClient {
         MatthiesenLibEntityRendererManager.modInitializer();
         MatthiesenLibBlockOutlineManager.modInitializer();
         MatthiesenLibHudManager.modInitializer();
+        MatthiesenLibKeybindsManager.modInitializer();
     }
 
     // -------------------------------------------------------------------------
@@ -111,6 +116,53 @@ public class MatthiesenLibClient {
      */
     public static synchronized void applyScreenRegistrations(MatthiesenLibScreenRegistrar registrar) {
         MatthiesenLibScreenManager.applyScreenRegistrations(registrar);
+    }
+
+    // -------------------------------------------------------------------------
+    // Keybinds
+    // -------------------------------------------------------------------------
+
+    /**
+     * Queues multiple keybinds to be registered. Safe to call at any time.
+     * The platform applies registrations during its own keybinding event.
+     */
+    public static void registerKeybinds(Consumer<MatthiesenLibKeybindRegistrar> registrarConsumer) {
+        MatthiesenLibKeybindsManager.registerKeybinds(registrarConsumer);
+    }
+
+    /**
+     * Queues a keybind to be registered. Safe to call at any time.
+     */
+    public static void registerKeybind(String name, MatthiesenLibKeybindMapping keybind) {
+        MatthiesenLibKeybindsManager.registerKeybind(name, keybind);
+    }
+
+    /**
+     * Queues a keybind using only a mapping. Tick handling defaults to no-op.
+     */
+    public static void registerKeybind(String name, KeyMapping keyMapping) {
+        MatthiesenLibKeybindsManager.registerKeybind(name, keyMapping);
+    }
+
+    /**
+     * Queues a keybind using a mapping and a per-client-tick callback.
+     */
+    public static void registerKeybind(String name, KeyMapping keyMapping, Runnable onClientTick) {
+        MatthiesenLibKeybindsManager.registerKeybind(name, keyMapping, onClientTick);
+    }
+
+    /**
+     * Applies queued keybind registrations using the provided platform registrar.
+     */
+    public static synchronized void applyKeybindRegistrations(Consumer<KeyMapping> registrar) {
+        MatthiesenLibKeybindsManager.applyKeybindRegistrations(registrar);
+    }
+
+    /**
+     * Runs client tick callbacks for all registered keybind mappings.
+     */
+    public static void applyKeybindTicks() {
+        MatthiesenLibKeybindsManager.tickKeybinds();
     }
 
     // -------------------------------------------------------------------------

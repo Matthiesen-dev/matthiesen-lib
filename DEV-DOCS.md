@@ -303,3 +303,56 @@ All located under `dev.matthiesen.common.matthiesen_lib_api.core.metric`.
   - `modRuntimeOnly(project(":api-fabric"))`
   - `modRuntimeOnly(project(":api-neoforge"))`
 - These runtime API platform dependencies are configured as non-transitive in lib platform modules so Loom does not attempt to resolve `api-common-dev.jar` as a standalone runtime artifact during dev launch.
+
+## 2026-07-17
+
+### Client Keybind Manager (new)
+
+MatthiesenLib now includes a shared keybind registration/tick pipeline so client mods can register keybinds through common code and let each platform apply them at the correct lifecycle moment.
+
+#### Core manager
+
+- New manager behavior in `dev.matthiesen.common.matthiesen_lib.core.MatthiesenLibKeybindsManager`:
+  - Queues registrations in a thread-safe list.
+  - Supports deferred platform application via `applyKeybindRegistrations(...)`.
+  - Supports per-tick dispatch via `tickKeybinds()`.
+  - Rejects duplicate keybind names with `IllegalArgumentException`.
+  - Isolates callback failures per keybind and logs with `MatthiesenLibConstants`.
+
+#### Public client API additions
+
+- `dev.matthiesen.common.matthiesen_lib.MatthiesenLibClient` now initializes keybinds in `modInitializer()` and exposes:
+  - `registerKeybinds(Consumer<MatthiesenLibKeybindRegistrar>)`
+  - `registerKeybind(String, MatthiesenLibKeybindMapping)`
+  - `registerKeybind(String, KeyMapping)`
+  - `registerKeybind(String, KeyMapping, Runnable)`
+  - `applyKeybindRegistrations(Consumer<KeyMapping>)`
+  - `applyKeybindTicks()`
+- New registrar contract:
+  - `dev.matthiesen.common.matthiesen_lib.core.interfaces.MatthiesenLibKeybindRegistrar`
+
+#### Abstract client-mod convenience wrappers
+
+- `dev.matthiesen.common.matthiesen_lib.abstracts.AbstractCommonClientMod` now forwards the same keybind registration methods, so downstream mods can register keybinds from their client-mod base class without directly touching internals.
+
+#### Platform wiring
+
+- Fabric (`lib/fabric/.../MatthiesenLibFabricClient`):
+  - Applies queued keybinds with `KeyBindingHelper.registerKeyBinding(...)` during `onInitializeClient()`.
+  - Calls `MatthiesenLibClient.applyKeybindTicks()` on end-client-tick when a player is present.
+- NeoForge (`lib/neoforge/.../MatthiesenLibNeoForgeClientBusEvents`):
+  - Applies queued keybinds in `RegisterKeyMappingsEvent`.
+  - Calls `MatthiesenLibClient.applyKeybindTicks()` in `ClientTickEvent.Post` when a player is present.
+
+#### Usage notes
+
+- Preferred simple style:
+  ```java
+  INSTANCE.registerKeybind("open_menu", myKeyMapping, () -> {
+      while (myKeyMapping.consumeClick()) {
+          // Handle press
+      }
+  });
+  ```
+- Advanced style remains available through `MatthiesenLibKeybindMapping` when custom mapping/tick behavior needs a dedicated type.
+
