@@ -27,6 +27,7 @@ import java.util.concurrent.CompletableFuture;
 /**
  * Represents a user on the server, which can be either online or offline.
  */
+@SuppressWarnings("unused")
 public class ServerUser {
     private final UUID uuid;
     private Player offlinePlayer;
@@ -97,31 +98,31 @@ public class ServerUser {
         return this.uuid.toString();
     }
 
-    public static class Argument implements ArgumentType<String> {
+    public static class CmdArgument implements ArgumentType<String> {
         private static final Collection<String> EXAMPLES = Arrays.asList("Player", "0123", "dd12be42-52a9-4a91-a8a1-11c01849e498");
 
-        public static Argument playerArg() {
-            return new Argument();
+        public static CmdArgument playerArg() {
+            return new CmdArgument();
         }
 
         public static ServerUser getUser(CommandContext<CommandSourceStack> context, String string) {
-            var arg = context.getArgument(string, String.class);
-            if (arg == null) return null;
-
+            var name = context.getArgument(string, String.class);
+            if (name == null) return null;
+            UUID uuid = null;
             // If string is a valid UUID
             try {
-                UUID uuid = UUID.fromString(arg);
-                return new ServerUser(uuid);
+                uuid = UUID.fromString(name);
             } catch (IllegalArgumentException e) {
-                // Not a valid UUID, continue to check for player name
+                // Do nothing
             }
-
-            // If string is a valid player name
-            UUID uuid = SavedPlayerData.findPlayerByUsername(arg);
             if (uuid != null) {
-                return new ServerUser(uuid);
+                // If UUID is valid, check if player exists
+                if (SavedPlayerData.hasSavedPlayerData(uuid)) return new ServerUser(uuid);
+                // Else continue
             }
-            return new ServerUser(arg);
+            // Check if the player name exists in the saved player data
+            if (SavedPlayerData.hasSavedPlayerData(name)) return new ServerUser(name);
+            return null;
         }
 
         @Override

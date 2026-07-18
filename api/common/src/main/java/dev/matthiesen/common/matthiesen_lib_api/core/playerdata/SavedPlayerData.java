@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api.core.playerdata;
 
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
+import dev.matthiesen.common.matthiesen_lib_api.core.MatthiesenLibApiConstants;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.ListTag;
@@ -60,7 +61,7 @@ public final class SavedPlayerData extends SavedData {
     private static SavedPlayerData getStore() {
         MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
         if (server == null) return null;
-        return server.overworld().getDataStorage().computeIfAbsent(FACTORY, PlayerDataEventHandler.DATA_ID);
+        return server.overworld().getDataStorage().computeIfAbsent(FACTORY, MatthiesenLibApiConstants.PLAYER_DATA_STORE_ID);
     }
 
     public static void verifyPlayerData(ServerPlayer player) {
@@ -89,6 +90,23 @@ public final class SavedPlayerData extends SavedData {
                 dataStore.setDirty();
             }
         }
+    }
+
+    public static boolean hasSavedPlayerData(UUID uuid) {
+        SavedPlayerData dataStore = getStore();
+        if (dataStore == null) return false;
+        return dataStore.playerRecords.containsKey(uuid.toString());
+    }
+
+    public static boolean hasSavedPlayerData(String name) {
+        SavedPlayerData dataStore = getStore();
+        if (dataStore == null) return false;
+        for (PlayerRecord record : dataStore.playerRecords.values()) {
+            if (record.name().equalsIgnoreCase(name) || record.aliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(name))) {
+                return true;
+            }
+        }
+        return false;
     }
 
     public static UUID findPlayerByUsername(String username) {
