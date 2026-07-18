@@ -29,6 +29,11 @@ public final class MatthiesenLibApiConstants {
     public static @Token final String METRICS_TOKEN = "40d72b3b79407e5d372d5790b7dee654";
 
     /**
+     * The identifier for the player data store. This constant is used to uniquely identify the data store where player data is saved and retrieved.
+     */
+    public static String PLAYER_DATA_STORE_ID = MatthiesenLibApiConstants.MOD_ID + "_player_data";
+
+    /**
      * The logger instance for the Matthiesen Lib API. This logger is used to create log messages for the API, including
      * info and error logs. The logger is initialized using LogManager.getLogger with the mod name as the logger name, allowing
      * for organized logging specific to this API.
