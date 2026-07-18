@@ -16,7 +16,9 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class SavedPlayerData extends SavedData {
-    public record PlayerRecord(String name, List<String> aliases) {}
+    private static final String PLAYER_RECORDS_NBT_KEY = "playerRecords";
+    private static final String RECORD_NAME_KEY = "name";
+    private static final String RECORD_ALIASES_KEY = "aliases";
 
     private final Map<String, PlayerRecord> playerRecords = new HashMap<>();
 
@@ -28,11 +30,11 @@ public final class SavedPlayerData extends SavedData {
     private static SavedPlayerData load(CompoundTag nbt, HolderLookup.Provider provider) {
         SavedPlayerData data = create();
         // Load player records from NBT
-        CompoundTag playerRecordsNBT = nbt.getCompound("playerRecords");
+        CompoundTag playerRecordsNBT = nbt.getCompound(PLAYER_RECORDS_NBT_KEY);
         for (String key : playerRecordsNBT.getAllKeys()) {
             CompoundTag recordNBT = playerRecordsNBT.getCompound(key);
-            String name = recordNBT.getString("name");
-            List<String> aliases = recordNBT.getList("aliases", 8).stream().map(Tag::getAsString).toList();
+            String name = recordNBT.getString(RECORD_NAME_KEY);
+            List<String> aliases = recordNBT.getList(RECORD_ALIASES_KEY, 8).stream().map(Tag::getAsString).toList();
             data.playerRecords.put(key, new PlayerRecord(name, aliases));
         }
         return data;
@@ -44,11 +46,11 @@ public final class SavedPlayerData extends SavedData {
         for (Map.Entry<String, PlayerRecord> entry : playerRecords.entrySet()) {
             PlayerRecord record = entry.getValue();
             CompoundTag recordNBT = new CompoundTag();
-            recordNBT.putString("name", record.name());
-            recordNBT.put("aliases", record.aliases().stream().map(StringTag::valueOf).collect(Collectors.toCollection(ListTag::new)));
+            recordNBT.putString(RECORD_NAME_KEY, record.name());
+            recordNBT.put(RECORD_ALIASES_KEY, record.aliases().stream().map(StringTag::valueOf).collect(Collectors.toCollection(ListTag::new)));
             playerRecordsNBT.put(entry.getKey(), recordNBT);
         }
-        compoundTag.put("playerRecords", playerRecordsNBT);
+        compoundTag.put(PLAYER_RECORDS_NBT_KEY, playerRecordsNBT);
         return compoundTag;
     }
 
