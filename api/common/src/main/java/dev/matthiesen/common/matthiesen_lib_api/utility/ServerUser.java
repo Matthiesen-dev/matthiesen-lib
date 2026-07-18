@@ -1,28 +1,16 @@
 package dev.matthiesen.common.matthiesen_lib_api.utility;
 
 import com.mojang.authlib.GameProfile;
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
 import dev.matthiesen.common.matthiesen_lib_api.core.playerdata.SavedPlayerData;
 import dev.matthiesen.common.matthiesen_lib_api.core.playerdata.fakeplayer.FakePlayerFactory;
-import net.minecraft.commands.CommandSourceStack;
-import net.minecraft.commands.SharedSuggestionProvider;
-import net.minecraft.commands.arguments.selector.EntitySelectorParser;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.player.Player;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 import java.util.UUID;
-import java.util.concurrent.CompletableFuture;
 
 /**
  * Represents a user on the server, which can be either online or offline.
@@ -32,36 +20,60 @@ public class ServerUser {
     private final UUID uuid;
     private Player offlinePlayer;
 
+    /**
+     * Creates a new ServerUser instance for the given player.
+     * @param player The player to create the ServerUser for. Can be either online or offline.
+     */
     public ServerUser(ServerPlayer player) {
         this.uuid = player.getUUID();
         this.offlinePlayer = player;
     }
 
+    /**
+     * Creates a new ServerUser instance for the given player.
+     * @param player The player to create the ServerUser for. Can be either online or offline.
+     */
     public ServerUser(Player player) {
         this.uuid = player.getUUID();
         this.offlinePlayer = player;
     }
 
+    /**
+     * Creates a new ServerUser instance for the given UUID.
+     * @param uuid The UUID of the player to create the ServerUser for. Can be either online or offline.
+     */
     public ServerUser(UUID uuid) {
         this.uuid = uuid;
     }
 
+    /**
+     * Creates a new ServerUser instance for the given player name.
+     * @param playerName The name of the player to create the ServerUser for. Can be either online or offline.
+     */
     public ServerUser(String playerName) {
-        this.uuid = getPlayerUUID(playerName);
+        this.uuid = SavedPlayerData.findPlayerByUsername(playerName);
     }
 
-    private UUID getPlayerUUID(String name) {
-        return SavedPlayerData.findPlayerByUsername(name);
-    }
-
+    /**
+     * Gets the online player associated with this ServerUser, if they are currently online.
+     * @return The online player, or null if they are not online.
+     */
     public ServerPlayer getOnlinePlayer() {
         return MatthiesenLibApi.getMinecraftServer().getPlayerList().getPlayer(this.uuid);
     }
 
+    /**
+     * Checks if the player associated with this ServerUser is currently online.
+     * @return True if the player is online, false otherwise.
+     */
     public boolean isOnline() {
         return getOnlinePlayer() != null;
     }
 
+    /**
+     * Gets the offline player associated with this ServerUser, if they are currently offline.
+     * @return The offline player, or null if there was an error
+     */
     public Player getOfflinePlayer() {
         Player player = this.getOnlinePlayer();
         if (player != null) return player;
@@ -78,6 +90,10 @@ public class ServerUser {
         return this.offlinePlayer;
     }
 
+    /**
+     * Gets the username of the player associated with this ServerUser.
+     * @return The username of the player, or null if they are not found.
+     */
     public String getUsername() {
         Player player = getOnlinePlayer();
         if (player != null) return player.getScoreboardName();
@@ -86,77 +102,27 @@ public class ServerUser {
         return SavedPlayerData.findPlayerNameByUUID(this.uuid);
     }
 
+    /**
+     * Gets the list of aliases associated with the player.
+     * @return A list of aliases for the player, or an empty list if none are found.
+     */
     public List<String> getAliases() {
         return SavedPlayerData.getPlayerAliases(this.uuid);
     }
 
+    /**
+     * Gets the UUID of the player associated with this ServerUser.
+     * @return The UUID of the player.
+     */
     public UUID getUUID() {
         return this.uuid;
     }
 
+    /**
+     * Gets the string representation of the UUID of the player associated with this ServerUser.
+     * @return The string representation of the UUID of the player.
+     */
     public String getStringUUID() {
         return this.uuid.toString();
-    }
-
-    public static class CmdArgument implements ArgumentType<String> {
-        private static final Collection<String> EXAMPLES = Arrays.asList("Player", "0123", "dd12be42-52a9-4a91-a8a1-11c01849e498");
-
-        public static CmdArgument playerArg() {
-            return new CmdArgument();
-        }
-
-        public static ServerUser getUser(CommandContext<CommandSourceStack> context, String string) {
-            var name = context.getArgument(string, String.class);
-            if (name == null) return null;
-            UUID uuid = null;
-            // If string is a valid UUID
-            try {
-                uuid = UUID.fromString(name);
-            } catch (IllegalArgumentException e) {
-                // Do nothing
-            }
-            if (uuid != null) {
-                // If UUID is valid, check if player exists
-                if (SavedPlayerData.hasSavedPlayerData(uuid)) return new ServerUser(uuid);
-                // Else continue
-            }
-            // Check if the player name exists in the saved player data
-            if (SavedPlayerData.hasSavedPlayerData(name)) return new ServerUser(name);
-            return null;
-        }
-
-        @Override
-        public String parse(StringReader reader) throws CommandSyntaxException {
-            return reader.readString();
-        }
-
-        @Override
-        public <S> CompletableFuture<Suggestions> listSuggestions(CommandContext<S> context, SuggestionsBuilder builder) {
-            Object var4 = context.getSource();
-            if (var4 instanceof SharedSuggestionProvider sharedSuggestionProvider) {
-                StringReader stringReader = new StringReader(builder.getInput());
-                stringReader.setCursor(builder.getStart());
-
-                EntitySelectorParser entitySelectorParser = new EntitySelectorParser(stringReader, EntitySelectorParser.allowSelectors(sharedSuggestionProvider));
-
-                try {
-                    entitySelectorParser.parse();
-                } catch (CommandSyntaxException e) {
-                    // Handle exception
-                }
-
-                return entitySelectorParser.fillSuggestions(builder, (suggestionsBuilder -> {
-                    Collection<String> collection = sharedSuggestionProvider.getOnlinePlayerNames();
-                    SharedSuggestionProvider.suggest(collection, suggestionsBuilder);
-                }));
-            } else {
-                return Suggestions.empty();
-            }
-        }
-
-        @Override
-        public Collection<String> getExamples() {
-            return EXAMPLES;
-        }
     }
 }
