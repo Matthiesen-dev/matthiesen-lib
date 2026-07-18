@@ -1,4 +1,4 @@
-package dev.matthiesen.common.matthiesen_lib_api.utility;
+package dev.matthiesen.common.matthiesen_lib_api.playerdata;
 
 import com.mojang.authlib.GameProfile;
 import dev.matthiesen.common.matthiesen_lib_api.MatthiesenLibApi;
