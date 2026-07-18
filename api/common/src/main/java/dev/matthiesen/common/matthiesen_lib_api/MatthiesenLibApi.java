@@ -1,6 +1,7 @@
 package dev.matthiesen.common.matthiesen_lib_api;
 
 import com.mojang.serialization.MapCodec;
+import dev.matthiesen.common.matthiesen_lib_api.core.playerdata.PlayerDataEventHandler;
 import dev.matthiesen.libs.faststats.ErrorTracker;
 import dev.matthiesen.libs.faststats.Token;
 import dev.matthiesen.common.matthiesen_lib_api.command.AbstractCommand;
@@ -78,6 +79,7 @@ public class MatthiesenLibApi {
         // Initialize the reload manager
         MatthiesenLibReloadManager.modInitializer();
         MatthiesenLibReloadManager.registerReloadRunnable(MatthiesenLibApiConstants.MOD_ID + "_config", MatthiesenLibApiConfigManager::reload);
+        PlayerDataEventHandler.init();
 
         initialized = true;
         MatthiesenLibApiConstants.createInfoLog("Initialized Matthiesen Lib API");
