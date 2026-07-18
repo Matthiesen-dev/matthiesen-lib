@@ -15,8 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public final class SavedPlayerData extends SavedData {
-    public record PlayerRecord(UUID uuid, String name, List<String> aliases) {
-    }
+    public record PlayerRecord(String name, List<String> aliases) {}
 
     private final Map<String, PlayerRecord> playerRecords = new HashMap<>();
 
@@ -31,10 +30,9 @@ public final class SavedPlayerData extends SavedData {
         CompoundTag playerRecordsNBT = nbt.getCompound("playerRecords");
         for (String key : playerRecordsNBT.getAllKeys()) {
             CompoundTag recordNBT = playerRecordsNBT.getCompound(key);
-            UUID uuid = recordNBT.getUUID("uuid");
             String name = recordNBT.getString("name");
             List<String> aliases = recordNBT.getList("aliases", 8).stream().map(Tag::getAsString).toList();
-            data.playerRecords.put(key, new PlayerRecord(uuid, name, aliases));
+            data.playerRecords.put(key, new PlayerRecord(name, aliases));
         }
         return data;
     }
@@ -45,7 +43,6 @@ public final class SavedPlayerData extends SavedData {
         for (Map.Entry<String, PlayerRecord> entry : playerRecords.entrySet()) {
             PlayerRecord record = entry.getValue();
             CompoundTag recordNBT = new CompoundTag();
-            recordNBT.putUUID("uuid", record.uuid());
             recordNBT.putString("name", record.name());
             recordNBT.put("aliases", record.aliases().stream().map(StringTag::valueOf).collect(Collectors.toCollection(ListTag::new)));
             playerRecordsNBT.put(entry.getKey(), recordNBT);
@@ -60,7 +57,7 @@ public final class SavedPlayerData extends SavedData {
             null
     );
 
-    public static SavedPlayerData getStore() {
+    private static SavedPlayerData getStore() {
         MinecraftServer server = MatthiesenLibApi.getMinecraftServer();
         if (server == null) return null;
         return server.overworld().getDataStorage().computeIfAbsent(FACTORY, PlayerDataEventHandler.DATA_ID);
@@ -76,7 +73,7 @@ public final class SavedPlayerData extends SavedData {
         PlayerRecord existingRecord = dataStore.playerRecords.get(playerUUID.toString());
         if (existingRecord == null) {
             // No record exists, create a new one
-            PlayerRecord newRecord = new PlayerRecord(playerUUID, playerName, List.of());
+            PlayerRecord newRecord = new PlayerRecord(playerName, List.of());
             dataStore.playerRecords.put(playerUUID.toString(), newRecord);
             dataStore.setDirty();
         } else {
@@ -87,7 +84,7 @@ public final class SavedPlayerData extends SavedData {
                 if (!updatedAliases.contains(existingRecord.name())) {
                     updatedAliases.add(existingRecord.name());
                 }
-                PlayerRecord updatedRecord = new PlayerRecord(playerUUID, playerName, updatedAliases);
+                PlayerRecord updatedRecord = new PlayerRecord(playerName, updatedAliases);
                 dataStore.playerRecords.put(playerUUID.toString(), updatedRecord);
                 dataStore.setDirty();
             }
@@ -97,9 +94,10 @@ public final class SavedPlayerData extends SavedData {
     public static UUID findPlayerByUsername(String username) {
         SavedPlayerData dataStore = getStore();
         if (dataStore == null) return null;
-        for (PlayerRecord record : dataStore.playerRecords.values()) {
+        for (Map.Entry<String, PlayerRecord> entry : dataStore.playerRecords.entrySet()) {
+            PlayerRecord record = entry.getValue();
             if (record.name().equalsIgnoreCase(username) || record.aliases().stream().anyMatch(alias -> alias.equalsIgnoreCase(username))) {
-                return record.uuid();
+                return UUID.fromString(entry.getKey());
             }
         }
         return null;
@@ -110,5 +108,12 @@ public final class SavedPlayerData extends SavedData {
         if (dataStore == null) return null;
         PlayerRecord record = dataStore.playerRecords.get(uuid.toString());
         return record != null ? record.name() : null;
+    }
+
+    public static List<String> getPlayerAliases(UUID uuid) {
+        SavedPlayerData dataStore = getStore();
+        if (dataStore == null) return Collections.emptyList();
+        PlayerRecord record = dataStore.playerRecords.get(uuid.toString());
+        return record != null ? record.aliases() : Collections.emptyList();
     }
 }

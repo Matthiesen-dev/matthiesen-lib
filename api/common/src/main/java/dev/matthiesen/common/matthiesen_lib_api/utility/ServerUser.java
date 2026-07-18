@@ -9,8 +9,12 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.server.players.GameProfileCache;
 import net.minecraft.world.entity.player.Player;
 
+import java.util.List;
 import java.util.UUID;
 
+/**
+ * Represents a user on the server, which can be either online or offline.
+ */
 public class ServerUser {
     private final UUID uuid;
     private Player offlinePlayer;
@@ -67,6 +71,10 @@ public class ServerUser {
         player = getOfflinePlayer();
         if (player != null) return player.getScoreboardName();
         return SavedPlayerData.findPlayerNameByUUID(this.uuid);
+    }
+
+    public List<String> getAliases() {
+        return SavedPlayerData.getPlayerAliases(this.uuid);
     }
 
     public UUID getUUID() {
