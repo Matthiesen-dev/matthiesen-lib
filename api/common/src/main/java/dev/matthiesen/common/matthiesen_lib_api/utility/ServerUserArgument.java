@@ -20,7 +20,7 @@ import java.util.concurrent.CompletableFuture;
  * Argument type for server users, which can be either online or offline players.
  */
 @SuppressWarnings("unused")
-public class ServerUserArgument  implements ArgumentType<String> {
+public final class ServerUserArgument implements ArgumentType<String> {
     private static final Collection<String> EXAMPLES = Arrays.asList("Player", "0123", "dd12be42-52a9-4a91-a8a1-11c01849e498");
 
     /**

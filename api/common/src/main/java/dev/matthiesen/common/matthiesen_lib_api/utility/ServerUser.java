@@ -16,7 +16,7 @@ import java.util.UUID;
  * Represents a user on the server, which can be either online or offline.
  */
 @SuppressWarnings("unused")
-public class ServerUser {
+public final class ServerUser {
     private final UUID uuid;
     private Player offlinePlayer;
 
