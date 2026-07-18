@@ -96,9 +96,9 @@ public final class ServerUser {
      */
     public String getUsername() {
         Player player = getOnlinePlayer();
-        if (player != null) return player.getScoreboardName();
+        if (player != null) return player.getName().getString();
         player = getOfflinePlayer();
-        if (player != null) return player.getScoreboardName();
+        if (player != null) return player.getName().getString();
         return SavedPlayerData.findPlayerNameByUUID(this.uuid);
     }
 

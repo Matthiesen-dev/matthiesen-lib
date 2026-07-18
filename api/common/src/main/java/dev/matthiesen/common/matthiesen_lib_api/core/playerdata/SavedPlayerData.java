@@ -68,7 +68,7 @@ public final class SavedPlayerData extends SavedData {
         SavedPlayerData dataStore = getStore();
         if (dataStore == null) return;
 
-        String playerName = player.getScoreboardName();
+        String playerName = player.getName().getString();
         UUID playerUUID = player.getUUID();
 
         PlayerRecord existingRecord = dataStore.playerRecords.get(playerUUID.toString());
