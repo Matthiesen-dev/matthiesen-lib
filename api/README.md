@@ -18,7 +18,7 @@ Documentation for the library can be found at [mods.matthiesen.dev](https://mods
 |-------------------|-----------------|
 | 1.21.1            | 1.x.x           |
 
-### Notice: FastStats Metrics
+## FastStats Metrics
 
 This library uses [FastStats](https://faststats.dev) to collect anonymous usage statistics. This helps the developer understand 
 how the library and the mods built using the library are being used and improve it over time. You can learn more about the data 
