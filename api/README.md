@@ -1,5 +1,8 @@
 # Matthiesen Lib API
 
+> ⚠️ This mod has been deprecated and is no longer going to receive updates.
+> This library has been replaced by [Matthiesen Core](https://modrinth.com/mod/matthiesen-core) which provides a more robust and feature-rich foundation for mod developers to build upon.
+
 Matthiesen Lib API is the server-side API for [Matthiesen Lib](https://modrinth.com/mod/matthiesen-lib), a lightweight Architectury-style library that enables 
 mod developers to write shared code that works seamlessly across both **Fabric** and **NeoForge** mod loaders for Minecraft **1.21.1**. 
 Instead of maintaining separate implementations for each platform, you can write your mod logic once in common code and let 
