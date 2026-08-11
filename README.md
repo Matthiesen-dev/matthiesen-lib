@@ -1,5 +1,8 @@
 # Matthiesen Lib
 
+> ⚠️ This mod has been deprecated and is no longer going to receive updates.
+> This library has been replaced by [Matthiesen Core](https://modrinth.com/mod/matthiesen-core) which provides a more robust and feature-rich foundation for mod developers to build upon.
+
 Matthiesen Lib has two main components published as separate mods on Modrinth:
 
 - [`matthiesen-lib-api`](./api) - The Server-side API mod that provides the shared code and functionality for mod developers to use in their mods.
